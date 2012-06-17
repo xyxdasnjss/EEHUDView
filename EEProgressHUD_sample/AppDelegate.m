@@ -8,8 +8,16 @@
 
 #import "AppDelegate.h"
 
-@implementation AppDelegate
+@interface AppDelegate ()
+{
+    // ignore counter
+    int ignoringCounter_;
+}
+@property (nonatomic) int ignoringCounter;
+@end
 
+@implementation AppDelegate
+@synthesize ignoringCounter = ignoringCounter_;
 @synthesize window = _window;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -55,6 +63,37 @@
      Save data if appropriate.
      See also applicationDidEnterBackground:.
      */
+}
+
+#pragma mark - Common
+- (void)countUpIgnoringCounter
+{
+    // countUP
+    ignoringCounter_++;
+    
+    if (![[UIApplication sharedApplication] isIgnoringInteractionEvents]) {
+        [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+    }
+    
+    //printf("%s(%d)\n", __func__, ignoringCounter_);
+}
+
+- (void)countDownIgnoringCounter
+{
+    // countDown
+    ignoringCounter_--;
+    
+    //printf("%s(%d)\n", __func__, ignoringCounter_);
+    
+    if (ignoringCounter_ <= 0) {
+        
+        if ([[UIApplication sharedApplication] isIgnoringInteractionEvents]) {
+            [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+        }
+        
+        // refresh
+        ignoringCounter_ = 0;
+    }
 }
 
 @end

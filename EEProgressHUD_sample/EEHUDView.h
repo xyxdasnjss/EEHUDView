@@ -10,27 +10,25 @@
 #import "EEHUDResultView.h"
 
 typedef enum _EEHUDViewShowStyle {
-    EEHUDViewShowStyleNone = 0,
-    EEHUDViewShowStyleFadeIn = 1,
-    EEHUDViewShowStyleLutz = 2,
-    EEHUDViewShowStyleShake = 3,
-    EEHUDViewShowStyleNoAnime = 4,
-    EEHUDViewShowStyleFromRight = 5,
-    EEHUDViewShowStyleFromLeft = 6,
-    EEHUDViewShowStyleFromTop = 7,
-    EEHUDViewShowStyleFromBottom = 8
+    EEHUDViewShowStyleFadeIn = 0,
+    EEHUDViewShowStyleLutz = 1,
+    EEHUDViewShowStyleShake = 2,
+    EEHUDViewShowStyleNoAnime = 3,
+    EEHUDViewShowStyleFromRight = 4,
+    EEHUDViewShowStyleFromLeft = 5,
+    EEHUDViewShowStyleFromTop = 6,
+    EEHUDViewShowStyleFromBottom = 7
 } EEHUDViewShowStyle;
 
 typedef enum _EEHUDViewHideStyle {
-    EEHUDViewHideStyleNone = 0,
-    EEHUDViewHideStyleFadeOut = 1,
-    EEHUDViewHideStyleLutz = 2,
-    EEHUDViewHideStyleShake = 3,
-    EEHUDViewHideStyleNoAnime = 4,
-    EEHUDViewHideStyleToLeft = 5,
-    EEHUDViewHideStyleToRight = 6,
-    EEHUDViewHideStyleToBottom = 7,
-    EEHUDViewHideStyleToTop = 8
+    EEHUDViewHideStyleFadeOut = 0,
+    EEHUDViewHideStyleLutz = 1,
+    EEHUDViewHideStyleShake = 2,
+    EEHUDViewHideStyleNoAnime = 3,
+    EEHUDViewHideStyleToLeft = 4,
+    EEHUDViewHideStyleToRight = 5,
+    EEHUDViewHideStyleToBottom = 6,
+    EEHUDViewHideStyleToTop = 7
 } EEHUDViewHideStyle;
 
 @interface EEHUDView : UIWindow 

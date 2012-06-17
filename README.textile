@@ -3,11 +3,13 @@ h1. EEHUDView
 EEHUDViewは非常に軽量で使いやすいiOS用のHUDです。
 EEHUDView is an easy-to-use, clean and lightweight HUD for iOS.
 
-!https://lh3.googleusercontent.com/-CACjjz0IPv8/TuC6DepBWsI/AAAAAAAAAEo/FuDBSejzp0k/s912/screenshots2.png!
+!https://lh5.googleusercontent.com/-D4prt2WDrv0/T902ENPr9OI/AAAAAAAAAPE/vfjaHdjztzA/s800/120617-0002.png!
 
 h2. Features(特徴):
 
 * Singleton Class
+
+* ARC
 
 * 以下のクラスメソッドを呼ぶ事でHUDを表示する事ができます。
 @+ (void)growlWithMessage:showStyle:hideStyle:resultViewStyle:showTime:@
@@ -22,7 +24,10 @@ EEHUDViewの回転は EEHUDViewConstants.h 内の以下定数により制御し�
 @EEHUD_INTERFACE_ORIENTATION_LANDSCAPE_RIGHT@
 @EEHUD_INTERFACE_ORIENTATION_PORTRAIT_UPSIDEDOWN@
 
-必ず、所望の定数を定義してください。
+!https://lh5.googleusercontent.com/-a3EKZnX5_Z0/T901FC4HHXI/AAAAAAAAAOw/5YLlz-_waJ4/s800/120617-0001.png!
+
+必ず、EEHUDViewConstants.h内にて所望の定数を定義してください。
+(回転対応する方向をYESに対応しない方向をNOに)
 
 h2. Arguments (引数)
 

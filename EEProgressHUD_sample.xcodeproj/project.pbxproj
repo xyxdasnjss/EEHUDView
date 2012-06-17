@@ -15,9 +15,12 @@
 		845728CC148F914100715B6B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 845728CB148F914100715B6B /* main.m */; };
 		845728D0148F914100715B6B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 845728CF148F914100715B6B /* AppDelegate.m */; };
 		845728D3148F914100715B6B /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 845728D1148F914100715B6B /* MainStoryboard.storyboard */; };
-		845728D6148F914100715B6B /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 845728D5148F914100715B6B /* ViewController.m */; };
 		845728E0148F931000715B6B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845728DF148F931000715B6B /* QuartzCore.framework */; };
 		8458944614E7B744002D32C4 /* EEHUDResultView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8458944514E7B744002D32C4 /* EEHUDResultView.m */; };
+		84E7CCCD158C5BA6009D17D1 /* EEShowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E7CCCC158C5BA6009D17D1 /* EEShowViewController.m */; };
+		84E7CCD6158C5C90009D17D1 /* EEConcreteEXViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E7CCD5158C5C8F009D17D1 /* EEConcreteEXViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		84E7CCD9158C6C47009D17D1 /* EEShowDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E7CCD8158C6C47009D17D1 /* EEShowDetailViewController.m */; };
+		84E7CCDC158C6D9C009D17D1 /* EEData.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E7CCDB158C6D9C009D17D1 /* EEData.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,12 +37,18 @@
 		845728CE148F914100715B6B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		845728CF148F914100715B6B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		845728D2148F914100715B6B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
-		845728D4148F914100715B6B /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		845728D5148F914100715B6B /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		845728DF148F931000715B6B /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		8458944414E7B744002D32C4 /* EEHUDResultView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EEHUDResultView.h; sourceTree = "<group>"; };
 		8458944514E7B744002D32C4 /* EEHUDResultView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EEHUDResultView.m; sourceTree = "<group>"; };
 		845D572E14E29E2200C5941C /* EEHUDViewConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EEHUDViewConstants.h; sourceTree = "<group>"; };
+		84E7CCCB158C5BA6009D17D1 /* EEShowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EEShowViewController.h; sourceTree = "<group>"; };
+		84E7CCCC158C5BA6009D17D1 /* EEShowViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EEShowViewController.m; sourceTree = "<group>"; };
+		84E7CCD4158C5C8F009D17D1 /* EEConcreteEXViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EEConcreteEXViewController.h; sourceTree = "<group>"; };
+		84E7CCD5158C5C8F009D17D1 /* EEConcreteEXViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EEConcreteEXViewController.m; sourceTree = "<group>"; };
+		84E7CCD7158C6C47009D17D1 /* EEShowDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EEShowDetailViewController.h; sourceTree = "<group>"; };
+		84E7CCD8158C6C47009D17D1 /* EEShowDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EEShowDetailViewController.m; sourceTree = "<group>"; };
+		84E7CCDA158C6D9C009D17D1 /* EEData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EEData.h; sourceTree = "<group>"; };
+		84E7CCDB158C6D9C009D17D1 /* EEData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EEData.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,8 +100,14 @@
 				845728CE148F914100715B6B /* AppDelegate.h */,
 				845728CF148F914100715B6B /* AppDelegate.m */,
 				845728D1148F914100715B6B /* MainStoryboard.storyboard */,
-				845728D4148F914100715B6B /* ViewController.h */,
-				845728D5148F914100715B6B /* ViewController.m */,
+				84E7CCCB158C5BA6009D17D1 /* EEShowViewController.h */,
+				84E7CCCC158C5BA6009D17D1 /* EEShowViewController.m */,
+				84E7CCD7158C6C47009D17D1 /* EEShowDetailViewController.h */,
+				84E7CCD8158C6C47009D17D1 /* EEShowDetailViewController.m */,
+				84E7CCD4158C5C8F009D17D1 /* EEConcreteEXViewController.h */,
+				84E7CCD5158C5C8F009D17D1 /* EEConcreteEXViewController.m */,
+				84E7CCDA158C6D9C009D17D1 /* EEData.h */,
+				84E7CCDB158C6D9C009D17D1 /* EEData.m */,
 				845D572C14E29D5A00C5941C /* EEHUDView */,
 				845728C6148F914100715B6B /* Supporting Files */,
 			);
@@ -187,9 +202,12 @@
 			files = (
 				845728CC148F914100715B6B /* main.m in Sources */,
 				845728D0148F914100715B6B /* AppDelegate.m in Sources */,
-				845728D6148F914100715B6B /* ViewController.m in Sources */,
 				8452D26214B3DFBA005F5D8C /* EEHUDView.m in Sources */,
 				8458944614E7B744002D32C4 /* EEHUDResultView.m in Sources */,
+				84E7CCCD158C5BA6009D17D1 /* EEShowViewController.m in Sources */,
+				84E7CCD6158C5C90009D17D1 /* EEConcreteEXViewController.m in Sources */,
+				84E7CCD9158C6C47009D17D1 /* EEShowDetailViewController.m in Sources */,
+				84E7CCDC158C6D9C009D17D1 /* EEData.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
