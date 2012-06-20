@@ -99,6 +99,7 @@ h3. resultViewStyle (アイコン)
 
 
 h3. progressViewStyle (progressタイプの表示アイコン)
+
 |*_EEHUDProgressViewStyleBar_*
 !https://lh4.googleusercontent.com/-sLOxaXcxq6A/T-HI2Le-U3I/AAAAAAAAAPc/vheYOPW_LF8/s800/-001_progressBar.png!|
 ||
