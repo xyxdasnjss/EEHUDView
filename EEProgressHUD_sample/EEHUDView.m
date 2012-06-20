@@ -225,6 +225,7 @@ typedef enum EEHUDViewState_{
 @property (nonatomic) EEHUDViewShowStyle showStyle;
 @property (nonatomic) EEHUDViewHideStyle hideStyle;
 @property (nonatomic) EEHUDResultViewStyle resultViewStyle;
+@property (nonatomic) EEHUDProgressViewStyle progressViewStyle;
 @property (nonatomic) EEHUDViewState state;
 
 @property (nonatomic, weak) UIWindow *previousKeyWindow;
@@ -237,7 +238,12 @@ typedef enum EEHUDViewState_{
                showStyle:(EEHUDViewShowStyle)showStyle
                hideStyle:(EEHUDViewHideStyle)hideStyle
          resultViewStyle:(EEHUDResultViewStyle)resultViewStyle
-                showTime:(CGFloat)time;
+                showTime:(float)time;
+- (void)progressWithMessage:(NSString *)message
+                  showStyle:(EEHUDViewShowStyle)showStyle
+                  hideStyle:(EEHUDViewHideStyle)hideStyle
+          progressViewStyle:(EEHUDProgressViewStyle)progressViewStyle
+                   progress:(float)progress;
 
 - (void)showAnimation;
 - (void)hideAnimation:(NSTimer *)timer;
@@ -292,13 +298,26 @@ static EEHUDView *sharedInstance_ = nil;
                showStyle:(EEHUDViewShowStyle)showStyle
                hideStyle:(EEHUDViewHideStyle)hideStyle
          resultViewStyle:(EEHUDResultViewStyle)resultViewStyle
-                showTime:(CGFloat)time
+                showTime:(float)time
 {
     [[EEHUDView sharedView] growlWithMessage:message
                                    showStyle:showStyle
                                    hideStyle:hideStyle
                              resultViewStyle:resultViewStyle
                                     showTime:time];
+}
+
++ (void)progressWithMessage:(NSString *)message
+                  showStyle:(EEHUDViewShowStyle)showStyle
+                  hideStyle:(EEHUDViewHideStyle)hideStyle
+          progressViewStyle:(EEHUDProgressViewStyle)progressViewStyle
+                   progress:(float)progress
+{
+    [[EEHUDView sharedView] progressWithMessage:message
+                                      showStyle:showStyle
+                                      hideStyle:hideStyle
+                              progressViewStyle:progressViewStyle
+                                       progress:progress];
 }
 
 + (BOOL)isShowing
@@ -318,7 +337,7 @@ static EEHUDView *sharedInstance_ = nil;
                showStyle:(EEHUDViewShowStyle)aShowStyle
                hideStyle:(EEHUDViewHideStyle)aHideStyle
          resultViewStyle:(EEHUDResultViewStyle)aResultViewStyle
-                showTime:(CGFloat)aTime
+                showTime:(float)aTime
 {
     if (!self.viewController) {
         self.viewController = [[EEHUDViewController alloc] initWithNibName:nil bundle:nil];
@@ -409,6 +428,134 @@ static EEHUDView *sharedInstance_ = nil;
             self.hideStyle = aHideStyle;
             
             self.time = aTime;
+            
+            // アニメーションスタート
+            [self showAnimation];
+            
+            break;
+        default:
+            break;
+    }
+}
+
+- (void)progressWithMessage:(NSString *)aMessage
+                  showStyle:(EEHUDViewShowStyle)aShowStyle
+                  hideStyle:(EEHUDViewHideStyle)aHideStyle
+          progressViewStyle:(EEHUDProgressViewStyle)aProgressViewStyle
+                   progress:(float)aProgress
+{
+    if (!self.viewController) {
+        self.viewController = [[EEHUDViewController alloc] initWithNibName:nil bundle:nil];
+    }
+    
+    if (!self.viewController.view.superview) {
+        [self addSubview:viewController_.view];
+    }
+    
+    /* show */
+    if(![self isKeyWindow]) {
+        
+        [[UIApplication sharedApplication].windows enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            UIWindow *window = (UIWindow*)obj;
+            if(window.windowLevel == UIWindowLevelNormal && ![[window class] isEqual:[EEHUDView class]]) {
+                self.previousKeyWindow = window;
+                *stop = YES;
+            }
+        }];
+        
+        [self makeKeyAndVisible];
+    }
+    
+    /******************************
+     状態によって処理変える。
+     ●EEHUDViewStateTransparent = 0,          // 非表示時
+     アニメーションスタート(特に問題無し)
+     
+     ●EEHUDViewStateAnimatingIn = 1,          // 表示時のアニメーション中
+     表示開始した時に呼ばれた場合はアニメーション自体をやり直す。
+     今動いてるアニメーション削除して作り直し
+     
+     ●EEHUDViewStateAppeal = 2,               // 表示中
+     このフェーズで呼ばれたら表示アニメーションはせずにmessage&resultViewを更新
+     
+     ●EEHUDViewStateAnimatingOut = 3          // 表示終わって消す為のアニメーション中
+     今動いてるアニメーションを削除し、表示アニメーションからスタート
+     ******************************/
+    
+    EEHUDResultViewStyle errStyle = -1;
+    
+    switch (self.state) {
+        case EEHUDViewStateTransparent:
+            
+            self.viewController.message.text = aMessage;
+            self.viewController.resultView.viewStyle = errStyle;
+            self.viewController.resultView.progressViewStyle = aProgressViewStyle;
+            self.viewController.resultView.progress = aProgress;
+            
+            self.showStyle = aShowStyle;
+            self.hideStyle = aHideStyle;
+            
+            if (aProgress >= 1.0) {
+                self.time = EEHUD_DURATION_HIDE_PROGRESS;
+            }else {
+                self.time = FLT_MAX;
+            }
+            
+            
+            // アニメーションスタート
+            [self showAnimation];
+            
+            break;
+        case EEHUDViewStateAnimatingIn:
+            // アニメーションは遮らない
+            
+            self.viewController.message.text = aMessage;
+            self.viewController.resultView.viewStyle = errStyle;
+            self.viewController.resultView.progressViewStyle = aProgressViewStyle;
+            self.viewController.resultView.progress = aProgress;
+            
+            //self.showStyle = aShowStyle;
+            //self.hideStyle = aHideStyle;
+            
+            // アニメーションスタート
+            //[self showAnimation];
+            
+            break;
+            
+        case EEHUDViewStateAppeal:
+            
+            // EEHUDViewStateAppeal状態へと遷移した模様
+            self.viewController.message.text = aMessage;
+            self.viewController.resultView.viewStyle = errStyle;
+            self.viewController.resultView.progressViewStyle = aProgressViewStyle;
+            self.viewController.resultView.progress = aProgress;
+            
+            self.hideStyle = aHideStyle;
+            
+            // タイマーリフレッシュ
+            
+            if (aProgress >= 1.0) {
+                [self.timer setFireDate:[NSDate dateWithTimeIntervalSinceNow:EEHUD_DURATION_HIDE_PROGRESS]];
+            }else {
+                [self.timer setFireDate:[NSDate dateWithTimeIntervalSinceNow:FLT_MAX]];
+            }
+            
+            break;
+        case EEHUDViewStateAnimatingOut:
+            
+            self.viewController.message.text = aMessage;
+            self.viewController.resultView.viewStyle = errStyle;
+            self.viewController.resultView.progressViewStyle = aProgressViewStyle;
+            self.viewController.resultView.progress = aProgress;
+            
+            self.showStyle = aShowStyle;
+            self.hideStyle = aHideStyle;
+            
+            if (aProgress >= 1.0) {
+                self.time = EEHUD_DURATION_HIDE_PROGRESS;
+            }else {
+                self.time = FLT_MAX;
+            }
             
             // アニメーションスタート
             [self showAnimation];

@@ -11,6 +11,8 @@
 
 @implementation EEHUDResultView
 @synthesize viewStyle = viewStyle_;
+@synthesize progressViewStyle = progressViewStyle_;
+@synthesize progress = progress_;
 
 - (void)setViewStyle:(EEHUDResultViewStyle)aViewStyle
 {
@@ -22,6 +24,19 @@
         
         [self setNeedsDisplay];
     }
+}
+
+- (void)setProgress:(float)progress
+{
+    if (progress > 1.0) {
+        progress = 1.0;
+    }else if (progress < 0.0) {
+        progress = 0.0;
+    }
+    
+    progress_ = progress;
+    
+    [self setNeedsDisplay];
 }
 
 - (void)drawRect:(CGRect)rect
@@ -48,6 +63,7 @@
     CGFloat bothExpansion;
     CGFloat ueMargin, hidariMargin, migiMargin, shitaMargin;
     CGFloat theta;
+    CGFloat floatOne;   // 何でも用
     
     EEHUDResultViewStyle style = self.viewStyle;
     
@@ -802,18 +818,6 @@
             migishita = CGPointMake(center.x + r - migiMargin, center.y + r - shitaMargin);
             hidarishita = CGPointMake(center.x - r + hidariMargin, center.y + r - shitaMargin);
             
-//            path = [UIBezierPath bezierPath];
-//            [path moveToPoint:hidariue];
-//            [path addLineToPoint:migiue];
-//            [path addLineToPoint:migishita];
-//            [path addLineToPoint:hidarishita];
-//            [path closePath];
-//            
-//            [EEHUD_COLOR_IMAGE set];
-//            [path stroke];
-//            
-//            path = nil;
-            
             path = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(hidariue.x, 
                                                                      hidariue.y, 
                                                                      migiue.x - hidariue.x, 
@@ -857,7 +861,67 @@
             [path fill];
             
             break;
-        default:            
+            
+        default:
+            
+            /*********************
+             progress
+            *********************/
+             
+            switch (self.progressViewStyle) {
+                case EEHUDProgressViewStyleBar:
+                    
+                    ueMargin = 27.0;
+                    hidariMargin = -27.0;
+                    migiMargin = -27.0;
+                    shitaMargin = 25.0;
+                    
+                    hidariue = CGPointMake(center.x - r + hidariMargin, center.y - r + ueMargin);
+                    migiue = CGPointMake(center.x + r - migiMargin, center.y - r + ueMargin);
+                    migishita = CGPointMake(center.x + r - migiMargin, center.y + r - shitaMargin);
+                    hidarishita = CGPointMake(center.x - r + hidariMargin, center.y + r - shitaMargin);
+                    
+//                    path = [UIBezierPath bezierPath];
+//                    [path moveToPoint:hidariue];
+//                    [path addLineToPoint:migiue];
+//                    [path addLineToPoint:migishita];
+//                    [path addLineToPoint:hidarishita];
+//                    [path closePath];
+//                    
+//                    [EEHUD_COLOR_IMAGE set];
+//                    [path stroke];
+                    
+                    floatOne = (hidarishita.y - hidariue.y)*0.5;
+                    center = CGPointMake((migiue.x + hidariue.x)/2.0, (hidarishita.y + hidariue.y)/2.0);
+                    
+                    path = [UIBezierPath bezierPathWithArcCenter:CGPointMake(migiue.x - 2.0*floatOne, center.y)
+                                                          radius:floatOne*2.0
+                                                      startAngle:M_PI_2*3.2
+                                                        endAngle:M_PI_2*0.8
+                                                       clockwise:YES];
+                    
+                    path.lineWidth = 2.0;
+                    path.lineCapStyle = kCGLineJoinRound;
+                    
+                    [EEHUD_COLOR_IMAGE set];
+                    [path stroke];
+                    
+                    path = nil;
+                    path = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(hidariue.x + floatOne,
+                                                                              hidariue.y,
+                                                                              (migiue.x - hidariue.x - 2.0*floatOne)*self.progress, 
+                                                                              migishita.y - migiue.y)
+                                                      cornerRadius:floatOne];
+                    
+                    [EEHUD_COLOR_IMAGE set];
+                    [path fill];
+                    
+                    break;
+                    
+                default:
+                    break;
+            }
+            
             break;
     }
     

@@ -38,11 +38,18 @@ typedef enum _EEHUDResultViewStyle {
     EEHUDResultViewStyleHome = 26,
     EEHUDResultViewStyleTweet = 27
 } EEHUDResultViewStyle;
+
+typedef enum _EEHUDProgressViewStyle {
+    EEHUDProgressViewStyleBar = 28
+} EEHUDProgressViewStyle;
+
 @interface EEHUDResultView : UIView {
     
     EEHUDResultViewStyle viewStyle_;
+    EEHUDProgressViewStyle progressViewStyle_;
+    float progress_;
 }
-
+@property (nonatomic, assign) float progress;
 @property (nonatomic) EEHUDResultViewStyle viewStyle;
-//- (id)init;
+@property (nonatomic) EEHUDProgressViewStyle progressViewStyle;
 @end

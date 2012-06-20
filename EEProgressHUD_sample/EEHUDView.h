@@ -35,10 +35,18 @@ typedef enum _EEHUDViewHideStyle {
 
 + (void)growlWithMessage:(NSString *)message
                showStyle:(EEHUDViewShowStyle)showStyle
-               hideStyle:(EEHUDViewHideStyle )hideStyle
+               hideStyle:(EEHUDViewHideStyle)hideStyle
          resultViewStyle:(EEHUDResultViewStyle)resultViewStyle
-                showTime:(CGFloat )time;
+                showTime:(float)time;
 
++ (void)progressWithMessage:(NSString *)message
+                  showStyle:(EEHUDViewShowStyle)showStyle
+                  hideStyle:(EEHUDViewHideStyle)hideStyle
+          progressViewStyle:(EEHUDProgressViewStyle)progressViewStyle
+                   progress:(float)progress;
+
+
+// HUD表示してるかどうか
 + (BOOL)isShowing;
 
 @end

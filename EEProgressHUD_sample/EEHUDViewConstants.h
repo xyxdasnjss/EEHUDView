@@ -89,3 +89,6 @@
 // animation (no anime)
 #define EEHUD_DURATION_NOANIME          0.001
 
+// animation (progress hide)
+#define EEHUD_DURATION_HIDE_PROGRESS    0.5
+

@@ -155,6 +155,40 @@
                     </connections>
                 </navigationController>
             </objects>
+            <point key="canvasLocation" x="-802" y="1275"/>
+        </scene>
+        <!--Progress View Controller - Progress-->
+        <scene sceneID="Vyn-t2-45a">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="O2k-Pm-Bh3" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tableViewController id="Iv9-UD-N2i" customClass="EEProgressViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="4nv-46-TGK">
+                        <rect key="frame" x="0.0" y="20" width="320" height="411"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <sections>
+                            <tableViewSection headerTitle="Bar" footerTitle="BarタイプのprogressHUDです。" id="PVT-1Y-7nf">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="w1j-7M-YgW">
+                                        <rect key="frame" x="0.0" y="46" width="320" height="45"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="10" y="1" width="300" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="Iv9-UD-N2i" id="WSL-OW-6hj"/>
+                            <outlet property="delegate" destination="Iv9-UD-N2i" id="vRb-KH-3MF"/>
+                        </connections>
+                    </tableView>
+                    <tabBarItem key="tabBarItem" title="Progress" id="nmj-lL-7Nc"/>
+                </tableViewController>
+            </objects>
             <point key="canvasLocation" x="-802" y="633"/>
         </scene>
         <!--ConcreteEX View Controller - 使用例-->
@@ -223,7 +257,7 @@
                     </connections>
                 </tableViewController>
             </objects>
-            <point key="canvasLocation" x="-364" y="633"/>
+            <point key="canvasLocation" x="-364" y="1275"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="MpY-ik-WlY">
@@ -238,7 +272,7 @@
                     <navigationItem key="navigationItem" id="AVH-Hv-Zm0"/>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="70" y="633"/>
+            <point key="canvasLocation" x="70" y="1275"/>
         </scene>
         <!--Show Detail View Controller-->
         <scene sceneID="4XX-dS-sgl">
@@ -309,16 +343,20 @@
                     </tabBar>
                     <connections>
                         <segue destination="Fpf-rQ-2s6" kind="relationship" relationship="viewControllers" id="iAw-Kl-kjk"/>
+                        <segue destination="Iv9-UD-N2i" kind="relationship" relationship="viewControllers" id="iiA-ZF-Uyi"/>
                         <segue destination="Ygl-RR-08X" kind="relationship" relationship="viewControllers" id="age-rY-EkC"/>
                     </connections>
                 </tabBarController>
             </objects>
-            <point key="canvasLocation" x="-1288" y="-18"/>
+            <point key="canvasLocation" x="-1460" y="633"/>
         </scene>
     </scenes>
     <classes>
         <class className="EEConcreteEXViewController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/EEConcreteEXViewController.h"/>
+        </class>
+        <class className="EEProgressViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/EEProgressViewController.h"/>
         </class>
         <class className="EEShowDetailViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/EEShowDetailViewController.h"/>

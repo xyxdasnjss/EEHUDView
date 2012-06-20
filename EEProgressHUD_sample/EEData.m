@@ -320,6 +320,7 @@
                 styleString = @"EEHUDResultViewStyleTweet";
                 break;
             default:
+                abbreviatedString = @"";
                 styleString = @"";
                 break;
         }
