@@ -41,8 +41,10 @@
 
 - (void)drawRect:(CGRect)rect
 {
-    CGFloat width = self.bounds.size.width;             // 180
-    CGFloat height = self.bounds.size.height;           // 60
+    //CGFloat width = self.bounds.size.width;             // 180
+    //CGFloat height = self.bounds.size.height;           // 60
+    CGFloat width = rect.size.width;
+    CGFloat height = rect.size.height;
     
     // = height
     CGFloat oneSide = (width < height) ? width : height;
@@ -861,6 +863,53 @@
             [path fill];
             
             break;
+        
+        case EEHUDResultViewStyleClock:
+            
+            ueMargin = 5.0;
+            hidariMargin = 5.0;
+            migiMargin = 5.0;
+            shitaMargin = 5.0;
+            
+            hidariue = CGPointMake(center.x - r + hidariMargin, center.y - r + ueMargin);
+            migiue = CGPointMake(center.x + r - migiMargin, center.y - r + ueMargin);
+            migishita = CGPointMake(center.x + r - migiMargin, center.y + r - shitaMargin);
+            hidarishita = CGPointMake(center.x - r + hidariMargin, center.y + r - shitaMargin);
+            
+//            path = [UIBezierPath bezierPath];
+//            [path moveToPoint:hidariue];
+//            [path addLineToPoint:migiue];
+//            [path addLineToPoint:migishita];
+//            [path addLineToPoint:hidarishita];
+//            [path closePath];
+//            
+//            [EEHUD_COLOR_IMAGE set];
+//            [path stroke];
+            
+            path = nil;
+            path = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(hidariue.x, hidariue.y, (migiue.x - hidariue.x), hidarishita.y - hidariue.y)];
+            
+            path.lineWidth = 4.0;
+            [EEHUD_COLOR_IMAGE set];
+            [path stroke];
+            
+            path = nil;
+            path = [UIBezierPath bezierPath];
+//            [path moveToPoint:CGPointMake(center.x, center.y)];
+//            [path addLineToPoint:CGPointMake(center.x, center.y - 10.0)];
+//            [path moveToPoint:CGPointMake(center.x, center.y)];
+//            [path addLineToPoint:CGPointMake(center.x + 10.0, center.y)];
+            [path moveToPoint:CGPointMake(center.x, center.y - 11.0)];
+            [path addLineToPoint:center];
+            [path addLineToPoint:CGPointMake(center.x + 11.0, center.y)];
+            
+            path.lineWidth = 5.0;
+            path.lineCapStyle = kCGLineCapRound;
+            
+            [EEHUD_COLOR_IMAGE set];
+            [path stroke];
+            
+            break;
             
         default:
             
@@ -880,16 +929,6 @@
                     migiue = CGPointMake(center.x + r - migiMargin, center.y - r + ueMargin);
                     migishita = CGPointMake(center.x + r - migiMargin, center.y + r - shitaMargin);
                     hidarishita = CGPointMake(center.x - r + hidariMargin, center.y + r - shitaMargin);
-                    
-//                    path = [UIBezierPath bezierPath];
-//                    [path moveToPoint:hidariue];
-//                    [path addLineToPoint:migiue];
-//                    [path addLineToPoint:migishita];
-//                    [path addLineToPoint:hidarishita];
-//                    [path closePath];
-//                    
-//                    [EEHUD_COLOR_IMAGE set];
-//                    [path stroke];
                     
                     floatOne = (hidarishita.y - hidariue.y)*0.5;
                     center = CGPointMake((migiue.x + hidariue.x)/2.0, (hidarishita.y + hidariue.y)/2.0);

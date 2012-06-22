@@ -47,7 +47,7 @@
     
     self.showStyle = EEHUDViewShowStyleFadeIn;
     self.hideStyle = EEHUDViewHideStyleFadeOut;
-    self.resultStyle = EEHUDResultViewStyleOK;
+    self.resultStyle = EEHUDResultViewStyleClock;
     
     if (!self.data) {
         EEData *dataObject = [[EEData alloc] init];

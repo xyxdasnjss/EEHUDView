@@ -36,7 +36,8 @@ typedef enum _EEHUDResultViewStyle {
     EEHUDResultViewStyleMicrophone = 24,
     EEHUDResultViewStyleLocation = 25,
     EEHUDResultViewStyleHome = 26,
-    EEHUDResultViewStyleTweet = 27
+    EEHUDResultViewStyleTweet = 27,
+    EEHUDResultViewStyleClock = 28
 } EEHUDResultViewStyle;
 
 typedef enum _EEHUDProgressViewStyle {

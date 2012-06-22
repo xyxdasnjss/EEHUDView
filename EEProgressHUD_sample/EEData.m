@@ -204,7 +204,7 @@
     // result
     array = nil;
     array = [NSMutableArray array];
-    for (int i = 0; i < 28; i++) {
+    for (int i = 0; i < 29; i++) {
         NSString *styleString, *abbreviatedString;
         switch (i) {
             case 0:
@@ -318,6 +318,10 @@
             case 27:
                 abbreviatedString = @"Tweet";
                 styleString = @"EEHUDResultViewStyleTweet";
+                break;
+            case 28:
+                abbreviatedString = @"Clock";
+                styleString = @"EEHUDResultViewStyleClock";
                 break;
             default:
                 abbreviatedString = @"";
