@@ -95,8 +95,7 @@ h3. resultViewStyle (アイコン)
 !https://lh5.googleusercontent.com/-YFwjubFI3Pg/T9wZES0HlWI/AAAAAAAAAOM/MDZbRF4O7dQ/s800/026_location.png!|*_EEHUDResultViewStyleHome_*
 !https://lh3.googleusercontent.com/-_7I5KJ1koEk/T9wZEpL0eWI/AAAAAAAAAOU/HHAISS8BSIg/s800/027_home.png!|
 |*_EEHUDResultViewStyleTweet_*
-!https://lh3.googleusercontent.com/-E7WdM3PlDdw/T9wZE31b7MI/AAAAAAAAAOk/H5lbspSEPXI/s800/028_tweet.png!|
-*_EEHUDResultViewStyleClock_*
+!https://lh3.googleusercontent.com/-E7WdM3PlDdw/T9wZE31b7MI/AAAAAAAAAOk/H5lbspSEPXI/s800/028_tweet.png!|*_EEHUDResultViewStyleClock_*
 !https://lh5.googleusercontent.com/-pEnuvZie0DI/T-RY9Zh7IxI/AAAAAAAAAPw/xdG7SYt76WU/s800/029_clock.png!||
 
 
