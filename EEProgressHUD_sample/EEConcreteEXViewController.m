@@ -126,6 +126,16 @@
             
             break;
         
+            case 2: // How To
+            
+            [EEHUDView growlWithMessage:@"Let's Swipe to Top"
+                              showStyle:EEHUDViewShowStyleFadeIn
+                              hideStyle:EEHUDViewHideStyleFadeOut
+                        resultViewStyle:EEHUDResultViewStyleUpArrow
+                               showTime:FLT_MAX];
+            
+            [self performSegueWithIdentifier:@"pushHowTo" sender:nil];
+        
         default:
             
             NSLog(@"default");

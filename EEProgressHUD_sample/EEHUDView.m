@@ -275,6 +275,7 @@ typedef enum EEHUDViewState_{
 @synthesize hideStyle;
 @synthesize resultViewStyle;
 @synthesize state;
+@synthesize progressViewStyle;
 
 @synthesize previousKeyWindow;
 @synthesize viewController = viewController_;
@@ -346,6 +347,17 @@ static EEHUDView *sharedInstance_ = nil;
     }
     
     return is;
+}
+
++ (NSString *)message
+{
+    EEHUDView *hud = [EEHUDView sharedView];
+    NSString *currentMessage = hud.viewController.message.text;
+    if (currentMessage) {
+        return currentMessage;
+    }else {
+        return @"";
+    }
 }
 
 #pragma mark - Private

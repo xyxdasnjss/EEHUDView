@@ -65,4 +65,7 @@ typedef enum _EEHUDViewHideStyle {
 // HUD表示してるかどうか
 + (BOOL)isShowing;
 
+// 表示しているmessage
++ (NSString *)message;
+
 @end

@@ -225,7 +225,7 @@
                             </tableViewSection>
                             <tableViewSection headerTitle="Countdown" footerTitle="EEHUDViewは表示中に再び呼ばれるとresultViewStyleとmessageが瞬時に入れ替わります。またshowTimeは後から指定した物に更新されます。この特徴をいかし、カウントダウン表示を行います。" id="Eq0-8A-537">
                                 <cells>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="alwaysShow3" textLabel="iFN-aa-VlZ" style="IBUITableViewCellStyleDefault" id="Lx0-mA-nOY">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="countdown" textLabel="iFN-aa-VlZ" style="IBUITableViewCellStyleDefault" id="Lx0-mA-nOY">
                                         <rect key="frame" x="0.0" y="216" width="320" height="46"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -233,6 +233,28 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="3, 2, 1, Finished" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="iFN-aa-VlZ">
+                                                    <rect key="frame" x="10" y="0.0" width="280" height="43"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="How To" footerTitle="showTimeにFLT_MAXを指定する事で長時間消さずに表示しつづける事ができます。これを用いるとユーザへ簡単な操作方法How To表示が可能になります。今回はユーザから所望のアクションがやってきたらフェードアウトするようにしています。" id="hdS-fR-ppr">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="howto" textLabel="afZ-iT-XbZ" style="IBUITableViewCellStyleDefault" id="und-Q6-XTQ">
+                                        <rect key="frame" x="0.0" y="405" width="320" height="46"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="10" y="1" width="300" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="ex Swipe" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="afZ-iT-XbZ">
                                                     <rect key="frame" x="10" y="0.0" width="280" height="43"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
@@ -254,6 +276,7 @@
                     <navigationItem key="navigationItem" title="使用例" id="Crw-sD-Za2"/>
                     <connections>
                         <segue destination="4Si-fe-4E5" kind="push" identifier="pushAlwaysShow" id="rh6-TG-3eb"/>
+                        <segue destination="5wk-1O-C8y" kind="push" identifier="pushHowTo" id="mGa-qE-4BB"/>
                     </connections>
                 </tableViewController>
             </objects>
@@ -273,6 +296,30 @@
                 </viewController>
             </objects>
             <point key="canvasLocation" x="70" y="1275"/>
+        </scene>
+        <!--How To View Controller-->
+        <scene sceneID="a0H-Rs-hTS">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ihg-mx-NDT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController id="5wk-1O-C8y" customClass="EEHowToViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="tpJ-gl-dwY">
+                        <rect key="frame" x="0.0" y="64" width="320" height="367"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="KSp-Zz-KM9" appends="YES" id="3P9-9a-KRR"/>
+                        </connections>
+                    </view>
+                    <navigationItem key="navigationItem" id="dAN-nf-1eQ"/>
+                </viewController>
+                <swipeGestureRecognizer direction="up" id="KSp-Zz-KM9">
+                    <connections>
+                        <action selector="up:" destination="5wk-1O-C8y" id="Fbk-Nw-STa"/>
+                    </connections>
+                </swipeGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="70" y="1879"/>
         </scene>
         <!--Show Detail View Controller-->
         <scene sceneID="4XX-dS-sgl">
@@ -354,6 +401,12 @@
     <classes>
         <class className="EEConcreteEXViewController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/EEConcreteEXViewController.h"/>
+        </class>
+        <class className="EEHowToViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/EEHowToViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="up:"/>
+            </relationships>
         </class>
         <class className="EEProgressViewController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/EEProgressViewController.h"/>
