@@ -104,3 +104,6 @@
 // animation (progress hide)
 #define EEHUD_DURATION_HIDE_PROGRESS    0.5
 
+// turn arround
+#define EEHUD_RADIUS_TURN_ARROUND       20.0
+

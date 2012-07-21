@@ -8,6 +8,10 @@
 
 #import "EEData.h"
 
+#define kEEDataResultStyleNumber 32
+#define kEEDataShowStyleNumber 8
+#define kEEDataHideStyleNumber 8
+
 @interface EEData ()
 
 @property (nonatomic, strong) NSArray *showInfos;
@@ -102,7 +106,7 @@
 {
     // show
     NSMutableArray *array = [NSMutableArray array];
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < kEEDataShowStyleNumber; i++) {
         NSString *styleString, *abbreviatedString;
         switch (i) {
             case 0:
@@ -154,7 +158,7 @@
     // hide
     array = nil;
     array = [NSMutableArray array];
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < kEEDataHideStyleNumber; i++) {
         NSString *styleString, *abbreviatedString;
         switch (i) {
             case 0:
@@ -204,7 +208,7 @@
     // result
     array = nil;
     array = [NSMutableArray array];
-    for (int i = 0; i < 29; i++) {
+    for (int i = 0; i < kEEDataResultStyleNumber; i++) {
         NSString *styleString, *abbreviatedString;
         switch (i) {
             case 0:
@@ -322,6 +326,18 @@
             case 28:
                 abbreviatedString = @"Clock";
                 styleString = @"EEHUDResultViewStyleClock";
+                break;
+            case 29:
+                abbreviatedString = @"Wifi - full";
+                styleString = @"EEHUDResultViewStyleWifiFull";
+                break;
+            case 30:
+                abbreviatedString = @"Wifi - empty";
+                styleString = @"EEHUDResultViewStyleWifiEmpty";
+                break;
+            case 31:
+                abbreviatedString = @"Turn Arround";
+                styleString = @"EEHUDResultViewStyleTurnArround";
                 break;
             default:
                 abbreviatedString = @"";

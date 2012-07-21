@@ -78,7 +78,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    int row = indexPath.row;
+    //int row = indexPath.row;
     int section = indexPath.section;
     
     switch (section) {

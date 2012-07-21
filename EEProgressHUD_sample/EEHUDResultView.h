@@ -23,6 +23,7 @@
 // SOFTWARE.
 
 #import <UIKit/UIKit.h>
+#import <QuartzCore/QuartzCore.h>
 
 typedef enum _EEHUDResultViewStyle {
     EEHUDResultViewStyleOK = 0,
@@ -53,7 +54,10 @@ typedef enum _EEHUDResultViewStyle {
     EEHUDResultViewStyleLocation = 25,
     EEHUDResultViewStyleHome = 26,
     EEHUDResultViewStyleTweet = 27,
-    EEHUDResultViewStyleClock = 28
+    EEHUDResultViewStyleClock = 28,
+    EEHUDResultViewStyleWifiFull = 29,
+    EEHUDResultViewStyleWifiEmpty = 30,
+    EEHUDResultViewStyleTurnAround = 31
 } EEHUDResultViewStyle;
 
 typedef enum _EEHUDProgressViewStyle {

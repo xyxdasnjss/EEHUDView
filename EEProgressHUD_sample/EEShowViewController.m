@@ -47,7 +47,7 @@
     
     self.showStyle = EEHUDViewShowStyleFadeIn;
     self.hideStyle = EEHUDViewHideStyleFadeOut;
-    self.resultStyle = EEHUDResultViewStyleClock;
+    self.resultStyle = EEHUDResultViewStyleWifiFull;
     
     if (!self.data) {
         EEData *dataObject = [[EEData alloc] init];
