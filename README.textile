@@ -18,10 +18,8 @@ h2. Features(特徴):
 * Progress表示
 ** HUD(progressタイプ)を表示する事ができます。(出っぱなし) 
 @+ (void)showProgressWithMessage:showStyle:activityViewStyle:@
-
 ** HUD(progressタイプ)の進捗度を更新できます (0.0 - 1.0) 
 @+ (void)updateProgress:@
-
 ** HUD(progressタイプ)を非表示にします 
 @+ (void)hideProgressWithMessage:hideStyle:resultViewStyle:showTime:@
 
