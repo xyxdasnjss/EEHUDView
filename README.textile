@@ -127,6 +127,7 @@ h2. Installation (インストール方法)
 @EEHUDView.h(.m)@
 @EEHUDResultView(.m)@
 @EEHUDViewConstants.h@
+@EEAnimationHandler.h(.m)@
 
 * 2.以下フレームワークを追加してください(Add the below framework to your project)
 @QuartzCore@
