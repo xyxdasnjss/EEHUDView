@@ -11,16 +11,18 @@ h2. Features(特徴):
 
 * ARC
 
-* HUDを表示する事ができます。(出て消える)
+* Growl表示
+** HUDを表示する事ができます。(出て消える) 
 @+ (void)growlWithMessage:showStyle:hideStyle:resultViewStyle:showTime:@
 
-* HUD(progressタイプ)を表示する事ができます。(出っぱなし)
+* Progress表示
+** HUD(progressタイプ)を表示する事ができます。(出っぱなし) 
 @+ (void)showProgressWithMessage:showStyle:activityViewStyle:@
 
-* HUD(progressタイプ)の進捗度を更新できます (0.0 - 1.0)
+** HUD(progressタイプ)の進捗度を更新できます (0.0 - 1.0) 
 @+ (void)updateProgress:@
 
-* HUD(progressタイプ)を非表示にします
+** HUD(progressタイプ)を非表示にします 
 @+ (void)hideProgressWithMessage:hideStyle:resultViewStyle:showTime:@
 
 h2. Warning (注意)
@@ -113,7 +115,7 @@ h3. activityViewStyle (progressタイプの表示アイコン)
 
 |*_EEHUDActivityViewStyleTurnAround_*
 !https://lh6.googleusercontent.com/-4Ll-W0A3I3s/UBNiIXEt5hI/AAAAAAAAAQw/TlJMcKAbgWc/s800/-001_turnArround.png!|*_EEHUDActivityViewStyleElectrocardiogram_*
-!https://lh6.googleusercontent.com/-wiOvX73_HRA/UBNiIcotsRI/AAAAAAAAAQs/O-pDTYptKeA/s144/-002_electrocardiogram.png!
+!https://lh6.googleusercontent.com/-wiOvX73_HRA/UBNiIcotsRI/AAAAAAAAAQs/O-pDTYptKeA/s800/-002_electrocardiogram.png!
 ||
 
 
