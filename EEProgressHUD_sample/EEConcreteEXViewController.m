@@ -138,8 +138,6 @@
         
         default:
             
-            NSLog(@"default");
-            
             break;
     }
     

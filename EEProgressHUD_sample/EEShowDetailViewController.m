@@ -45,8 +45,6 @@
 
 - (void)viewDidUnload
 {
-    
-    NSLog(@"%s", __func__);
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }

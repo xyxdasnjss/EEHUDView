@@ -29,10 +29,13 @@
 #define EEHUD_INTERFACE_ORIENTATION_PORTRAIT_UPSIDEDOWN     NO
 
 // HUDView (golden ratio)
-#define EEHUD_VIEW_WIDTH            161.8
-#define EEHUD_VIEW_HEIGHT           100.0
-#define EEHUD_VIEW_BOTHENDS_MARGIN  5.0
-#define EEHUD_VIEW_CORNER_RADIUS    7.0
+#define EEHUD_VIEW_WIDTH                        161.8
+#define EEHUD_VIEW_HEIGHT                       100.0
+#define EEHUD_VIEW_BOTHENDS_MARGIN              5.0
+#define EEHUD_VIEW_CORNER_RADIUS                7.0
+#define EEHUD_VIEW_HEIGHT_PROGRESS              8.0
+#define EEHUD_VIEW_MARGIN_VERTICAL_PROGRESS      6.0
+#define EEHUD_VIEW_MARGIN_HORIZONTAL_PROGRESS   8.0
 
 // image
 #define EEHUD_IMAGE_ORIGINY 10.0
@@ -49,6 +52,7 @@
 #define EEHUD_COLOR_HUDVIEW [UIColor colorWithWhite:0.0 alpha:0.75]
 #define EEHUD_COLOR_LABEL [UIColor whiteColor]
 #define EEHUD_COLOR_IMAGE [UIColor whiteColor]
+#define EEHUD_COLOR_PROGRESS [UIColor colorWithWhite:1.0 alpha:0.75]
 
 // 
 //#define EEHUD_DURATION_STARTWAIT    3.0
@@ -102,8 +106,16 @@
 #define EEHUD_DURATION_NOANIME          0.001
 
 // animation (progress hide)
-#define EEHUD_DURATION_HIDE_PROGRESS    0.5
+#define EEHUD_DURATION_SHOW_PROGRESS_RANGE      0.3
+#define EEHUD_DURATION_HIDE_PROGRESS_RANGE      0.3
+#define EEHUD_DURATION_FADEIN_PROGRESS          0.2
+#define EEHUD_DURATION_FADEOUT_PROGRESS         0.2
+#define EEHUD_KEY_HIDE_PROGRESS         @"EEHUD_KEY_HIDE_PROGRESS"
+#define EEHUD_KEY_SHOW_PROGRESS         @"EEHUD_KEY_SHOW_PROGRESS"
 
 // turn arround
 #define EEHUD_RADIUS_TURN_ARROUND       20.0
+
+// view tag
+#define EEHUD_TAG_PROGRESSVIEW          10000
 

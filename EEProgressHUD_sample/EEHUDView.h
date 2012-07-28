@@ -24,6 +24,7 @@
 
 #import <UIKit/UIKit.h>
 #import "EEHUDResultView.h"
+#import "EEProgressView.h"
 
 typedef enum _EEHUDViewShowStyle {
     EEHUDViewShowStyleFadeIn = 0,
@@ -49,17 +50,22 @@ typedef enum _EEHUDViewHideStyle {
 
 @interface EEHUDView : UIWindow 
 
+
 + (void)growlWithMessage:(NSString *)message
                showStyle:(EEHUDViewShowStyle)showStyle
                hideStyle:(EEHUDViewHideStyle)hideStyle
          resultViewStyle:(EEHUDResultViewStyle)resultViewStyle
                 showTime:(float)time;
 
-+ (void)progressWithMessage:(NSString *)message
-                  showStyle:(EEHUDViewShowStyle)showStyle
-                  hideStyle:(EEHUDViewHideStyle)hideStyle
-          progressViewStyle:(EEHUDProgressViewStyle)progressViewStyle
-                   progress:(float)progress;
++ (void)showProgressWithMessage:(NSString *)message
+                      showStyle:(EEHUDViewShowStyle)showStyle
+              activityViewStyle:(EEHUDActivityViewStyle)activityStyle;
++ (void)hideProgressWithMessage:(NSString *)message
+                      hideStyle:(EEHUDViewHideStyle)hideStyle
+                resultViewStyle:(EEHUDResultViewStyle)resultViewStyle
+                       showTime:(float)time;
+
++ (void)updateProgress:(float)progress;
 
 
 // HUD表示してるかどうか

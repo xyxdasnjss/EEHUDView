@@ -23,6 +23,18 @@
 // SOFTWARE.
 
 #import "EEHUDViewConstants.h"
+#import "EEAnimationHandler.h"
+
+enum {
+    EEHUDResultViewStyleNoView = 0
+};
+//typedef int EEHUDResultViewStyle;
+
+enum {
+    EEHUDActivityViewStyleNoView = 0
+};
+//typedef int EEHUDActivityViewStyle;
+
 
 @interface EEHUDCircleView : UIView
 @end
@@ -51,7 +63,9 @@
 #import "EEHUDResultView.h"
 
 @interface EEHUDResultView ()
+
 @property (nonatomic, weak) UIView *animationView;
+@property (nonatomic, weak) CAShapeLayer *shapeLayer;
 
 /***
  draw
@@ -87,101 +101,230 @@
 - (void)drawClock:(CGRect)rect;
 - (void)drawWifiFull:(CGRect)rect;
 - (void)drawWifiEmpty:(CGRect)rect;
-- (void)drawTurnArround:(CGRect)rect;
+//- (void)drawTurnArround:(CGRect)rect;
+//- (void)drawElectrocardiogram:(CGRect)rect;
 /*****************************************/
 
 - (void)startAnimation;
+
+/***
+ Animation
+ ***/
+- (void)animationStartTurnArround;
+- (void)animationStartElectrocardiogram;
+/*****************************************/
+
+- (void)refreshSomeLayers;
 
 @end
 
 @implementation EEHUDResultView
 @synthesize viewStyle = viewStyle_;
-@synthesize progressViewStyle = progressViewStyle_;
-@synthesize progress = progress_;
+@synthesize activityStyle = _activityStyle;
+
 @synthesize animationView = _animationView;
+@synthesize shapeLayer = _shapeLayer;
 
 - (void)setViewStyle:(EEHUDResultViewStyle)aViewStyle
 {
-    if (viewStyle_ != aViewStyle) {
-        
-        viewStyle_ = aViewStyle;
-        [self setNeedsDisplay];
-        
-        // animation
-        [self startAnimation];
-    }
+    [self refreshSomeLayers];
+    
+    viewStyle_ = aViewStyle;
+    [self setNeedsDisplay];
 }
 
-- (void)setProgress:(float)progress
+- (void)setActivityStyle:(EEHUDActivityViewStyle)anActivityStyle
 {
-    if (progress > 1.0) {
-        progress = 1.0;
-    }else if (progress < 0.0) {
-        progress = 0.0;
+    if (viewStyle_ != EEHUDResultViewStyleNoView) {
+        viewStyle_ = EEHUDResultViewStyleNoView;
+        [self setNeedsDisplay];
     }
     
-    progress_ = progress;
+    _activityStyle = anActivityStyle;
     
-    [self setNeedsDisplay];
+    // animation
+    [self startAnimation];
+}
+
+- (void)refreshSomeLayers
+{
+    [self.animationView.layer removeAllAnimations];
+    [self.animationView removeFromSuperview];
+    self.animationView = nil;
+    
+    [self.shapeLayer removeAllAnimations];
+    [self.shapeLayer removeFromSuperlayer];
+    self.shapeLayer = nil;
 }
 
 - (void)dealloc
 {
-    //NSLog(@"%s", __func__);
-    [self.animationView.layer removeAllAnimations];
-    [self.animationView removeFromSuperview];
-    self.animationView = nil;
+    [self refreshSomeLayers];
 }
 
 #pragma mark - Animation
 - (void)startAnimation
 {
-    [self.animationView.layer removeAllAnimations];
-    [self.animationView removeFromSuperview];
-    self.animationView = nil;
+    // 初期化
+    [self refreshSomeLayers];
     
-    if (self.viewStyle == EEHUDResultViewStyleTurnAround) {
-        
-        CGRect rect = self.bounds;
-        CGFloat width = rect.size.width;
-        CGFloat height = rect.size.height;
-        CGPoint center = CGPointMake(rect.origin.x + width*0.5, rect.origin.y + height*0.5);
-        
-        CGFloat oneSide = (width < height) ? width : height;
-        CGFloat r = oneSide * 0.5;
-        
-        CGFloat circleR = r * 0.4;
-        CGFloat size = 10.0;
-        
-        CGRect circleRect = CGRectZero;
-        circleRect.origin = CGPointMake(center.x - size*0.5f, center.y - circleR - 2.0f - size);      // 2.0: line width
-        circleRect.size = CGSizeMake(size, size);
-        
-        EEHUDCircleView *aView = [[EEHUDCircleView alloc] initWithFrame:circleRect];
-        aView.backgroundColor = [UIColor clearColor];
-        
-        self.animationView = aView;
-        
-        [self addSubview:aView];
-        
-        // animation
-        CAKeyframeAnimation *turn = [CAKeyframeAnimation animationWithKeyPath:@"position"];
-        
-        CGMutablePathRef path = CGPathCreateMutable();
-        CGFloat turnArroundRadius = circleR + 2.0f + size*0.5;
-        CGPathAddArc(path, NULL, center.x, center.y, turnArroundRadius, -M_PI_2, 1.5f*M_PI, YES);
-        
-        turn.path = path;
-        CGPathRelease(path);
-        
-        turn.duration = 1.0;
-        turn.repeatCount = HUGE_VALF;
-        
-        turn.calculationMode = kCAAnimationPaced;
-        
-        [aView.layer addAnimation:turn forKey:nil];
+    LOG(@"activityStyle:%d", self.activityStyle);
+    
+    // 振り分け
+    switch (self.activityStyle) {
+        case EEHUDActivityViewStyleTurnAround:
+            [self animationStartTurnArround];
+            
+            break;
+        case EEHUDActivityViewStyleElectrocardiogram:
+            [self animationStartElectrocardiogram];
+            
+            break;
+        default:
+            break;
     }
 }
+
+- (void)animationStartTurnArround
+{
+    CGRect rect = self.bounds;
+    CGFloat width = rect.size.width;
+    CGFloat height = rect.size.height;
+    CGPoint center = CGPointMake(rect.origin.x + width*0.5, rect.origin.y + height*0.5);
+    
+    CGFloat oneSide = (width < height) ? width : height;
+    CGFloat r = oneSide * 0.5;
+    
+    CGFloat circleR = r * 0.4;
+    CGFloat size = 10.0;
+    
+    CGRect circleRect = CGRectZero;
+    circleRect.origin = CGPointMake(center.x - size*0.5f, center.y - circleR - 2.0f - size);      // 2.0: line width
+    circleRect.size = CGSizeMake(size, size);
+    
+    EEHUDCircleView *aView = [[EEHUDCircleView alloc] initWithFrame:circleRect];
+    aView.backgroundColor = [UIColor clearColor];
+    
+    self.animationView = aView;
+    
+    [self addSubview:aView];
+    
+    // animation
+    CAKeyframeAnimation *turn = [CAKeyframeAnimation animationWithKeyPath:@"position"];
+    
+    CGMutablePathRef path = CGPathCreateMutable();
+    CGFloat turnArroundRadius = circleR + 2.0f + size*0.5;
+    CGPathAddArc(path, NULL, center.x, center.y, turnArroundRadius, -M_PI_2, 1.5f*M_PI, YES);
+    
+    turn.path = path;
+    CGPathRelease(path);
+    
+    turn.duration = 1.0;
+    turn.repeatCount = HUGE_VALF;
+    
+    turn.calculationMode = kCAAnimationPaced;
+    
+    EEAnimationHandler *handler = [EEAnimationHandler sharedHandler];
+    [handler registerAnimation:turn toLayer:aView.layer forKey:@"turnArround"];
+    //[aView.layer addAnimation:turn forKey:nil];
+}
+
+- (void)animationStartElectrocardiogram
+{
+    CGRect rect = self.bounds;
+    CGFloat width = rect.size.width;
+    CGFloat height = rect.size.height;
+    CGPoint center = CGPointMake(rect.origin.x + width*0.5, rect.origin.y + height*0.5);
+    
+    CGFloat oneSide = (width < height) ? width : height;
+    CGFloat r = oneSide * 0.5;
+    
+    CGFloat verticalSpace = 15.0;
+    CGFloat offsetY = 7.0;
+    CGFloat mainWidth = 70.0f;
+    CGPoint realCenter = CGPointMake(center.x, center.y + offsetY);
+    
+    // path
+    UIBezierPath *path = [UIBezierPath bezierPath];
+    [path moveToPoint:CGPointMake(verticalSpace, realCenter.y)];
+    [path addLineToPoint:CGPointMake(realCenter.x - mainWidth*0.5, realCenter.y)];
+    [path addCurveToPoint:CGPointMake(realCenter.x - mainWidth*0.5 + 6.0f, realCenter.y)
+            controlPoint1:CGPointMake(realCenter.x - mainWidth*0.5 + 3.0f, realCenter.y - 6.0f)
+            controlPoint2:CGPointMake(realCenter.x - mainWidth*0.5 + 3.0f, realCenter.y - 6.0f)];
+    [path addLineToPoint:CGPointMake(realCenter.x - mainWidth*0.5 + 14.0f, realCenter.y)];
+    [path addCurveToPoint:CGPointMake(realCenter.x - mainWidth*0.5 + 22.0f, realCenter.y - 15.0f)
+            controlPoint1:CGPointMake(realCenter.x - mainWidth*0.5 + 19.0f, realCenter.y)
+            controlPoint2:CGPointMake(realCenter.x - mainWidth*0.5 + 20.0f, realCenter.y - 15.0f)];
+    [path addCurveToPoint:CGPointMake(realCenter.x - mainWidth*0.5 + 28.0f, realCenter.y)
+            controlPoint1:CGPointMake(realCenter.x - mainWidth*0.5 + 24.0f, realCenter.y - 15.0f)
+            controlPoint2:CGPointMake(realCenter.x - mainWidth*0.5 + 27.0f, realCenter.y)];
+    [path addCurveToPoint:realCenter
+            controlPoint1:CGPointMake(realCenter.x - mainWidth*0.5 + 33.0f, realCenter.y + 25.0f)
+            controlPoint2:CGPointMake(realCenter.x - 2.0f, realCenter.y + 25.0f)];
+    [path addQuadCurveToPoint:CGPointMake(realCenter.x + mainWidth*0.5 - 27.0f, realCenter.y - 33.0f)
+                 controlPoint:CGPointMake(realCenter.x + mainWidth*0.5 - 32.0f, realCenter.y - 33.0f)];
+    [path addQuadCurveToPoint:CGPointMake(realCenter.x + mainWidth*0.5 - 18.0f, realCenter.y - 15.0f)
+                 controlPoint:CGPointMake(realCenter.x + mainWidth*0.5 - 24.0f, realCenter.y - 33.0f)];
+    [path addQuadCurveToPoint:CGPointMake(realCenter.x + mainWidth*0.5 - 10.0f, realCenter.y)
+                 controlPoint:CGPointMake(realCenter.x + mainWidth*0.5 - 18.0f, realCenter.y - 12.0f)];
+    [path addQuadCurveToPoint:CGPointMake(realCenter.x + mainWidth*0.5 - 5.0f, realCenter.y + 5.0f)
+                 controlPoint:CGPointMake(realCenter.x + mainWidth*0.5 - 6.0f, realCenter.y + 5.0f)];
+    [path addQuadCurveToPoint:CGPointMake(realCenter.x + mainWidth*0.5, realCenter.y)
+                 controlPoint:CGPointMake(realCenter.x + mainWidth*0.5 - 4.0f, realCenter.y + 5.0f)];
+    [path addLineToPoint:CGPointMake(width - verticalSpace, realCenter.y)];
+    
+    
+    // shapeLayer
+    CAShapeLayer *aLayer = [CAShapeLayer layer];
+    aLayer.frame = self.layer.bounds;
+    aLayer.bounds = CGRectInset(self.layer.bounds, verticalSpace, 0.0);
+    aLayer.path = path.CGPath;
+    aLayer.strokeColor = [(UIColor *)EEHUD_COLOR_IMAGE CGColor];
+    aLayer.fillColor = nil;
+    aLayer.lineWidth = 3.0;
+    aLayer.lineJoin = kCALineJoinBevel;
+    aLayer.lineCap = kCALineCapRound;
+    
+    [self.layer addSublayer:aLayer];
+    
+    self.shapeLayer = aLayer;
+    
+    // animation
+    
+    NSNumber *oneF = [NSNumber numberWithFloat:1.0f];
+    NSNumber *zeroF = [NSNumber numberWithFloat:0.0f];
+    NSNumber *timePoint1 = [NSNumber numberWithFloat:0.10f];
+    NSNumber *timePoint3 = [NSNumber numberWithFloat:0.70f];
+    
+    CAMediaTimingFunction *easeIn = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+    CAMediaTimingFunction *easeOut = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+    CAMediaTimingFunction *linear = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    
+    CABasicAnimation *strokeEnd = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
+    strokeEnd.fromValue = zeroF;
+    strokeEnd.toValue = oneF;
+    
+    // dev
+    //strokeEnd.duration = 1.2f;
+    
+    
+    CAKeyframeAnimation *opacity = [CAKeyframeAnimation animationWithKeyPath:@"opacity"];
+    opacity.values = [NSArray arrayWithObjects:zeroF, oneF, oneF, zeroF, nil];
+    opacity.keyTimes = [NSArray arrayWithObjects:zeroF, timePoint1, timePoint3, oneF, nil];
+    opacity.timingFunctions = [NSArray arrayWithObjects:easeOut, linear ,easeIn, nil];
+    
+    CAAnimationGroup *group = [CAAnimationGroup animation];
+    group.animations = [NSArray arrayWithObjects:strokeEnd, opacity, nil];
+    group.repeatCount = HUGE_VALF;
+    group.duration = 1.2f;
+    
+    EEAnimationHandler *handler = [EEAnimationHandler sharedHandler];
+    [handler registerAnimation:group toLayer:aLayer forKey:@"electrocardiogram"];
+    //[aLayer addAnimation:group forKey:nil];
+}
+
+#pragma mark - Common
+
 
 #pragma mark - drawRect:
 - (void)drawRect:(CGRect)rect
@@ -190,8 +333,6 @@
     //CGFloat height = self.bounds.size.height;           // 60
     CGFloat width = rect.size.width;                        // 151
     CGFloat height = rect.size.height;                      // 60
-    
-    //NSLog(@"w:%f, h:%f", width, height);
     
     // = height
     CGFloat oneSide = (width < height) ? width : height;
@@ -422,59 +563,7 @@
             [self drawWifiEmpty:rect];
             
             break;
-        case EEHUDResultViewStyleTurnAround:
-            [self drawTurnArround:rect];
-            
-            break;
-        default:
-            
-            /*********************
-             progress
-            *********************/
-             
-            switch (self.progressViewStyle) {
-                case EEHUDProgressViewStyleBar:
-                    
-                    ueMargin = 27.0;
-                    hidariMargin = -27.0;
-                    migiMargin = -27.0;
-                    shitaMargin = 25.0;
-                    
-                    hidariue = CGPointMake(center.x - r + hidariMargin, center.y - r + ueMargin);
-                    migiue = CGPointMake(center.x + r - migiMargin, center.y - r + ueMargin);
-                    migishita = CGPointMake(center.x + r - migiMargin, center.y + r - shitaMargin);
-                    hidarishita = CGPointMake(center.x - r + hidariMargin, center.y + r - shitaMargin);
-                    
-                    floatOne = (hidarishita.y - hidariue.y)*0.5;
-                    center = CGPointMake((migiue.x + hidariue.x)/2.0, (hidarishita.y + hidariue.y)/2.0);
-                    
-                    path = [UIBezierPath bezierPathWithArcCenter:CGPointMake(migiue.x - 2.0*floatOne, center.y)
-                                                          radius:floatOne*2.0
-                                                      startAngle:M_PI_2*3.2
-                                                        endAngle:M_PI_2*0.8
-                                                       clockwise:YES];
-                    
-                    path.lineWidth = 2.0;
-                    path.lineCapStyle = kCGLineJoinRound;
-                    
-                    [EEHUD_COLOR_IMAGE set];
-                    [path stroke];
-                    
-                    path = nil;
-                    path = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(hidariue.x + floatOne,
-                                                                              hidariue.y,
-                                                                              (migiue.x - hidariue.x - 2.0*floatOne)*self.progress, 
-                                                                              migishita.y - migiue.y)
-                                                      cornerRadius:floatOne];
-                    
-                    [EEHUD_COLOR_IMAGE set];
-                    [path fill];
-                    
-                    break;
-                    
-                default:
-                    break;
-            }
+        default:    // EEHUDResultViewStyleNoView
             
             break;
     }
@@ -1433,33 +1522,6 @@
     CGContextSetStrokeColorWithColor(context, [color CGColor]);
     
     CGContextStrokePath(context);
-}
-
-- (void)drawTurnArround:(CGRect)rect
-{
-//    /** definition *******************************************************************/
-//    CGFloat width = rect.size.width;
-//    CGFloat height = rect.size.height;
-//    CGPoint center = CGPointMake(rect.origin.x + width*0.5, rect.origin.y + height*0.5);
-//    
-//    CGFloat oneSide = (width < height) ? width : height;
-//    CGFloat r = oneSide * 0.5;
-//    
-//    CGFloat circleR = r * 0.4;
-//    /*********************************************************************************/
-//    
-//    CGContextRef context = UIGraphicsGetCurrentContext();
-//    CGMutablePathRef path = CGPathCreateMutable();
-//    
-//    CGPathAddArc(path, NULL, center.x, center.y, circleR, 0.0, 2*M_PI, YES);
-//    
-//    CGContextAddPath(context, path);
-//    CGPathRelease(path);
-//    
-//    CGContextSetRGBStrokeColor(context, 1.0, 1.0, 1.0, 1.0);
-//    CGContextSetLineWidth(context, 2.0);
-//    
-//    CGContextStrokePath(context);
 }
 
 @end

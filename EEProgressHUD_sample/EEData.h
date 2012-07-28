@@ -16,12 +16,15 @@
 - (NSString *)stringShowStyle:(int)index;
 - (NSString *)stringHideStyle:(int)index;
 - (NSString *)stringResultStyle:(int)index;
+- (NSString *)stringActivityStyle:(int)index;
 
 - (NSString *)abbreviatedStringShowStyle:(int)index;
 - (NSString *)abbreviatedStringHideStyle:(int)index;
 - (NSString *)abbreviatedStringResultStyle:(int)index;
+- (NSString *)abbreviatedStringActivityStyle:(int)index;
 
 - (int)countOfShowStyle;
 - (int)countOfHideStyle;
 - (int)countOfResultStyle;
+- (int)countOfActivityStyle;
 @end

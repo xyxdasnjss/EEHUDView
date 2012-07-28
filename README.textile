@@ -11,11 +11,17 @@ h2. Features(特徴):
 
 * ARC
 
-* 以下のクラスメソッドを呼ぶ事でHUDを表示する事ができます。
+* HUDを表示する事ができます。(出て消える)
 @+ (void)growlWithMessage:showStyle:hideStyle:resultViewStyle:showTime:@
 
-* 以下のクラスメソッドを呼ぶ事でHUD(progressタイプ)を表示する事ができます。
-@+ (void)progressWithMessage:showStyle:hideStyle:progressViewStyle:progress:@
+* HUD(progressタイプ)を表示する事ができます。(出っぱなし)
+@+ (void)showProgressWithMessage:showStyle:activityViewStyle:@
+
+* HUD(progressタイプ)の進捗度を更新できます (0.0 - 1.0)
+@+ (void)updateProgress:@
+
+* HUD(progressタイプ)を非表示にします
+@+ (void)hideProgressWithMessage:hideStyle:resultViewStyle:showTime:@
 
 h2. Warning (注意)
 
@@ -103,10 +109,11 @@ h3. resultViewStyle (アイコン)
 !https://lh3.googleusercontent.com/-7j0AhSXhaD0/UArUMbPXBkI/AAAAAAAAAQM/q716kfobcNM/s800/032_turnArround.png!||
 
 
-h3. progressViewStyle (progressタイプの表示アイコン)
+h3. activityViewStyle (progressタイプの表示アイコン)
 
-|*_EEHUDProgressViewStyleBar_*
-!https://lh4.googleusercontent.com/-sLOxaXcxq6A/T-HI2Le-U3I/AAAAAAAAAPc/vheYOPW_LF8/s800/-001_progressBar.png!|
+|*_EEHUDActivityViewStyleTurnAround_*
+!https://lh6.googleusercontent.com/-4Ll-W0A3I3s/UBNiIXEt5hI/AAAAAAAAAQw/TlJMcKAbgWc/s800/-001_turnArround.png!|*_EEHUDActivityViewStyleElectrocardiogram_*
+!https://lh6.googleusercontent.com/-wiOvX73_HRA/UBNiIcotsRI/AAAAAAAAAQs/O-pDTYptKeA/s144/-002_electrocardiogram.png!
 ||
 
 

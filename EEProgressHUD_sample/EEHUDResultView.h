@@ -26,51 +26,50 @@
 #import <QuartzCore/QuartzCore.h>
 
 typedef enum _EEHUDResultViewStyle {
-    EEHUDResultViewStyleOK = 0,
-    EEHUDResultViewStyleNG = 1,
-    EEHUDResultViewStyleChecked = 2,
-    EEHUDResultViewStyleUpArrow = 3,
-    EEHUDResultViewStyleDownArrow = 4,
-    EEHUDResultViewStyleRightArrow = 5,
-    EEHUDResultViewStyleLeftArrow = 6,
-    EEHUDResultViewStylePlay = 7,
-    EEHUDResultViewStylePause = 8,
-    EEHUDResultViewStyleZero = 9,
-    EEHUDResultViewStyleOne = 10,
-    EEHUDResultViewStyleTwo = 11,
-    EEHUDResultViewStyleThree = 12,
-    EEHUDResultViewStyleFour = 13,
-    EEHUDResultViewStyleFive = 14,
-    EEHUDResultViewStyleSix = 15,
-    EEHUDResultViewStyleSeven = 16,
-    EEHUDResultViewStyleEight = 17,
-    EEHUDResultViewStyleNine = 18,
-    EEHUDResultViewStyleExclamation = 19,
-    EEHUDResultViewStyleCloud = 20,
-    EEHUDResultViewStyleCloudUp = 21,
-    EEHUDResultViewStyleCloudDown = 22,
-    EEHUDResultViewStyleMail = 23,
-    EEHUDResultViewStyleMicrophone = 24,
-    EEHUDResultViewStyleLocation = 25,
-    EEHUDResultViewStyleHome = 26,
-    EEHUDResultViewStyleTweet = 27,
-    EEHUDResultViewStyleClock = 28,
-    EEHUDResultViewStyleWifiFull = 29,
-    EEHUDResultViewStyleWifiEmpty = 30,
-    EEHUDResultViewStyleTurnAround = 31
+    EEHUDResultViewStyleOK = 1,
+    EEHUDResultViewStyleNG = 2,
+    EEHUDResultViewStyleChecked = 3,
+    EEHUDResultViewStyleUpArrow = 4,
+    EEHUDResultViewStyleDownArrow = 5,
+    EEHUDResultViewStyleRightArrow = 6,
+    EEHUDResultViewStyleLeftArrow = 7,
+    EEHUDResultViewStylePlay = 8,
+    EEHUDResultViewStylePause = 9,
+    EEHUDResultViewStyleZero = 10,
+    EEHUDResultViewStyleOne = 11,
+    EEHUDResultViewStyleTwo = 12,
+    EEHUDResultViewStyleThree = 13,
+    EEHUDResultViewStyleFour = 14,
+    EEHUDResultViewStyleFive = 15,
+    EEHUDResultViewStyleSix = 16,
+    EEHUDResultViewStyleSeven = 17,
+    EEHUDResultViewStyleEight = 18,
+    EEHUDResultViewStyleNine = 19,
+    EEHUDResultViewStyleExclamation = 20,
+    EEHUDResultViewStyleCloud = 21,
+    EEHUDResultViewStyleCloudUp = 22,
+    EEHUDResultViewStyleCloudDown = 23,
+    EEHUDResultViewStyleMail = 24,
+    EEHUDResultViewStyleMicrophone = 25,
+    EEHUDResultViewStyleLocation = 26,
+    EEHUDResultViewStyleHome = 27,
+    EEHUDResultViewStyleTweet = 28,
+    EEHUDResultViewStyleClock = 29,
+    EEHUDResultViewStyleWifiFull = 30,
+    EEHUDResultViewStyleWifiEmpty = 31
 } EEHUDResultViewStyle;
 
-typedef enum _EEHUDProgressViewStyle {
-    EEHUDProgressViewStyleBar = 28
-} EEHUDProgressViewStyle;
+typedef enum _EEHUDActivityViewStyle {
+    EEHUDActivityViewStyleTurnAround = 1,
+    EEHUDActivityViewStyleElectrocardiogram = 2
+} EEHUDActivityViewStyle;
 
 @interface EEHUDResultView : UIView {
     
     EEHUDResultViewStyle viewStyle_;
-    EEHUDProgressViewStyle progressViewStyle_;
-    float progress_;
+    EEHUDActivityViewStyle _activityStyle;
 }
-@property (nonatomic, assign) float progress;
 @property (nonatomic) EEHUDResultViewStyle viewStyle;
-@property (nonatomic) EEHUDProgressViewStyle progressViewStyle;
+@property (nonatomic) EEHUDActivityViewStyle activityStyle;
+
 @end

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8422C1BB15C16A0500E56DBA /* EEAnimationHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 8422C1BA15C16A0500E56DBA /* EEAnimationHandler.m */; };
 		8452D26214B3DFBA005F5D8C /* EEHUDView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8452D26114B3DFBA005F5D8C /* EEHUDView.m */; };
 		845728C0148F914100715B6B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845728BF148F914100715B6B /* UIKit.framework */; };
 		845728C2148F914100715B6B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845728C1148F914100715B6B /* Foundation.framework */; };
@@ -17,6 +18,7 @@
 		845728D3148F914100715B6B /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 845728D1148F914100715B6B /* MainStoryboard.storyboard */; };
 		845728E0148F931000715B6B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845728DF148F931000715B6B /* QuartzCore.framework */; };
 		8458944614E7B744002D32C4 /* EEHUDResultView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8458944514E7B744002D32C4 /* EEHUDResultView.m */; };
+		8471FC2515C00753005CCC53 /* EEProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8471FC2415C00753005CCC53 /* EEProgressView.m */; };
 		84884AE81591EA760037DDB2 /* EEProgressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84884AE71591EA760037DDB2 /* EEProgressViewController.m */; };
 		849EAEB61597046D0011400F /* EEHowToViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 849EAEB51597046D0011400F /* EEHowToViewController.m */; };
 		84E7CCCD158C5BA6009D17D1 /* EEShowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E7CCCC158C5BA6009D17D1 /* EEShowViewController.m */; };
@@ -26,6 +28,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8422C1B915C16A0500E56DBA /* EEAnimationHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EEAnimationHandler.h; sourceTree = "<group>"; };
+		8422C1BA15C16A0500E56DBA /* EEAnimationHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EEAnimationHandler.m; sourceTree = "<group>"; };
 		8452D26014B3DFBA005F5D8C /* EEHUDView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EEHUDView.h; sourceTree = "<group>"; };
 		8452D26114B3DFBA005F5D8C /* EEHUDView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EEHUDView.m; sourceTree = "<group>"; };
 		845728BB148F914100715B6B /* EEProgressHUD_sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EEProgressHUD_sample.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -43,6 +47,8 @@
 		8458944414E7B744002D32C4 /* EEHUDResultView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EEHUDResultView.h; sourceTree = "<group>"; };
 		8458944514E7B744002D32C4 /* EEHUDResultView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EEHUDResultView.m; sourceTree = "<group>"; };
 		845D572E14E29E2200C5941C /* EEHUDViewConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EEHUDViewConstants.h; sourceTree = "<group>"; };
+		8471FC2315C00753005CCC53 /* EEProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EEProgressView.h; sourceTree = "<group>"; };
+		8471FC2415C00753005CCC53 /* EEProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EEProgressView.m; sourceTree = "<group>"; };
 		84884AE61591EA760037DDB2 /* EEProgressViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EEProgressViewController.h; sourceTree = "<group>"; };
 		84884AE71591EA760037DDB2 /* EEProgressViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EEProgressViewController.m; sourceTree = "<group>"; };
 		849EAEB41597046D0011400F /* EEHowToViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EEHowToViewController.h; sourceTree = "<group>"; };
@@ -142,7 +148,11 @@
 				8452D26114B3DFBA005F5D8C /* EEHUDView.m */,
 				8458944414E7B744002D32C4 /* EEHUDResultView.h */,
 				8458944514E7B744002D32C4 /* EEHUDResultView.m */,
+				8471FC2315C00753005CCC53 /* EEProgressView.h */,
+				8471FC2415C00753005CCC53 /* EEProgressView.m */,
 				845D572E14E29E2200C5941C /* EEHUDViewConstants.h */,
+				8422C1B915C16A0500E56DBA /* EEAnimationHandler.h */,
+				8422C1BA15C16A0500E56DBA /* EEAnimationHandler.m */,
 			);
 			name = EEHUDView;
 			sourceTree = "<group>";
@@ -220,6 +230,8 @@
 				84E7CCDC158C6D9C009D17D1 /* EEData.m in Sources */,
 				84884AE81591EA760037DDB2 /* EEProgressViewController.m in Sources */,
 				849EAEB61597046D0011400F /* EEHowToViewController.m in Sources */,
+				8471FC2515C00753005CCC53 /* EEProgressView.m in Sources */,
+				8422C1BB15C16A0500E56DBA /* EEAnimationHandler.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,6 +272,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = "";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
@@ -295,6 +308,7 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "EEProgressHUD_sample/EEProgressHUD_sample-Prefix.pch";
+				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = DEBUG;
 				INFOPLIST_FILE = "EEProgressHUD_sample/EEProgressHUD_sample-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;

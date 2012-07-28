@@ -47,7 +47,7 @@
     
     self.showStyle = EEHUDViewShowStyleFadeIn;
     self.hideStyle = EEHUDViewHideStyleFadeOut;
-    self.resultStyle = EEHUDResultViewStyleWifiFull;
+    self.resultStyle = EEHUDResultViewStyleOK;
     
     if (!self.data) {
         EEData *dataObject = [[EEData alloc] init];
@@ -57,8 +57,6 @@
 
 - (void)viewDidUnload
 {
-    
-    NSLog(@"%s", __func__);
     
     [super viewDidUnload];
     // Release any retained subviews of the main view.
@@ -108,8 +106,8 @@
         cell.detailTextLabel.text = [self.data stringHideStyle:self.hideStyle];
         cell.textLabel.text = [self.data abbreviatedStringHideStyle:self.hideStyle];
     }else if ([cell.reuseIdentifier isEqualToString:@"resultStyle"]) {
-        cell.detailTextLabel.text = [self.data stringResultStyle:self.resultStyle];
-        cell.textLabel.text = [self.data abbreviatedStringResultStyle:self.resultStyle];
+        cell.detailTextLabel.text = [self.data stringResultStyle:(self.resultStyle-1)];
+        cell.textLabel.text = [self.data abbreviatedStringResultStyle:(self.resultStyle-1)];
     }
     
     return cell;
@@ -165,7 +163,7 @@
                           showStyle:self.showStyle
                           hideStyle:self.hideStyle
                     resultViewStyle:self.resultStyle
-                           showTime:1.2];
+                           showTime:1.5];
         
         [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
@@ -196,6 +194,7 @@
 
 - (void)updateResultStyle:(EEHUDResultViewStyle)newResultStyle
 {
+    newResultStyle++;
     self.resultStyle = newResultStyle;
     [self.tableView reloadData];
 }

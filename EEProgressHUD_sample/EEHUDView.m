@@ -26,6 +26,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "EEHUDViewConstants.h"
+#import "EEAnimationHandler.h"
 
 #pragma mark - ** EEHUDViewController **
 @interface EEHUDViewController : UIViewController  {
@@ -33,11 +34,14 @@
     UIView *hudView_;
     UILabel *message_;
     EEHUDResultView *resultView_;
-    
+    EEProgressView *_progressView;
+    BOOL _isShowProgress;
 }
 @property (nonatomic, strong) UIView *hudView;
 @property (nonatomic, strong) UILabel *message;
 @property (nonatomic, strong) EEHUDResultView *resultView;
+@property (nonatomic, strong) EEProgressView *progressView;
+@property (nonatomic, assign) BOOL isShowProgress;
 
 @end
 
@@ -45,6 +49,8 @@
 @synthesize hudView = hudView_;
 @synthesize message = message_;
 @synthesize resultView = resultView_;
+@synthesize progressView = _progressView;
+@synthesize isShowProgress = _isShowProgress;
 
 - (void)didReceiveMemoryWarning
 {
@@ -63,6 +69,7 @@
     if (!self.hudView) [self hudView];
     if (!self.message) [self message];
     if (!self.resultView) [self resultView];
+    if (!self.progressView) [self progressView];
 }
 
 - (void)loadView
@@ -82,6 +89,7 @@
     self.hudView = nil;
     self.message = nil;
     self.resultView = nil;
+    self.progressView = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -118,23 +126,34 @@
 
 - (void)viewDidLayoutSubviews
 {
+    LOG_METHOD;
+    
     CGRect hudRect = self.hudView.frame;
+    
+    CGFloat height = EEHUD_VIEW_HEIGHT;
+    CGFloat width = EEHUD_VIEW_WIDTH;
+    
+    if (self.isShowProgress) {
+        height = EEHUD_VIEW_HEIGHT + EEHUD_VIEW_HEIGHT_PROGRESS + 2.0*EEHUD_VIEW_MARGIN_VERTICAL_PROGRESS;
+    }
+    
+    hudRect.size.height = height;
     
     switch (self.interfaceOrientation) {
         case UIInterfaceOrientationPortrait:
-            hudRect.origin = CGPointMake((320.0 - hudRect.size.width)*0.5, (460.0 - hudRect.size.height)*0.5);
+            hudRect.origin = CGPointMake((320.0 - width)*0.5, (460.0 - height)*0.5);
             break;
         case UIInterfaceOrientationLandscapeLeft:
-            hudRect.origin = CGPointMake((480.0 - hudRect.size.width)*0.5, (300.0 - hudRect.size.height)*0.5);
+            hudRect.origin = CGPointMake((480.0 - width)*0.5, (300.0 - height)*0.5);
             break;
         case UIInterfaceOrientationLandscapeRight:
-            hudRect.origin = CGPointMake((480.0 - hudRect.size.width)*0.5, (300.0 - hudRect.size.height)*0.5);
+            hudRect.origin = CGPointMake((480.0 - width)*0.5, (300.0 - height)*0.5);
             break;
         case UIInterfaceOrientationPortraitUpsideDown:
-            hudRect.origin = CGPointMake((320.0 - hudRect.size.width)*0.5, (460.0 - hudRect.size.height)*0.5);
+            hudRect.origin = CGPointMake((320.0 - width)*0.5, (460.0 - height)*0.5);
             break;
         default:
-            hudRect.origin = CGPointMake((320.0 - hudRect.size.width)*0.5, (460.0 - hudRect.size.height)*0.5);
+            hudRect.origin = CGPointMake((320.0 - width)*0.5, (460.0 - height)*0.5);
             break;
     }
     
@@ -220,6 +239,155 @@
     return resultView_;
 }
 
+- (UIView *)progressView
+{
+    if (!_progressView) {
+        
+        UIView *hud = [self hudView];
+        
+        //CGSize fullSize = CGSizeMake(320.0, 460.0);
+        
+        CGRect rect = CGRectZero;
+//        rect.origin.x = (fullSize.width - EEHUD_VIEW_WIDTH) * 0.5;
+//        rect.origin.y = (fullSize.height - EEHUD_VIEW_HEIGHT) * 0.5 + EEHUD_VIEW_HEIGHT;
+        rect.origin.x = EEHUD_VIEW_MARGIN_HORIZONTAL_PROGRESS;
+        rect.origin.y = EEHUD_VIEW_HEIGHT + EEHUD_VIEW_MARGIN_VERTICAL_PROGRESS;
+        rect.size.width = hud.frame.size.width - 2.0*EEHUD_VIEW_MARGIN_HORIZONTAL_PROGRESS;
+        rect.size.height = EEHUD_VIEW_HEIGHT_PROGRESS;
+        
+        _progressView = [[EEProgressView alloc] initWithFrame:rect];
+        _progressView.backgroundColor = [UIColor clearColor];
+        _progressView.layer.opacity = 0.0;
+        
+        // 
+        _isShowProgress = NO;
+    }
+    
+    if (!_progressView.superview) {
+        //[self.view addSubview:_progressView];
+        [self.hudView addSubview:_progressView];
+    }
+    
+    return _progressView;
+}
+
+#pragma mark - Setter
+- (void)setIsShowProgress:(BOOL)isShowProgress
+{
+    __weak EEProgressView *progressView = self.progressView;
+    __weak UIView *hud = self.hudView;
+    
+    if (_isShowProgress != isShowProgress) {
+        
+        LOG(@"isShowProrgess:%d", isShowProgress);
+        
+        if (isShowProgress) {
+            // NO -> YES
+            
+            CGSize fromSize = hud.bounds.size;
+            fromSize.height = EEHUD_VIEW_HEIGHT;
+            
+            CGSize toSize = hud.bounds.size;
+            toSize.height = EEHUD_VIEW_HEIGHT + EEHUD_VIEW_HEIGHT_PROGRESS + 2.0*EEHUD_VIEW_MARGIN_VERTICAL_PROGRESS;
+            
+            CABasicAnimation *expand = [CABasicAnimation animationWithKeyPath:@"bounds.size"];
+            expand.fromValue = [NSValue valueWithCGSize:fromSize];
+            expand.toValue = [NSValue valueWithCGSize:toSize];
+            expand.removedOnCompletion = NO;
+            expand.fillMode = kCAFillModeForwards;
+            expand.duration = EEHUD_DURATION_SHOW_PROGRESS_RANGE;
+            
+            //hud.layer.anchorPoint = CGPointMake(0.5, 0.0);
+            
+            expand.stopHandlerBlock = ^(CAAnimation *anim, BOOL finished){
+                
+                CALayer *layer = anim.addedLayer;
+                CALayer *pLayer = layer.presentationLayer;
+                layer.bounds = pLayer.bounds;
+                
+                [layer removeAnimationForKey:anim.animationKey];
+                
+                // 代入
+                _isShowProgress = isShowProgress;
+                
+                // alpha
+                CABasicAnimation *alpha = [CABasicAnimation animationWithKeyPath:@"opacity"];
+                alpha.fromValue = [NSNumber numberWithFloat:0.0];
+                alpha.toValue = [NSNumber numberWithFloat:1.0];
+                alpha.fillMode = kCAFillModeForwards;
+                alpha.removedOnCompletion = NO;
+                alpha.duration = EEHUD_DURATION_FADEIN_PROGRESS;
+                alpha.stopHandlerBlock = ^(CAAnimation *anim, BOOL finished){
+                    
+                    CALayer *layer = anim.addedLayer;
+                    CALayer *pLayer = layer.presentationLayer;
+                    
+                    layer.opacity = pLayer.opacity;
+                    [layer removeAnimationForKey:anim.animationKey];
+                    
+                };
+                
+                EEAnimationHandler *handler = [EEAnimationHandler sharedHandler];
+                [handler registerAnimation:alpha toLayer:progressView.layer forKey:@"in_progress"];
+                
+            };
+            
+            EEAnimationHandler *handler = [EEAnimationHandler sharedHandler];
+            [handler registerAnimation:expand toLayer:hud.layer forKey:EEHUD_KEY_SHOW_PROGRESS];
+            
+        }else {
+            // YES -> NO
+            
+            // alpha
+            CABasicAnimation *alpha = [CABasicAnimation animationWithKeyPath:@"opacity"];
+            alpha.fromValue = [NSNumber numberWithFloat:1.0];
+            alpha.toValue = [NSNumber numberWithFloat:0.0];
+            alpha.fillMode = kCAFillModeForwards;
+            alpha.removedOnCompletion = NO;
+            alpha.duration = EEHUD_DURATION_FADEOUT_PROGRESS;
+            alpha.stopHandlerBlock = ^(CAAnimation *anim, BOOL finished){
+                
+                CALayer *layer = anim.addedLayer;
+                CALayer *pLayer = layer.presentationLayer;
+                
+                layer.opacity = pLayer.opacity;
+                [layer removeAnimationForKey:anim.animationKey];
+                
+                // 
+                CGSize toSize = hud.bounds.size;
+                toSize.height = EEHUD_VIEW_HEIGHT;
+                
+                CGSize fromSize = hud.bounds.size;
+                fromSize.height = EEHUD_VIEW_HEIGHT + EEHUD_VIEW_HEIGHT_PROGRESS + 2.0*EEHUD_VIEW_MARGIN_VERTICAL_PROGRESS;
+                
+                CABasicAnimation *reduction = [CABasicAnimation animationWithKeyPath:@"bounds.size"];
+                reduction.fromValue = [NSValue valueWithCGSize:fromSize];
+                reduction.toValue = [NSValue valueWithCGSize:toSize];
+                reduction.removedOnCompletion = NO;
+                reduction.fillMode = kCAFillModeForwards;
+                reduction.duration = EEHUD_DURATION_HIDE_PROGRESS_RANGE;
+                reduction.stopHandlerBlock = ^(CAAnimation *anim, BOOL finished){
+                    
+                    CALayer *layer = anim.addedLayer;
+                    CALayer *pLayer = layer.presentationLayer;
+                    layer.bounds = pLayer.bounds;
+                    
+                    [layer removeAnimationForKey:anim.animationKey];
+                    
+                    // 代入
+                    _isShowProgress = isShowProgress;
+                };
+                
+                EEAnimationHandler *handler = [EEAnimationHandler sharedHandler];
+                [handler registerAnimation:reduction toLayer:hud.layer forKey:EEHUD_KEY_HIDE_PROGRESS];
+            };
+            
+            EEAnimationHandler *handler = [EEAnimationHandler sharedHandler];
+            [handler registerAnimation:alpha toLayer:progressView.layer forKey:@"out_progress"];
+        }
+    }
+}
+
 @end
 
 #pragma mark - Constant
@@ -227,44 +395,86 @@ typedef enum EEHUDViewState_{
     EEHUDViewStateTransparent = 0,          // 非表示時
     EEHUDViewStateAnimatingIn = 1,          // 表示時のアニメーション中
     EEHUDViewStateAppeal = 2,               // 表示中
-    EEHUDViewStateAnimatingOut = 3          // 表示終わって消す為のアニメーション中
+    EEHUDViewStateCalledHideAnimation = 3,  // タイマー発動してhideAnimation:が呼ばれたとこ
+    EEHUDViewStateAnimatingOut = 4          // 表示終わって消す為のアニメーション中
 }EEHUDViewState;
 
 #pragma mark - ** EEHUDView **
 @interface EEHUDView ()
 {
     EEHUDViewController *viewController_;
-    NSTimer *timer_;
+    
+    NSTimer *appealTimer_;
+    NSTimer *_appealTimerInProgress;
+    
     CGFloat time_;
+    
+    NSString *_progressMessage;
 }
 
 @property (nonatomic) EEHUDViewShowStyle showStyle;
 @property (nonatomic) EEHUDViewHideStyle hideStyle;
 @property (nonatomic) EEHUDResultViewStyle resultViewStyle;
-@property (nonatomic) EEHUDProgressViewStyle progressViewStyle;
+@property (nonatomic) EEHUDActivityViewStyle activityViewStyle;
 @property (nonatomic) EEHUDViewState state;
 
 @property (nonatomic, weak) UIWindow *previousKeyWindow;
 @property (nonatomic, strong) EEHUDViewController *viewController;
-@property (nonatomic, strong) NSTimer *timer;
+@property (nonatomic, strong) NSTimer *appealTimer;
+@property (nonatomic, strong) NSTimer *appealTimerInProgress;
 @property (nonatomic) CGFloat time;
+@property (nonatomic, strong) NSString *progressMessage;
 
+- (id)myInitWithFrame:(CGRect)frame;
 + (id)sharedView;
 - (void)growlWithMessage:(NSString *)message
                showStyle:(EEHUDViewShowStyle)showStyle
                hideStyle:(EEHUDViewHideStyle)hideStyle
          resultViewStyle:(EEHUDResultViewStyle)resultViewStyle
                 showTime:(float)time;
-- (void)progressWithMessage:(NSString *)message
-                  showStyle:(EEHUDViewShowStyle)showStyle
-                  hideStyle:(EEHUDViewHideStyle)hideStyle
-          progressViewStyle:(EEHUDProgressViewStyle)progressViewStyle
-                   progress:(float)progress;
+- (void)showProgressWithMessage:(NSString *)message
+                      showStyle:(EEHUDViewShowStyle)showStyle
+              activityViewStyle:(EEHUDActivityViewStyle)activityStyle;
+- (void)hideProgressWithMessage:(NSString *)message
+                      hideStyle:(EEHUDViewHideStyle)hideStyle
+                resultViewStyle:(EEHUDResultViewStyle)resultViewStyle
+                       showTime:(float)time;
+- (void)updateProgress:(float)progress;
 
+// show
 - (void)showAnimation;
+
+- (void)fadeInAnimation;
+- (void)lutzInAnimation;
+- (void)shakeInAnimation;
+- (void)noAnimeInAnimation;
+- (void)fromRightAnimation;
+- (void)fromLeftAnimation;
+- (void)fromTopAnimation;
+- (void)fromBottomAnimation;
+
+/******************************************/
+
+// hide
 - (void)hideAnimation:(NSTimer *)timer;
+
+- (void)fadeOutAnimation;
+- (void)lutzOutAnimation;
+- (void)shakeOutAnimation;
+- (void)noAnimeOutAnimation;
+- (void)toRightAnimation;
+- (void)toLeftAnimation;
+- (void)toTopAnimation;
+- (void)toBottomAnimation;
+/******************************************/
+
 - (void)cleaning;
 - (void)makeTimer;
+
+- (EEAnimationDidStartHandlerBlock)startHandlerBlock;
+- (EEAnimationDidStopHandlerBlock)stopHandlerBlock;
+
+- (void)appealEndInProgress:(NSTimer *)timer;
 
 @end
 
@@ -275,12 +485,14 @@ typedef enum EEHUDViewState_{
 @synthesize hideStyle;
 @synthesize resultViewStyle;
 @synthesize state;
-@synthesize progressViewStyle;
+@synthesize activityViewStyle;
 
 @synthesize previousKeyWindow;
 @synthesize viewController = viewController_;
-@synthesize timer = timer_;
+@synthesize appealTimer = appealTimer_;
+@synthesize appealTimerInProgress = _appealTimerInProgress;
 @synthesize time = time_;
+@synthesize progressMessage = _progressMessage;
 
 static EEHUDView *sharedInstance_ = nil;
 
@@ -289,7 +501,7 @@ static EEHUDView *sharedInstance_ = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         if (!sharedInstance_) {
-            sharedInstance_ = [[self alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+            sharedInstance_ = [[self alloc] myInitWithFrame:[[UIScreen mainScreen] bounds]];
         }
     });
     
@@ -297,17 +509,26 @@ static EEHUDView *sharedInstance_ = nil;
 }
 
 #pragma mark - Initializer
-- (id)initWithFrame:(CGRect)frame {
-	
-    if ((self = [super initWithFrame:frame])) {
-		self.userInteractionEnabled = NO;
-        self.backgroundColor = [UIColor clearColor];
-        self.state = EEHUDViewStateTransparent;
-        
-        
+- (id)initWithFrame:(CGRect)frame 
+{	
+    return nil;
+}
+
+- (id)init
+{
+    return nil;
+}
+
+- (id)myInitWithFrame:(CGRect)frame
+{
+    EEHUDView *object = [super initWithFrame:frame];
+    if (object) {
+		object.userInteractionEnabled = NO;
+        object.backgroundColor = [UIColor clearColor];
+        object.state = EEHUDViewStateTransparent;
     }
 	
-    return self;
+    return object;
 }
 
 #pragma mark - Common
@@ -324,17 +545,29 @@ static EEHUDView *sharedInstance_ = nil;
                                     showTime:time];
 }
 
-+ (void)progressWithMessage:(NSString *)message
-                  showStyle:(EEHUDViewShowStyle)showStyle
-                  hideStyle:(EEHUDViewHideStyle)hideStyle
-          progressViewStyle:(EEHUDProgressViewStyle)progressViewStyle
-                   progress:(float)progress
++ (void)showProgressWithMessage:(NSString *)message
+                      showStyle:(EEHUDViewShowStyle)showStyle
+              activityViewStyle:(EEHUDActivityViewStyle)activityStyle
 {
-    [[EEHUDView sharedView] progressWithMessage:message
-                                      showStyle:showStyle
-                                      hideStyle:hideStyle
-                              progressViewStyle:progressViewStyle
-                                       progress:progress];
+    [[EEHUDView sharedView] showProgressWithMessage:message
+                                          showStyle:showStyle
+                                  activityViewStyle:activityStyle];
+}
+
++ (void)hideProgressWithMessage:(NSString *)message
+                      hideStyle:(EEHUDViewHideStyle)hideStyle
+                resultViewStyle:(EEHUDResultViewStyle)resultViewStyle
+                       showTime:(float)time
+{
+    [[EEHUDView sharedView] hideProgressWithMessage:message
+                                          hideStyle:hideStyle
+                                    resultViewStyle:resultViewStyle
+                                           showTime:time];
+}
+
++ (void)updateProgress:(float)progress
+{
+    [[EEHUDView sharedView] updateProgress:progress];
 }
 
 + (BOOL)isShowing
@@ -367,6 +600,8 @@ static EEHUDView *sharedInstance_ = nil;
          resultViewStyle:(EEHUDResultViewStyle)aResultViewStyle
                 showTime:(float)aTime
 {
+    LOG(@" --------- (show growl) state:%d ---------", self.state);
+    
     if (!self.viewController) {
         self.viewController = [[EEHUDViewController alloc] initWithNibName:nil bundle:nil];
     }
@@ -389,89 +624,177 @@ static EEHUDView *sharedInstance_ = nil;
         [self makeKeyAndVisible];
     }
     
-    /******************************
-     状態によって処理変える。
-     ●EEHUDViewStateTransparent = 0,          // 非表示時
-        アニメーションスタート(特に問題無し)
-     
-     ●EEHUDViewStateAnimatingIn = 1,          // 表示時のアニメーション中
-        表示開始した時に呼ばれた場合はアニメーション自体をやり直す。
-        今動いてるアニメーション削除して作り直し
-     
-     ●EEHUDViewStateAppeal = 2,               // 表示中
-        このフェーズで呼ばれたら表示アニメーションはせずにmessage&resultViewを更新
-     
-     ●EEHUDViewStateAnimatingOut = 3          // 表示終わって消す為のアニメーション中
-        今動いてるアニメーションを削除し、表示アニメーションからスタート
-     ******************************/
-    
-    
-    switch (self.state) {
-        case EEHUDViewStateTransparent:
-            
-            self.viewController.message.text = aMessage;
-            self.viewController.resultView.viewStyle = aResultViewStyle;
-            
-            self.showStyle = aShowStyle;
-            self.hideStyle = aHideStyle;
-            
-            self.time = aTime;
-            
-            // アニメーションスタート
-            [self showAnimation];
-            
-            break;
-        case EEHUDViewStateAnimatingIn:
-            // animationDidStartで削除するので普通に追加する
-            
-            self.viewController.message.text = aMessage;
-            self.viewController.resultView.viewStyle = aResultViewStyle;
-            
-            self.showStyle = aShowStyle;
-            self.hideStyle = aHideStyle;
-            
-            // アニメーションスタート
-            [self showAnimation];
-            
-            break;
-
-        case EEHUDViewStateAppeal:
-            
-            // EEHUDViewStateAppeal状態へと遷移した模様
-            self.viewController.message.text = aMessage;
-            self.viewController.resultView.viewStyle = aResultViewStyle;
-            
-            self.hideStyle = aHideStyle;
-            
-            // タイマーリフレッシュ
-            [self.timer setFireDate:[NSDate dateWithTimeIntervalSinceNow:aTime]];
-            
-            break;
-        case EEHUDViewStateAnimatingOut:
-            
-            self.viewController.message.text = aMessage;
-            self.viewController.resultView.viewStyle = aResultViewStyle;
-            
-            self.showStyle = aShowStyle;
-            self.hideStyle = aHideStyle;
-            
-            self.time = aTime;
-            
-            // アニメーションスタート
-            [self showAnimation];
-            
-            break;
-        default:
-            break;
+    if (self.viewController.isShowProgress) {
+        
+        /******************************
+         
+         hideProgressはタイマー時間を FLT_MAXから有限時間に帰るだけ -> EEHUDViewStateApealのまま (ただしisShowProgress=NOにして先消してるはず)
+         
+         ●EEHUDViewStateTransparent = 0,          // 非表示時 -> 無い
+         ●EEHUDViewStateAnimatingIn = 1,          // 表示時のアニメーション中 -> 無い
+         
+         ●EEHUDViewStateAppeal = 2,               // 表示中 (hideのtimeがprogress隠すアニメーションより遅ければ progress フェードアウト中もここ)
+         アニメーションせず内容を差し替え
+         タイマー(appealTimerInProgress)無ければ発動
+         あれば時間差し替え
+         
+         ●EEHUDViewStateCalledHideAnimation = 3,  // タイマー発動してhideAnimation:が呼ばれたとこ
+         もうすぐ自動的に消す為のアニメーション開始する
+         そんなに時間無いはずなので何もしない
+         
+         ●EEHUDViewStateAnimatingOut = 4,         // 表示終わって消す為のアニメーション中 
+                                                     (hideのtimeがprogress隠すアニメーションより短ければ progressフェードアウトはここ)
+         今動いてるアニメーションを削除
+         表示アニメーションからスタート
+         
+         ******************************/
+        
+        switch (self.state) {
+            case EEHUDViewStateAppeal:
+                
+                self.viewController.message.text = aMessage;
+                self.viewController.resultView.viewStyle = aResultViewStyle;
+                
+                if (!self.appealTimerInProgress) {
+                    self.appealTimerInProgress = [NSTimer scheduledTimerWithTimeInterval:aTime
+                                                                                  target:self
+                                                                                selector:@selector(appealEndInProgress:)
+                                                                                userInfo:nil
+                                                                                 repeats:NO];
+                }else {
+                    [self.appealTimerInProgress setFireDate:[NSDate dateWithTimeIntervalSinceNow:aTime]];
+                }
+                
+                break;
+            case EEHUDViewStateCalledHideAnimation:
+                
+                break;
+            case EEHUDViewStateAnimatingOut:
+                
+                self.viewController.message.text = aMessage;
+                self.viewController.resultView.viewStyle = aResultViewStyle;
+                
+                self.showStyle = aShowStyle;
+                self.hideStyle = aHideStyle;
+                
+                self.time = aTime;
+                
+                // 状態変更
+                self.state = EEHUDViewStateAnimatingIn;
+                
+                // アニメーションスタート
+                for (NSString *key in [self.viewController.hudView.layer animationKeys]) {
+                    if (![key isEqualToString:EEHUD_KEY_SHOW_PROGRESS] && ![key isEqualToString:EEHUD_KEY_HIDE_PROGRESS]) {
+                        [self.viewController.hudView.layer removeAnimationForKey:key];
+                    }
+                }
+                [self showAnimation];
+                
+                break;
+            default:
+                break;
+        }
+        
+    }else {
+        
+        /******************************
+         ●EEHUDViewStateTransparent = 0,          // 非表示時
+         アニメーションスタート(特に問題無し)
+         
+         ●EEHUDViewStateAnimatingIn = 1,          // 表示時のアニメーション中
+         表示開始した時に呼ばれた場合はアニメーションはそのまま
+         内容とアピール時間を差し替え
+         
+         ●EEHUDViewStateAppeal = 2,               // 表示中
+         アニメーションせず内容とアピール時間を差し替え
+         タイマー既に発動してるのでタイマーのリフレッシュが必要
+         
+         ●EEHUDViewStateCalledHideAnimation = 3,  // タイマー発動してhideAnimation:が呼ばれたとこ
+         もうすぐ自動的に消す為のアニメーション開始する
+         そんなに時間無いはずなので何もしない
+         
+         ●EEHUDViewStateAnimatingOut = 4          // 表示終わって消す為のアニメーション中
+         今動いてるアニメーションを削除
+         表示アニメーションからスタート
+         ******************************/
+        switch (self.state) {
+            case EEHUDViewStateTransparent:
+                
+                // 状態変更
+                self.state = EEHUDViewStateAnimatingIn;
+                
+                // 代入
+                self.viewController.message.text = aMessage;
+                self.viewController.resultView.viewStyle = aResultViewStyle;
+                
+                self.showStyle = aShowStyle;
+                self.hideStyle = aHideStyle;
+                
+                self.time = aTime;
+                
+                // アニメーションスタート
+                [self showAnimation];
+                
+                break;
+            case EEHUDViewStateAnimatingIn:
+                
+                self.viewController.message.text = aMessage;
+                self.viewController.resultView.viewStyle = aResultViewStyle;
+                
+                self.showStyle = aShowStyle;
+                self.hideStyle = aHideStyle;
+                
+                break;
+                
+            case EEHUDViewStateAppeal:
+                
+                self.viewController.message.text = aMessage;
+                self.viewController.resultView.viewStyle = aResultViewStyle;
+                
+                self.hideStyle = aHideStyle;
+                
+                // タイマーリフレッシュ
+                [self.appealTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:aTime]];
+                
+                break;
+            case EEHUDViewStateCalledHideAnimation:
+                
+                break;
+            case EEHUDViewStateAnimatingOut:
+                
+                self.viewController.message.text = aMessage;
+                self.viewController.resultView.viewStyle = aResultViewStyle;
+                
+                self.showStyle = aShowStyle;
+                self.hideStyle = aHideStyle;
+                
+                self.time = aTime;
+                
+                // 状態変更
+                self.state = EEHUDViewStateAnimatingIn;
+                
+                // アニメーションスタート
+                for (NSString *key in [self.viewController.hudView.layer animationKeys]) {
+                    if (![key isEqualToString:EEHUD_KEY_SHOW_PROGRESS] && ![key isEqualToString:EEHUD_KEY_HIDE_PROGRESS]) {
+                        [self.viewController.hudView.layer removeAnimationForKey:key];
+                    }
+                }
+                [self showAnimation];
+                
+                break;
+            default:
+                break;
+        }
     }
+    
 }
 
-- (void)progressWithMessage:(NSString *)aMessage
-                  showStyle:(EEHUDViewShowStyle)aShowStyle
-                  hideStyle:(EEHUDViewHideStyle)aHideStyle
-          progressViewStyle:(EEHUDProgressViewStyle)aProgressViewStyle
-                   progress:(float)aProgress
+- (void)showProgressWithMessage:(NSString *)aMessage
+                      showStyle:(EEHUDViewShowStyle)aShowStyle
+              activityViewStyle:(EEHUDActivityViewStyle)anActivityStyle
 {
+    LOG(@" --------- (show progress) state:%d ---------", self.state);
+    
     if (!self.viewController) {
         self.viewController = [[EEHUDViewController alloc] initWithNibName:nil bundle:nil];
     }
@@ -494,486 +817,205 @@ static EEHUDView *sharedInstance_ = nil;
         [self makeKeyAndVisible];
     }
     
-    /******************************
-     状態によって処理変える。
-     ●EEHUDViewStateTransparent = 0,          // 非表示時
-     アニメーションスタート(特に問題無し)
-     
-     ●EEHUDViewStateAnimatingIn = 1,          // 表示時のアニメーション中
-     表示開始した時に呼ばれた場合はアニメーション自体をやり直す。
-     今動いてるアニメーション削除して作り直し
-     
-     ●EEHUDViewStateAppeal = 2,               // 表示中
-     このフェーズで呼ばれたら表示アニメーションはせずにmessage&resultViewを更新
-     
-     ●EEHUDViewStateAnimatingOut = 3          // 表示終わって消す為のアニメーション中
-     今動いてるアニメーションを削除し、表示アニメーションからスタート
-     ******************************/
     
-    EEHUDResultViewStyle errStyle = -1;
     
-    switch (self.state) {
-        case EEHUDViewStateTransparent:
-            
-            self.viewController.message.text = aMessage;
-            self.viewController.resultView.viewStyle = errStyle;
-            self.viewController.resultView.progressViewStyle = aProgressViewStyle;
-            self.viewController.resultView.progress = aProgress;
-            
-            self.showStyle = aShowStyle;
-            self.hideStyle = aHideStyle;
-            
-            if (aProgress >= 1.0) {
-                self.time = EEHUD_DURATION_HIDE_PROGRESS;
-            }else {
+    if (!self.viewController.isShowProgress) {
+        
+        /******************************
+         状態によって処理変える。
+         ●EEHUDViewStateTransparent = 0,          // 非表示時
+         アニメーションスタート(特に問題無し)
+         アピール時間はFLT_MAXに
+         
+         ●EEHUDViewStateAnimatingIn = 1,          // 表示時のアニメーション中
+         表示アニメーション中なのでそれはそのまま
+         handlerにそのまま突っ込めば終わり次第アニメーションしてくれるはず
+         アピール時間はFLT_MAXに
+         
+         ●EEHUDViewStateAppeal = 2,               // 表示中
+         内容とアピール時間を差し替え
+         そのまま拡張アニメスタート
+         タイマー既に発動してるのでタイマーのリフレッシュが必要 (アピール時間はFLT_MAXに)
+         
+         ●EEHUDViewStateCalledHideAnimation = 3,  // タイマー発動してhideAnimation:が呼ばれたとこ
+         もうすぐ自動的に消す為のアニメーション開始する
+         そんなに時間無いはずなのでdelayかけてアニメーション削除し、再スタート
+         アピール時間はFLT_MAXに
+         
+         ●EEHUDViewStateAnimatingOut = 4          // 表示終わって消す為のアニメーション中
+         今動いてるアニメーションを削除
+         表示アニメーションからスタート
+         アピール時間はFLT_MAXに
+         ******************************/
+        switch (self.state) {
+            case EEHUDViewStateTransparent:
+                
+                // 状態変更
+                self.state = EEHUDViewStateAnimatingIn;
+                
+                self.progressMessage = aMessage;
+                self.viewController.message.text = aMessage;
+                self.viewController.progressView.progress = 0.0;
+                self.showStyle = aShowStyle;
                 self.time = FLT_MAX;
-            }
-            
-            
-            // アニメーションスタート
-            [self showAnimation];
-            
-            break;
-        case EEHUDViewStateAnimatingIn:
-            // アニメーションは遮らない
-            
-            self.viewController.message.text = aMessage;
-            self.viewController.resultView.viewStyle = errStyle;
-            self.viewController.resultView.progressViewStyle = aProgressViewStyle;
-            self.viewController.resultView.progress = aProgress;
-            
-            //self.showStyle = aShowStyle;
-            //self.hideStyle = aHideStyle;
-            
-            // アニメーションスタート
-            //[self showAnimation];
-            
-            break;
-            
-        case EEHUDViewStateAppeal:
-            
-            // EEHUDViewStateAppeal状態へと遷移した模様
-            self.viewController.message.text = aMessage;
-            self.viewController.resultView.viewStyle = errStyle;
-            self.viewController.resultView.progressViewStyle = aProgressViewStyle;
-            self.viewController.resultView.progress = aProgress;
-            
-            self.hideStyle = aHideStyle;
-            
-            // タイマーリフレッシュ
-            
-            if (aProgress >= 1.0) {
-                [self.timer setFireDate:[NSDate dateWithTimeIntervalSinceNow:EEHUD_DURATION_HIDE_PROGRESS]];
-            }else {
-                [self.timer setFireDate:[NSDate dateWithTimeIntervalSinceNow:FLT_MAX]];
-            }
-            
-            break;
-        case EEHUDViewStateAnimatingOut:
-            
-            self.viewController.message.text = aMessage;
-            self.viewController.resultView.viewStyle = errStyle;
-            self.viewController.resultView.progressViewStyle = aProgressViewStyle;
-            self.viewController.resultView.progress = aProgress;
-            
-            self.showStyle = aShowStyle;
-            self.hideStyle = aHideStyle;
-            
-            if (aProgress >= 1.0) {
-                self.time = EEHUD_DURATION_HIDE_PROGRESS;
-            }else {
+                
+                [self showAnimation];
+                self.viewController.resultView.activityStyle = anActivityStyle;
+                
+                break;
+                
+            case EEHUDViewStateAnimatingIn:
+                
+                self.progressMessage = aMessage;
+                self.viewController.message.text = aMessage;
+                self.viewController.progressView.progress = 0.0;
                 self.time = FLT_MAX;
-            }
-            
-            // アニメーションスタート
-            [self showAnimation];
-            
-            break;
-        default:
-            break;
+                
+                self.viewController.resultView.activityStyle = anActivityStyle;
+                
+                break;
+                
+            case EEHUDViewStateAppeal:
+                
+                self.progressMessage = aMessage;
+                self.viewController.message.text = aMessage;
+                self.viewController.progressView.progress = 0.0;
+                
+                [self.appealTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:FLT_MAX]];
+                
+                self.viewController.resultView.activityStyle = anActivityStyle;
+                
+                break;
+                
+            case EEHUDViewStateAnimatingOut:
+                
+                self.progressMessage = aMessage;
+                self.viewController.message.text = aMessage;
+                self.viewController.progressView.progress = 0.0;
+                self.showStyle = aShowStyle;
+                self.time = FLT_MAX;
+                
+                // 状態変更
+                self.state = EEHUDViewStateAnimatingIn;
+                
+                // アニメーションスタート
+                for (NSString *key in [self.viewController.hudView.layer animationKeys]) {
+                    [self.viewController.hudView.layer removeAnimationForKey:key];
+                }
+                [self showAnimation];
+                
+                self.viewController.resultView.activityStyle = anActivityStyle;
+                
+                break;
+            default:
+                break;
+        }
+        
+        // 状態変更
+        self.viewController.isShowProgress = YES;
     }
+    
+}
+
+- (void)hideProgressWithMessage:(NSString *)message
+                      hideStyle:(EEHUDViewHideStyle)aHideStyle
+                resultViewStyle:(EEHUDResultViewStyle)aResultViewStyle
+                       showTime:(float)time
+{
+    LOG(@" --------- (hide progress) state:%d ---------", self.state);
+    
+    if (self.viewController.isShowProgress) {
+        
+        /************
+         Appeal中のはず (progress表示中でもgrowlに切り替えた状態でも)
+         ************/
+        switch (self.state) {
+            case EEHUDViewStateAppeal:
+                
+                // タイマーあるなら消去しとく
+                if (self.appealTimerInProgress) {
+                    [self.appealTimerInProgress invalidate];
+                    self.appealTimerInProgress = nil;
+                }
+                
+                self.viewController.isShowProgress = NO;
+                
+                // タイマーリフレッシュ
+                [self.appealTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:time]];
+                
+                self.progressMessage = nil;
+                
+                self.viewController.message.text = message;
+                self.viewController.resultView.viewStyle = aResultViewStyle;
+                
+                self.hideStyle = aHideStyle;
+                
+                break;
+                
+            default:
+                break;
+        }
+    }
+    
+}
+
+- (void)updateProgress:(float)aProgress
+{
+    float progress = 0.0;
+    if (aProgress > 1.0) {
+        progress = 1.0;
+    }else if (aProgress < 0.0) {
+        progress = 0.0;
+    }else {
+        progress = aProgress;
+    }
+    
+    self.viewController.progressView.progress = progress;
 }
 
 #pragma mark - Private
+#pragma mark ** show **
 - (void)showAnimation
-{
-    CGFloat fromAlpha, toAlpha;
-    CGRect fromRect, toRect;
-    CGPoint point1, point2;
-    
-    CGFloat duration;
-    
-    CAAnimationGroup *allAnimationGroup;
-    CABasicAnimation *alphaAnime;
-    CABasicAnimation *expandAnime;
-    CABasicAnimation *jumpUpAnime, *jumpDownAnime;
-    CABasicAnimation *rotateAnime;
-    CAKeyframeAnimation *shakeAnime;
-    CABasicAnimation *moveAnime;
-    
-    CGFloat shakeTheta;
-    NSMutableArray *transforms, *timingFunctions, *durations;
-    
-    // ユニークなkey作成
-    CFUUIDRef   uuid;
-    NSString*   identifier;
-    uuid = CFUUIDCreate(NULL);
-    identifier = (__bridge NSString*)CFUUIDCreateString(NULL, uuid);
-    CFRelease(uuid);
-    
-    NSString *animationKey = identifier;
-    
-    
+{    
     switch (self.showStyle) {
         case EEHUDViewShowStyleFadeIn:
             
-            fromAlpha = 0.0;
-            toAlpha = 1.0;
-            
-            fromRect = self.viewController.hudView.frame;
-            fromRect.size.width *= EEHUD_SIZERATIO_FADEIN;
-            fromRect.size.height *= EEHUD_SIZERATIO_FADEIN;
-            
-            toRect = self.viewController.hudView.frame;
-            
-            duration = EEHUD_DURATION_FADEIN;
-            
-            // 透明度
-            alphaAnime = [CABasicAnimation animationWithKeyPath:@"opacity"];
-            alphaAnime.fromValue = [NSNumber numberWithFloat:fromAlpha];
-            alphaAnime.toValue = [NSNumber numberWithFloat:toAlpha];
-            
-            // 拡大
-            expandAnime = [CABasicAnimation animationWithKeyPath:@"bounds"];
-            expandAnime.fromValue = [NSValue valueWithCGRect:fromRect];
-            expandAnime.toValue = [NSValue valueWithCGRect:toRect];
-            
-            // 合体
-            allAnimationGroup = [CAAnimationGroup animation];
-            allAnimationGroup.animations = [NSArray arrayWithObjects:alphaAnime, expandAnime, nil];
-            allAnimationGroup.removedOnCompletion = NO;
-            allAnimationGroup.fillMode = kCAFillModeForwards;
-            allAnimationGroup.duration = duration;
-            allAnimationGroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-            allAnimationGroup.delegate = self;
-            
-            // start
-            [self.viewController.hudView.layer addAnimation:allAnimationGroup forKey:animationKey];
-            
-            
+            [self fadeInAnimation];
             break;
             
         case EEHUDViewShowStyleLutz:
             
-            fromAlpha = 0.0;
-            toAlpha = 1.0;
-            
-            duration = EEHUD_DURATION_LUTZIN;
-            
-            fromRect = self.viewController.hudView.bounds;
-            fromRect.size.width *= EEHUD_SIZERATIO_LUTZIN;
-            fromRect.size.height *= EEHUD_SIZERATIO_LUTZIN;
-            
-            toRect = self.viewController.hudView.bounds;
-            
-            //
-            point1 = self.viewController.hudView.layer.position;
-            point2 = point1;
-            point2.y -= EEHUD_HEIGHT_JUMP_LUTZIN;
-            
-            
-            // 透明度
-            alphaAnime = [CABasicAnimation animationWithKeyPath:@"opacity"];
-            alphaAnime.fromValue = [NSNumber numberWithFloat:fromAlpha];
-            alphaAnime.toValue = [NSNumber numberWithFloat:toAlpha];
-            alphaAnime.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-            alphaAnime.removedOnCompletion = NO;
-            alphaAnime.fillMode = kCAFillModeForwards;
-            alphaAnime.duration = duration * 0.5;
-            alphaAnime.beginTime = 0.0;
-            
-            // 拡大
-            expandAnime = [CABasicAnimation animationWithKeyPath:@"bounds.size"];
-            expandAnime.fromValue = [NSValue valueWithCGSize:fromRect.size];
-            expandAnime.toValue = [NSValue valueWithCGSize:toRect.size];
-            expandAnime.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-            expandAnime.removedOnCompletion = NO;
-            expandAnime.fillMode = kCAFillModeForwards;
-            expandAnime.duration = duration * 0.5;
-            expandAnime.beginTime = 0.0;
-            
-            // jumpUP
-            jumpUpAnime = [CABasicAnimation animationWithKeyPath:@"position"];
-            jumpUpAnime.fromValue = [NSValue valueWithCGPoint:point1];
-            jumpUpAnime.toValue = [NSValue valueWithCGPoint:point2];
-            jumpUpAnime.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-            jumpUpAnime.duration = duration * 0.5;
-            jumpUpAnime.beginTime = 0.0;
-            
-            // jumpDown
-            jumpDownAnime = [CABasicAnimation animationWithKeyPath:@"position"];
-            jumpDownAnime.fromValue = [NSValue valueWithCGPoint:point2];
-            jumpDownAnime.toValue = [NSValue valueWithCGPoint:point1];
-            jumpDownAnime.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
-            jumpDownAnime.duration = duration * 0.5;
-            jumpDownAnime.beginTime = duration * 0.5;
-            
-            // 回転
-            rotateAnime = [CABasicAnimation animationWithKeyPath:@"transform"];
-            rotateAnime.fromValue = [NSValue valueWithCATransform3D:CATransform3DIdentity];
-            rotateAnime.toValue = [NSValue valueWithCATransform3D:CATransform3DMakeRotation(M_PI, 0.0f, 1.0f, 0.0f)];
-            rotateAnime.repeatCount = EEHUD_COUNT_ROTATION_LUTZIN;
-            rotateAnime.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-            rotateAnime.duration = duration / (float)EEHUD_COUNT_ROTATION_LUTZIN;
-            
-            // 合体
-            allAnimationGroup = [CAAnimationGroup animation];
-            allAnimationGroup.animations = [NSArray arrayWithObjects:
-                                            alphaAnime,
-                                            expandAnime,
-                                            jumpUpAnime,
-                                            jumpDownAnime,
-                                            rotateAnime, nil];
-            allAnimationGroup.removedOnCompletion = NO;
-            allAnimationGroup.fillMode = kCAFillModeForwards;
-            allAnimationGroup.duration = duration;
-            allAnimationGroup.delegate = self;
-            
-            // 
-            [self.viewController.hudView.layer addAnimation:allAnimationGroup forKey:animationKey];
-            
+            [self lutzInAnimation];
             break;
-            
+        
         case EEHUDViewShowStyleShake:
             
-            fromAlpha = 0.0;
-            toAlpha = 1.0;
-            
-            duration = EEHUD_DURATION_SHAKEIN;
-            
-            // 透明度
-            alphaAnime = [CABasicAnimation animationWithKeyPath:@"opacity"];
-            alphaAnime.fromValue = [NSNumber numberWithFloat:fromAlpha];
-            alphaAnime.toValue = [NSNumber numberWithFloat:toAlpha];
-            alphaAnime.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-            alphaAnime.removedOnCompletion = NO;
-            alphaAnime.fillMode = kCAFillModeForwards;
-            alphaAnime.duration = duration * 0.5;
-            alphaAnime.beginTime = 0.0;
-            
-            // シェイク
-            shakeAnime = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
-            
-            shakeTheta = 0.5 * EEHUD_THETA_DEGREE_SHAKEIN * M_PI / 180.0;
-            transforms = [NSMutableArray array];
-            timingFunctions = [NSMutableArray array];
-            durations = [NSMutableArray array];
-            
-            for (int i = 0; i < EEHUD_COUNT_SHAKEIN; i++) {
-                
-                /* transform */
-                if (i == 0) {
-                    [transforms addObject:[NSValue valueWithCATransform3D:CATransform3DMakeRotation(0.0f, 0.0f, 0.0f, 1.0f)]];
-                    [durations addObject:[NSNumber numberWithFloat:0.0]];
-                    
-                }else if (i == EEHUD_COUNT_SHAKEIN - 1){
-                    [transforms addObject:[NSValue valueWithCATransform3D:CATransform3DMakeRotation(0.0f, 0.0f, 0.0f, 1.0f)]];
-                    [durations addObject:[NSNumber numberWithFloat:(i - 0.5)/((CGFloat)EEHUD_COUNT_SHAKEIN - 1.0)]];
-                    
-                }else if (i % 2 == 0){
-                    [transforms addObject:[NSValue valueWithCATransform3D:CATransform3DMakeRotation(shakeTheta, 0.0f, 0.0f, 1.0f)]];
-                    [durations addObject:[NSNumber numberWithFloat:(i - 0.5)/((CGFloat)EEHUD_COUNT_SHAKEIN - 1.0)]];
-                    
-                }else {
-                    [transforms addObject:[NSValue valueWithCATransform3D:CATransform3DMakeRotation(- shakeTheta, 0.0f, 0.0f, 1.0f)]];
-                    [durations addObject:[NSNumber numberWithFloat:(i - 0.5)/((CGFloat)EEHUD_COUNT_SHAKEIN - 1.0)]];
-                    
-                }
-                
-                /* timingFunction */
-                if (i == 0) {
-                    [timingFunctions addObject:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
-                    
-                }else {
-                    [timingFunctions addObject:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
-                }
-            }
-            
-            shakeAnime.values = transforms;
-            shakeAnime.timingFunctions = timingFunctions;
-            shakeAnime.keyTimes = durations;
-            shakeAnime.duration = duration;
-            
-            // 合体
-            allAnimationGroup = [CAAnimationGroup animation];
-            allAnimationGroup.animations = [NSArray arrayWithObjects:alphaAnime, shakeAnime, nil];
-            allAnimationGroup.removedOnCompletion = NO;
-            allAnimationGroup.fillMode = kCAFillModeForwards;
-            allAnimationGroup.duration = duration;
-            allAnimationGroup.delegate = self;
-            
-            //
-            [self.viewController.hudView.layer addAnimation:allAnimationGroup forKey:animationKey];
-            
+            [self shakeInAnimation];
             break;
             
         case EEHUDViewShowStyleFromLeft:
             
-            fromAlpha = 0.0;
-            toAlpha = 1.0;
-            
-            point1 = self.viewController.hudView.layer.position;
-            point2 = point1;
-            point1.x -= EEHUD_LENGTH_FROM_LEFT;
-            
-            duration = EEHUD_DURATION_FROM_LEFT;
-            
-            // 透明度
-            alphaAnime = [CABasicAnimation animationWithKeyPath:@"opacity"];
-            alphaAnime.fromValue = [NSNumber numberWithFloat:fromAlpha];
-            alphaAnime.toValue = [NSNumber numberWithFloat:toAlpha];
-            
-            // 移動
-            moveAnime = [CABasicAnimation animationWithKeyPath:@"position"];
-            moveAnime.fromValue = [NSValue valueWithCGPoint:point1];
-            moveAnime.toValue = [NSValue valueWithCGPoint:point2];
-            
-            // 合体
-            allAnimationGroup = [CAAnimationGroup animation];
-            allAnimationGroup.animations = [NSArray arrayWithObjects:alphaAnime, moveAnime, nil];
-            allAnimationGroup.removedOnCompletion = NO;
-            allAnimationGroup.fillMode = kCAFillModeForwards;
-            allAnimationGroup.duration = duration;
-            allAnimationGroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-            allAnimationGroup.delegate = self;
-            
-            // 
-            [self.viewController.hudView.layer addAnimation:allAnimationGroup forKey:animationKey];
-            
+            [self fromLeftAnimation];
             break;
             
         case EEHUDViewShowStyleFromRight:
             
-            fromAlpha = 0.0;
-            toAlpha = 1.0;
-            
-            point1 = self.viewController.hudView.layer.position;
-            point2 = point1;
-            point1.x += EEHUD_LENGTH_FROM_RIGHT;
-            
-            duration = EEHUD_DURATION_FROM_RIGHT;
-            
-            // 透明度
-            alphaAnime = [CABasicAnimation animationWithKeyPath:@"opacity"];
-            alphaAnime.fromValue = [NSNumber numberWithFloat:fromAlpha];
-            alphaAnime.toValue = [NSNumber numberWithFloat:toAlpha];
-            
-            // 移動
-            moveAnime = [CABasicAnimation animationWithKeyPath:@"position"];
-            moveAnime.fromValue = [NSValue valueWithCGPoint:point1];
-            moveAnime.toValue = [NSValue valueWithCGPoint:point2];
-            
-            // 合体
-            allAnimationGroup = [CAAnimationGroup animation];
-            allAnimationGroup.animations = [NSArray arrayWithObjects:alphaAnime, moveAnime, nil];
-            allAnimationGroup.removedOnCompletion = NO;
-            allAnimationGroup.fillMode = kCAFillModeForwards;
-            allAnimationGroup.duration = duration;
-            allAnimationGroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-            allAnimationGroup.delegate = self;
-            
-            // 
-            [self.viewController.hudView.layer addAnimation:allAnimationGroup forKey:animationKey];
-            
+            [self fromRightAnimation];
             break;
             
         case EEHUDViewShowStyleNoAnime:
             
-            fromAlpha = 0.0;
-            toAlpha = 1.0;
-            
-            // 透明度
-            alphaAnime = [CABasicAnimation animationWithKeyPath:@"opacity"];
-            alphaAnime.fromValue = [NSNumber numberWithFloat:fromAlpha];
-            alphaAnime.toValue = [NSNumber numberWithFloat:toAlpha];
-            alphaAnime.removedOnCompletion = NO;
-            alphaAnime.fillMode = kCAFillModeForwards;
-            alphaAnime.duration = EEHUD_DURATION_NOANIME;
-            alphaAnime.delegate = self;
-            
-            //
-            [self.viewController.hudView.layer addAnimation:alphaAnime forKey:animationKey];
-            
+            [self noAnimeInAnimation];
             break;
             
         case EEHUDViewShowStyleFromTop:
             
-            fromAlpha = 0.0;
-            toAlpha = 1.0;
-            
-            point1 = self.viewController.hudView.layer.position;
-            point2 = point1;
-            point1.y -= EEHUD_LENGTH_FROM_TOP;
-            
-            duration = EEHUD_DURATION_FROM_TOP;
-            
-            // 透明度
-            alphaAnime = [CABasicAnimation animationWithKeyPath:@"opacity"];
-            alphaAnime.fromValue = [NSNumber numberWithFloat:fromAlpha];
-            alphaAnime.toValue = [NSNumber numberWithFloat:toAlpha];
-            
-            // 移動
-            moveAnime = [CABasicAnimation animationWithKeyPath:@"position"];
-            moveAnime.fromValue = [NSValue valueWithCGPoint:point1];
-            moveAnime.toValue = [NSValue valueWithCGPoint:point2];
-            
-            // 合体
-            allAnimationGroup = [CAAnimationGroup animation];
-            allAnimationGroup.animations = [NSArray arrayWithObjects:alphaAnime, moveAnime, nil];
-            allAnimationGroup.removedOnCompletion = NO;
-            allAnimationGroup.fillMode = kCAFillModeForwards;
-            allAnimationGroup.duration = duration;
-            allAnimationGroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-            allAnimationGroup.delegate = self;
-            
-            // 
-            [self.viewController.hudView.layer addAnimation:allAnimationGroup forKey:animationKey];
-            
+            [self fromTopAnimation];
             break;
             
         case EEHUDViewShowStyleFromBottom:
             
-            fromAlpha = 0.0;
-            toAlpha = 1.0;
-            
-            point1 = self.viewController.hudView.layer.position;
-            point2 = point1;
-            point1.y += EEHUD_LENGTH_FROM_BOTTOM;
-            
-            duration = EEHUD_DURATION_FROM_BOTTOM;
-            
-            // 透明度
-            alphaAnime = [CABasicAnimation animationWithKeyPath:@"opacity"];
-            alphaAnime.fromValue = [NSNumber numberWithFloat:fromAlpha];
-            alphaAnime.toValue = [NSNumber numberWithFloat:toAlpha];
-            
-            // 移動
-            moveAnime = [CABasicAnimation animationWithKeyPath:@"position"];
-            moveAnime.fromValue = [NSValue valueWithCGPoint:point1];
-            moveAnime.toValue = [NSValue valueWithCGPoint:point2];
-            
-            // 合体
-            allAnimationGroup = [CAAnimationGroup animation];
-            allAnimationGroup.animations = [NSArray arrayWithObjects:alphaAnime, moveAnime, nil];
-            allAnimationGroup.removedOnCompletion = NO;
-            allAnimationGroup.fillMode = kCAFillModeForwards;
-            allAnimationGroup.duration = duration;
-            allAnimationGroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-            allAnimationGroup.delegate = self;
-            
-            // 
-            [self.viewController.hudView.layer addAnimation:allAnimationGroup forKey:animationKey];
-            
+            [self fromBottomAnimation];
             break;
             
         default:
@@ -981,387 +1023,823 @@ static EEHUDView *sharedInstance_ = nil;
     }
 }
 
+- (void)fadeInAnimation
+{
+    CGFloat fromAlpha = 0.0;
+    CGFloat toAlpha = 1.0;
+    
+    CGRect fromRect = self.viewController.hudView.frame;
+    fromRect.size.width *= EEHUD_SIZERATIO_FADEIN;
+    fromRect.size.height *= EEHUD_SIZERATIO_FADEIN;
+    
+    CGRect toRect = self.viewController.hudView.frame;
+    
+    CGFloat duration = EEHUD_DURATION_FADEIN;
+    
+    // 透明度
+    CABasicAnimation *alphaAnime;
+    alphaAnime = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    alphaAnime.fromValue = [NSNumber numberWithFloat:fromAlpha];
+    alphaAnime.toValue = [NSNumber numberWithFloat:toAlpha];
+    
+    // 拡大
+    CABasicAnimation *expandAnime;
+    expandAnime = [CABasicAnimation animationWithKeyPath:@"bounds"];
+    expandAnime.fromValue = [NSValue valueWithCGRect:fromRect];
+    expandAnime.toValue = [NSValue valueWithCGRect:toRect];
+    
+    // 合体
+    CAAnimationGroup *allAnimationGroup;
+    allAnimationGroup = [CAAnimationGroup animation];
+    allAnimationGroup.animations = [NSArray arrayWithObjects:alphaAnime, expandAnime, nil];
+    allAnimationGroup.removedOnCompletion = NO;
+    allAnimationGroup.fillMode = kCAFillModeForwards;
+    allAnimationGroup.duration = duration;
+    allAnimationGroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    
+    //allAnimationGroup.startHandlerBlock = [self startHandlerBlock];
+    allAnimationGroup.stopHandlerBlock = [self stopHandlerBlock];
+    
+    // start
+    EEAnimationHandler *handler = [EEAnimationHandler sharedHandler];
+    [handler registerAnimation:allAnimationGroup toLayer:self.viewController.hudView.layer forKey:@"fadein"];
+}
+
+- (void)lutzInAnimation
+{
+    CGFloat fromAlpha = 0.0;
+    CGFloat toAlpha = 1.0;
+    
+    CGFloat duration = EEHUD_DURATION_LUTZIN;
+    
+    CGRect fromRect = self.viewController.hudView.bounds;
+    fromRect.size.width *= EEHUD_SIZERATIO_LUTZIN;
+    fromRect.size.height *= EEHUD_SIZERATIO_LUTZIN;
+    
+    CGRect toRect = self.viewController.hudView.bounds;
+    
+    //
+    CGPoint point1 = self.viewController.hudView.layer.position;
+    CGPoint point2 = point1;
+    point2.y -= EEHUD_HEIGHT_JUMP_LUTZIN;
+    
+    
+    // 透明度
+    CABasicAnimation *alphaAnime;
+    alphaAnime = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    alphaAnime.fromValue = [NSNumber numberWithFloat:fromAlpha];
+    alphaAnime.toValue = [NSNumber numberWithFloat:toAlpha];
+    alphaAnime.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+    alphaAnime.removedOnCompletion = NO;
+    alphaAnime.fillMode = kCAFillModeForwards;
+    alphaAnime.duration = duration * 0.5;
+    alphaAnime.beginTime = 0.0;
+    
+    // 拡大
+    CABasicAnimation *expandAnime;
+    expandAnime = [CABasicAnimation animationWithKeyPath:@"bounds.size"];
+    expandAnime.fromValue = [NSValue valueWithCGSize:fromRect.size];
+    expandAnime.toValue = [NSValue valueWithCGSize:toRect.size];
+    expandAnime.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+    expandAnime.removedOnCompletion = NO;
+    expandAnime.fillMode = kCAFillModeForwards;
+    expandAnime.duration = duration * 0.5;
+    expandAnime.beginTime = 0.0;
+    
+    // jumpUP
+    CABasicAnimation *jumpUpAnime;
+    jumpUpAnime = [CABasicAnimation animationWithKeyPath:@"position"];
+    jumpUpAnime.fromValue = [NSValue valueWithCGPoint:point1];
+    jumpUpAnime.toValue = [NSValue valueWithCGPoint:point2];
+    jumpUpAnime.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+    jumpUpAnime.duration = duration * 0.5;
+    jumpUpAnime.beginTime = 0.0;
+    
+    // jumpDown
+    CABasicAnimation *jumpDownAnime;
+    jumpDownAnime = [CABasicAnimation animationWithKeyPath:@"position"];
+    jumpDownAnime.fromValue = [NSValue valueWithCGPoint:point2];
+    jumpDownAnime.toValue = [NSValue valueWithCGPoint:point1];
+    jumpDownAnime.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+    jumpDownAnime.duration = duration * 0.5;
+    jumpDownAnime.beginTime = duration * 0.5;
+    
+    // 回転
+    CABasicAnimation *rotateAnime;
+    rotateAnime = [CABasicAnimation animationWithKeyPath:@"transform"];
+    rotateAnime.fromValue = [NSValue valueWithCATransform3D:CATransform3DIdentity];
+    rotateAnime.toValue = [NSValue valueWithCATransform3D:CATransform3DMakeRotation(M_PI, 0.0f, 1.0f, 0.0f)];
+    rotateAnime.repeatCount = EEHUD_COUNT_ROTATION_LUTZIN;
+    rotateAnime.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+    rotateAnime.duration = duration / (float)EEHUD_COUNT_ROTATION_LUTZIN;
+    
+    // 合体
+    CAAnimationGroup *allAnimationGroup;
+    allAnimationGroup = [CAAnimationGroup animation];
+    allAnimationGroup.animations = [NSArray arrayWithObjects:
+                                    alphaAnime,
+                                    expandAnime,
+                                    jumpUpAnime,
+                                    jumpDownAnime,
+                                    rotateAnime, nil];
+    allAnimationGroup.removedOnCompletion = NO;
+    allAnimationGroup.fillMode = kCAFillModeForwards;
+    allAnimationGroup.duration = duration;
+    //allAnimationGroup.startHandlerBlock = [self startHandlerBlock];
+    allAnimationGroup.stopHandlerBlock = [self stopHandlerBlock];
+    
+    // start
+    EEAnimationHandler *handler = [EEAnimationHandler sharedHandler];
+    [handler registerAnimation:allAnimationGroup toLayer:self.viewController.hudView.layer forKey:@"lutzin"];
+}
+
+- (void)shakeInAnimation
+{
+    CGFloat fromAlpha = 0.0;
+    CGFloat toAlpha = 1.0;
+    
+    CGFloat duration = EEHUD_DURATION_SHAKEIN;
+    
+    // 透明度
+    CABasicAnimation *alphaAnime;
+    alphaAnime = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    alphaAnime.fromValue = [NSNumber numberWithFloat:fromAlpha];
+    alphaAnime.toValue = [NSNumber numberWithFloat:toAlpha];
+    alphaAnime.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    alphaAnime.removedOnCompletion = NO;
+    alphaAnime.fillMode = kCAFillModeForwards;
+    alphaAnime.duration = duration * 0.5;
+    alphaAnime.beginTime = 0.0;
+    
+    // シェイク
+    CAKeyframeAnimation *shakeAnime;
+    shakeAnime = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
+    
+    CGFloat shakeTheta = 0.5 * EEHUD_THETA_DEGREE_SHAKEIN * M_PI / 180.0;
+    NSMutableArray *transforms = [NSMutableArray array];
+    NSMutableArray *timingFunctions = [NSMutableArray array];
+    NSMutableArray *durations = [NSMutableArray array];
+    
+    for (int i = 0; i < EEHUD_COUNT_SHAKEIN; i++) {
+        
+        /* transform */
+        if (i == 0) {
+            [transforms addObject:[NSValue valueWithCATransform3D:CATransform3DMakeRotation(0.0f, 0.0f, 0.0f, 1.0f)]];
+            [durations addObject:[NSNumber numberWithFloat:0.0]];
+            
+        }else if (i == EEHUD_COUNT_SHAKEIN - 1){
+            [transforms addObject:[NSValue valueWithCATransform3D:CATransform3DMakeRotation(0.0f, 0.0f, 0.0f, 1.0f)]];
+            [durations addObject:[NSNumber numberWithFloat:(i - 0.5)/((CGFloat)EEHUD_COUNT_SHAKEIN - 1.0)]];
+            
+        }else if (i % 2 == 0){
+            [transforms addObject:[NSValue valueWithCATransform3D:CATransform3DMakeRotation(shakeTheta, 0.0f, 0.0f, 1.0f)]];
+            [durations addObject:[NSNumber numberWithFloat:(i - 0.5)/((CGFloat)EEHUD_COUNT_SHAKEIN - 1.0)]];
+            
+        }else {
+            [transforms addObject:[NSValue valueWithCATransform3D:CATransform3DMakeRotation(- shakeTheta, 0.0f, 0.0f, 1.0f)]];
+            [durations addObject:[NSNumber numberWithFloat:(i - 0.5)/((CGFloat)EEHUD_COUNT_SHAKEIN - 1.0)]];
+            
+        }
+        
+        /* timingFunction */
+        if (i == 0) {
+            [timingFunctions addObject:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
+            
+        }else {
+            [timingFunctions addObject:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+        }
+    }
+    
+    shakeAnime.values = transforms;
+    shakeAnime.timingFunctions = timingFunctions;
+    shakeAnime.keyTimes = durations;
+    shakeAnime.duration = duration;
+    
+    // 合体
+    CAAnimationGroup *allAnimationGroup;
+    allAnimationGroup = [CAAnimationGroup animation];
+    allAnimationGroup.animations = [NSArray arrayWithObjects:alphaAnime, shakeAnime, nil];
+    allAnimationGroup.removedOnCompletion = NO;
+    allAnimationGroup.fillMode = kCAFillModeForwards;
+    allAnimationGroup.duration = duration;
+    //allAnimationGroup.startHandlerBlock = [self startHandlerBlock];
+    allAnimationGroup.stopHandlerBlock = [self stopHandlerBlock];
+    
+    // start
+    EEAnimationHandler *handler = [EEAnimationHandler sharedHandler];
+    [handler registerAnimation:allAnimationGroup toLayer:self.viewController.hudView.layer forKey:@"shakein"];
+}
+
+- (void)noAnimeInAnimation
+{
+    CGFloat fromAlpha = 0.0;
+    CGFloat toAlpha = 1.0;
+    
+    // 透明度
+    CABasicAnimation *alphaAnime;
+    alphaAnime = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    alphaAnime.fromValue = [NSNumber numberWithFloat:fromAlpha];
+    alphaAnime.toValue = [NSNumber numberWithFloat:toAlpha];
+    alphaAnime.removedOnCompletion = NO;
+    alphaAnime.fillMode = kCAFillModeForwards;
+    alphaAnime.duration = EEHUD_DURATION_NOANIME;
+    //alphaAnime.startHandlerBlock = [self startHandlerBlock];
+    alphaAnime.stopHandlerBlock = [self stopHandlerBlock];
+    
+    // start
+    EEAnimationHandler *handler = [EEAnimationHandler sharedHandler];
+    [handler registerAnimation:alphaAnime toLayer:self.viewController.hudView.layer forKey:@"noanimein"];
+}
+
+- (void)fromRightAnimation
+{
+    CGFloat fromAlpha = 0.0;
+    CGFloat toAlpha = 1.0;
+    
+    CGPoint point1 = self.viewController.hudView.layer.position;
+    CGPoint point2 = point1;
+    point1.x += EEHUD_LENGTH_FROM_RIGHT;
+    
+    CGFloat duration = EEHUD_DURATION_FROM_RIGHT;
+    
+    // 透明度
+    CABasicAnimation *alphaAnime;
+    alphaAnime = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    alphaAnime.fromValue = [NSNumber numberWithFloat:fromAlpha];
+    alphaAnime.toValue = [NSNumber numberWithFloat:toAlpha];
+    
+    // 移動
+    CABasicAnimation *moveAnime;
+    moveAnime = [CABasicAnimation animationWithKeyPath:@"position"];
+    moveAnime.fromValue = [NSValue valueWithCGPoint:point1];
+    moveAnime.toValue = [NSValue valueWithCGPoint:point2];
+    
+    // 合体
+    CAAnimationGroup *allAnimationGroup;
+    allAnimationGroup = [CAAnimationGroup animation];
+    allAnimationGroup.animations = [NSArray arrayWithObjects:alphaAnime, moveAnime, nil];
+    allAnimationGroup.removedOnCompletion = NO;
+    allAnimationGroup.fillMode = kCAFillModeForwards;
+    allAnimationGroup.duration = duration;
+    allAnimationGroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+    //allAnimationGroup.startHandlerBlock = [self startHandlerBlock];
+    allAnimationGroup.stopHandlerBlock = [self stopHandlerBlock];
+    
+    // start
+    EEAnimationHandler *handler = [EEAnimationHandler sharedHandler];
+    [handler registerAnimation:allAnimationGroup toLayer:self.viewController.hudView.layer forKey:@"fromRight"];
+}
+
+- (void)fromLeftAnimation
+{
+    CGFloat fromAlpha = 0.0;
+    CGFloat toAlpha = 1.0;
+    
+    CGPoint point1 = self.viewController.hudView.layer.position;
+    CGPoint point2 = point1;
+    point1.x -= EEHUD_LENGTH_FROM_LEFT;
+    
+    CGFloat duration = EEHUD_DURATION_FROM_LEFT;
+    
+    // 透明度
+    CABasicAnimation *alphaAnime;
+    alphaAnime = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    alphaAnime.fromValue = [NSNumber numberWithFloat:fromAlpha];
+    alphaAnime.toValue = [NSNumber numberWithFloat:toAlpha];
+    
+    // 移動
+    CABasicAnimation *moveAnime;
+    moveAnime = [CABasicAnimation animationWithKeyPath:@"position"];
+    moveAnime.fromValue = [NSValue valueWithCGPoint:point1];
+    moveAnime.toValue = [NSValue valueWithCGPoint:point2];
+    
+    // 合体
+    CAAnimationGroup *allAnimationGroup;
+    allAnimationGroup = [CAAnimationGroup animation];
+    allAnimationGroup.animations = [NSArray arrayWithObjects:alphaAnime, moveAnime, nil];
+    allAnimationGroup.removedOnCompletion = NO;
+    allAnimationGroup.fillMode = kCAFillModeForwards;
+    allAnimationGroup.duration = duration;
+    allAnimationGroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+    //allAnimationGroup.startHandlerBlock = [self startHandlerBlock];
+    allAnimationGroup.stopHandlerBlock = [self stopHandlerBlock];
+    
+    // start
+    EEAnimationHandler *handler = [EEAnimationHandler sharedHandler];
+    [handler registerAnimation:allAnimationGroup toLayer:self.viewController.hudView.layer forKey:@"fromLeft"];
+}
+
+- (void)fromTopAnimation
+{
+    CGFloat fromAlpha = 0.0;
+    CGFloat toAlpha = 1.0;
+    
+    CGPoint point1 = self.viewController.hudView.layer.position;
+    CGPoint point2 = point1;
+    point1.y -= EEHUD_LENGTH_FROM_TOP;
+    
+    CGFloat duration = EEHUD_DURATION_FROM_TOP;
+    
+    // 透明度
+    CABasicAnimation *alphaAnime;
+    alphaAnime = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    alphaAnime.fromValue = [NSNumber numberWithFloat:fromAlpha];
+    alphaAnime.toValue = [NSNumber numberWithFloat:toAlpha];
+    
+    // 移動
+    CABasicAnimation *moveAnime;
+    moveAnime = [CABasicAnimation animationWithKeyPath:@"position"];
+    moveAnime.fromValue = [NSValue valueWithCGPoint:point1];
+    moveAnime.toValue = [NSValue valueWithCGPoint:point2];
+    
+    // 合体
+    CAAnimationGroup *allAnimationGroup;
+    allAnimationGroup = [CAAnimationGroup animation];
+    allAnimationGroup.animations = [NSArray arrayWithObjects:alphaAnime, moveAnime, nil];
+    allAnimationGroup.removedOnCompletion = NO;
+    allAnimationGroup.fillMode = kCAFillModeForwards;
+    allAnimationGroup.duration = duration;
+    allAnimationGroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+    //allAnimationGroup.startHandlerBlock = [self startHandlerBlock];
+    allAnimationGroup.stopHandlerBlock = [self stopHandlerBlock];
+    
+    // start
+    EEAnimationHandler *handler = [EEAnimationHandler sharedHandler];
+    [handler registerAnimation:allAnimationGroup toLayer:self.viewController.hudView.layer forKey:@"fromTop"];
+}
+
+- (void)fromBottomAnimation
+{
+    CGFloat fromAlpha = 0.0;
+    CGFloat toAlpha = 1.0;
+    
+    CGPoint point1 = self.viewController.hudView.layer.position;
+    CGPoint point2 = point1;
+    point1.y += EEHUD_LENGTH_FROM_BOTTOM;
+    
+    CGFloat duration = EEHUD_DURATION_FROM_BOTTOM;
+    
+    // 透明度
+    CABasicAnimation *alphaAnime;
+    alphaAnime = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    alphaAnime.fromValue = [NSNumber numberWithFloat:fromAlpha];
+    alphaAnime.toValue = [NSNumber numberWithFloat:toAlpha];
+    
+    // 移動
+    CABasicAnimation *moveAnime;
+    moveAnime = [CABasicAnimation animationWithKeyPath:@"position"];
+    moveAnime.fromValue = [NSValue valueWithCGPoint:point1];
+    moveAnime.toValue = [NSValue valueWithCGPoint:point2];
+    
+    // 合体
+    CAAnimationGroup *allAnimationGroup;
+    allAnimationGroup = [CAAnimationGroup animation];
+    allAnimationGroup.animations = [NSArray arrayWithObjects:alphaAnime, moveAnime, nil];
+    allAnimationGroup.removedOnCompletion = NO;
+    allAnimationGroup.fillMode = kCAFillModeForwards;
+    allAnimationGroup.duration = duration;
+    allAnimationGroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+    //allAnimationGroup.startHandlerBlock = [self startHandlerBlock];
+    allAnimationGroup.stopHandlerBlock = [self stopHandlerBlock];
+    
+    // start
+    EEAnimationHandler *handler = [EEAnimationHandler sharedHandler];
+    [handler registerAnimation:allAnimationGroup toLayer:self.viewController.hudView.layer forKey:@"fromBottom"];
+}
+
+#pragma mark ** hide **
 - (void)hideAnimation:(NSTimer *)timer;
 {
-    CGFloat fromAlpha, toAlpha;
-    CGRect fromRect, toRect;
-    CGPoint point1, point2;
-    
-    CGFloat duration;
-    
-    CAAnimationGroup *allAnimationGroup;
-    CABasicAnimation *alphaAnime;
-    CABasicAnimation *expandAnime;
-    CABasicAnimation *jumpUpAnime, *jumpDownAnime;
-    CABasicAnimation *rotateAnime;
-    CAKeyframeAnimation *shakeAnime;
-    CABasicAnimation *moveAnime;
-    
-    CGFloat shakeTheta;
-    NSMutableArray *transforms, *timingFunctions, *durations;
-    
-    // ユニークなkey作成
-    CFUUIDRef   uuid;
-    NSString*   identifier;
-    uuid = CFUUIDCreate(NULL);
-    identifier = (__bridge NSString*)CFUUIDCreateString(NULL, uuid);
-    CFRelease(uuid);
-    
-    NSString *animationKey = identifier;
+    // 状態更新
+    self.state = EEHUDViewStateCalledHideAnimation;
     
     switch (self.hideStyle) {
         case EEHUDViewHideStyleFadeOut:
             
-            fromAlpha = 1.0;
-            toAlpha = 0.0;
-            
-            fromRect = self.viewController.hudView.frame;
-            toRect = self.viewController.hudView.frame;
-            toRect.size.width *= EEHUD_SIZERATIO_FADEOUT;
-            toRect.size.height *= EEHUD_SIZERATIO_FADEOUT;
-            
-            duration = EEHUD_DURATION_FADEOUT;
-            
-            // 透明度
-            alphaAnime = [CABasicAnimation animationWithKeyPath:@"opacity"];
-            alphaAnime.fromValue = [NSNumber numberWithFloat:fromAlpha];
-            alphaAnime.toValue = [NSNumber numberWithFloat:toAlpha];
-            
-            // 拡大
-            expandAnime = [CABasicAnimation animationWithKeyPath:@"bounds"];
-            expandAnime.fromValue = [NSValue valueWithCGRect:fromRect];
-            expandAnime.toValue = [NSValue valueWithCGRect:toRect];
-            
-            // 合体
-            allAnimationGroup = [CAAnimationGroup animation];
-            allAnimationGroup.animations = [NSArray arrayWithObjects:alphaAnime, expandAnime, nil];
-            allAnimationGroup.removedOnCompletion = NO;
-            allAnimationGroup.fillMode = kCAFillModeForwards;
-            allAnimationGroup.duration = duration;
-            allAnimationGroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-            allAnimationGroup.delegate = self;
-            
-            // start
-            [self.viewController.hudView.layer addAnimation:allAnimationGroup forKey:animationKey];
-            
+            [self fadeOutAnimation];
             break;
             
         case EEHUDViewHideStyleLutz:
             
-            fromAlpha = 1.0;
-            toAlpha = 0.0;
-            
-            duration = EEHUD_DURATION_LUTZOUT;
-            
-            fromRect = self.viewController.hudView.bounds;
-            
-            toRect = self.viewController.hudView.bounds;
-            toRect.size.width *= EEHUD_SIZERATIO_LUTZOUT;
-            toRect.size.height *= EEHUD_SIZERATIO_LUTZOUT;
-            
-            //
-            point1 = self.viewController.hudView.layer.position;
-            point2 = point1;
-            point2.y -= EEHUD_HEIGHT_JUMP_LUTZOUT;
-            
-            
-            // 透明度
-            alphaAnime = [CABasicAnimation animationWithKeyPath:@"opacity"];
-            alphaAnime.fromValue = [NSNumber numberWithFloat:fromAlpha];
-            alphaAnime.toValue = [NSNumber numberWithFloat:toAlpha];
-            alphaAnime.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
-            alphaAnime.removedOnCompletion = NO;
-            alphaAnime.fillMode = kCAFillModeForwards;
-            alphaAnime.duration = duration * 0.5;
-            alphaAnime.beginTime = duration * 0.5;
-            
-            // 拡大
-            expandAnime = [CABasicAnimation animationWithKeyPath:@"bounds.size"];
-            expandAnime.fromValue = [NSValue valueWithCGSize:fromRect.size];
-            expandAnime.toValue = [NSValue valueWithCGSize:toRect.size];
-            expandAnime.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
-            expandAnime.removedOnCompletion = NO;
-            expandAnime.fillMode = kCAFillModeForwards;
-            expandAnime.duration = duration * 0.5;
-            expandAnime.beginTime = 0.0;
-            
-            // jumpUP
-            jumpUpAnime = [CABasicAnimation animationWithKeyPath:@"position"];
-            jumpUpAnime.fromValue = [NSValue valueWithCGPoint:point1];
-            jumpUpAnime.toValue = [NSValue valueWithCGPoint:point2];
-            jumpUpAnime.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-            jumpUpAnime.duration = duration * 0.5;
-            jumpUpAnime.beginTime = 0.0;
-            
-            // jumpDown
-            jumpDownAnime = [CABasicAnimation animationWithKeyPath:@"position"];
-            jumpDownAnime.fromValue = [NSValue valueWithCGPoint:point2];
-            jumpDownAnime.toValue = [NSValue valueWithCGPoint:point1];
-            jumpDownAnime.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
-            jumpDownAnime.duration = duration * 0.5;
-            jumpDownAnime.beginTime = duration * 0.5;
-            
-            // 回転
-            rotateAnime = [CABasicAnimation animationWithKeyPath:@"transform"];
-            rotateAnime.fromValue = [NSValue valueWithCATransform3D:CATransform3DIdentity];
-            rotateAnime.toValue = [NSValue valueWithCATransform3D:CATransform3DMakeRotation(M_PI, 0.0f, 1.0f, 0.0f)];
-            rotateAnime.repeatCount = EEHUD_COUNT_ROTATION_LUTZOUT;
-            rotateAnime.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-            rotateAnime.duration = duration / (float)EEHUD_COUNT_ROTATION_LUTZOUT;
-            
-            // 合体
-            allAnimationGroup = [CAAnimationGroup animation];
-            allAnimationGroup.animations = [NSArray arrayWithObjects:
-                                            alphaAnime,
-                                            expandAnime,
-                                            jumpUpAnime,
-                                            jumpDownAnime,
-                                            rotateAnime, nil];
-            allAnimationGroup.removedOnCompletion = NO;
-            allAnimationGroup.fillMode = kCAFillModeForwards;
-            allAnimationGroup.duration = duration;
-            allAnimationGroup.delegate = self;
-            
-            // 
-            [self.viewController.hudView.layer addAnimation:allAnimationGroup forKey:animationKey];
-            
+            [self lutzOutAnimation];
             break;
             
         case EEHUDViewHideStyleShake:
             
-            fromAlpha = 1.0;
-            toAlpha = 0.0;
-            
-            duration = EEHUD_DURATION_SHAKEIN;
-            
-            // 透明度
-            alphaAnime = [CABasicAnimation animationWithKeyPath:@"opacity"];
-            alphaAnime.fromValue = [NSNumber numberWithFloat:fromAlpha];
-            alphaAnime.toValue = [NSNumber numberWithFloat:toAlpha];
-            alphaAnime.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-            alphaAnime.removedOnCompletion = NO;
-            alphaAnime.fillMode = kCAFillModeForwards;
-            alphaAnime.duration = duration * 0.7;
-            alphaAnime.beginTime = 0.3 * duration;
-            
-            // シェイク
-            shakeAnime = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
-            
-            shakeTheta = 0.5 * EEHUD_THETA_DEGREE_SHAKEIN * M_PI / 180.0;
-            transforms = [NSMutableArray array];
-            timingFunctions = [NSMutableArray array];
-            durations = [NSMutableArray array];
-            
-            for (int i = 0; i < EEHUD_COUNT_SHAKEIN; i++) {
-                
-                /* transform */
-                if (i == 0) {
-                    [transforms addObject:[NSValue valueWithCATransform3D:CATransform3DMakeRotation(0.0f, 0.0f, 0.0f, 1.0f)]];
-                    [durations addObject:[NSNumber numberWithFloat:0.0]];
-                    
-                }else if (i == EEHUD_COUNT_SHAKEIN - 1){
-                    [transforms addObject:[NSValue valueWithCATransform3D:CATransform3DMakeRotation(0.0f, 0.0f, 0.0f, 1.0f)]];
-                    [durations addObject:[NSNumber numberWithFloat:(i - 0.5)/((CGFloat)EEHUD_COUNT_SHAKEIN - 1.0)]];
-                    
-                }else if (i % 2 == 0){
-                    [transforms addObject:[NSValue valueWithCATransform3D:CATransform3DMakeRotation(shakeTheta, 0.0f, 0.0f, 1.0f)]];
-                    [durations addObject:[NSNumber numberWithFloat:(i - 0.5)/((CGFloat)EEHUD_COUNT_SHAKEIN - 1.0)]];
-                    
-                }else {
-                    [transforms addObject:[NSValue valueWithCATransform3D:CATransform3DMakeRotation(- shakeTheta, 0.0f, 0.0f, 1.0f)]];
-                    [durations addObject:[NSNumber numberWithFloat:(i - 0.5)/((CGFloat)EEHUD_COUNT_SHAKEIN - 1.0)]];
-                    
-                }
-                
-                /* timingFunction */
-                if (i == 0) {
-                    [timingFunctions addObject:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
-                    
-                }else {
-                    [timingFunctions addObject:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
-                }
-            }
-            
-            shakeAnime.values = transforms;
-            shakeAnime.timingFunctions = timingFunctions;
-            shakeAnime.keyTimes = durations;
-            shakeAnime.duration = duration;
-            
-            // 合体
-            allAnimationGroup = [CAAnimationGroup animation];
-            allAnimationGroup.animations = [NSArray arrayWithObjects:alphaAnime, shakeAnime, nil];
-            allAnimationGroup.removedOnCompletion = NO;
-            allAnimationGroup.fillMode = kCAFillModeForwards;
-            allAnimationGroup.duration = duration;
-            allAnimationGroup.delegate = self;
-            
-            //
-            [self.viewController.hudView.layer addAnimation:allAnimationGroup forKey:animationKey];
-            
+            [self shakeOutAnimation];
             break;
             
         case EEHUDViewHideStyleToRight:
             
-            fromAlpha = 1.0;
-            toAlpha = 0.0;
-            
-            point1 = self.viewController.hudView.layer.position;
-            point2 = point1;
-            point2.x += EEHUD_LENGTH_TO_RIGHT;
-            
-            duration = EEHUD_DURATION_TO_RIGHT;
-            
-            // 透明度
-            alphaAnime = [CABasicAnimation animationWithKeyPath:@"opacity"];
-            alphaAnime.fromValue = [NSNumber numberWithFloat:fromAlpha];
-            alphaAnime.toValue = [NSNumber numberWithFloat:toAlpha];
-            
-            // 移動
-            moveAnime = [CABasicAnimation animationWithKeyPath:@"position"];
-            moveAnime.fromValue = [NSValue valueWithCGPoint:point1];
-            moveAnime.toValue = [NSValue valueWithCGPoint:point2];
-            
-            // 合体
-            allAnimationGroup = [CAAnimationGroup animation];
-            allAnimationGroup.animations = [NSArray arrayWithObjects:alphaAnime, moveAnime, nil];
-            allAnimationGroup.removedOnCompletion = NO;
-            allAnimationGroup.fillMode = kCAFillModeForwards;
-            allAnimationGroup.duration = duration;
-            allAnimationGroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
-            allAnimationGroup.delegate = self;
-            
-            // 
-            [self.viewController.hudView.layer addAnimation:allAnimationGroup forKey:animationKey];
-            
+            [self toRightAnimation];
             break;
             
         case EEHUDViewHideStyleToLeft:
             
-            fromAlpha = 1.0;
-            toAlpha = 0.0;
-            
-            point1 = self.viewController.hudView.layer.position;
-            point2 = point1;
-            point2.x -= EEHUD_LENGTH_TO_LEFT;
-            
-            duration = EEHUD_DURATION_TO_LEFT;
-            
-            // 透明度
-            alphaAnime = [CABasicAnimation animationWithKeyPath:@"opacity"];
-            alphaAnime.fromValue = [NSNumber numberWithFloat:fromAlpha];
-            alphaAnime.toValue = [NSNumber numberWithFloat:toAlpha];
-            
-            // 移動
-            moveAnime = [CABasicAnimation animationWithKeyPath:@"position"];
-            moveAnime.fromValue = [NSValue valueWithCGPoint:point1];
-            moveAnime.toValue = [NSValue valueWithCGPoint:point2];
-            
-            // 合体
-            allAnimationGroup = [CAAnimationGroup animation];
-            allAnimationGroup.animations = [NSArray arrayWithObjects:alphaAnime, moveAnime, nil];
-            allAnimationGroup.removedOnCompletion = NO;
-            allAnimationGroup.fillMode = kCAFillModeForwards;
-            allAnimationGroup.duration = duration;
-            allAnimationGroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
-            allAnimationGroup.delegate = self;
-            
-            // 
-            [self.viewController.hudView.layer addAnimation:allAnimationGroup forKey:animationKey];
-            
+            [self toLeftAnimation];
             break;
             
         case EEHUDViewHideStyleNoAnime:
             
-            fromAlpha = 1.0;
-            toAlpha = 0.0;
-            
-            // 透明度
-            alphaAnime = [CABasicAnimation animationWithKeyPath:@"opacity"];
-            alphaAnime.fromValue = [NSNumber numberWithFloat:fromAlpha];
-            alphaAnime.toValue = [NSNumber numberWithFloat:toAlpha];
-            alphaAnime.removedOnCompletion = NO;
-            alphaAnime.fillMode = kCAFillModeForwards;
-            alphaAnime.duration = EEHUD_DURATION_NOANIME;
-            alphaAnime.delegate = self;
-            
-            //
-            [self.viewController.hudView.layer addAnimation:alphaAnime forKey:animationKey];
-            
+            [self noAnimeOutAnimation];
             break;
             
         case EEHUDViewHideStyleToBottom:
             
-            fromAlpha = 1.0;
-            toAlpha = 0.0;
-            
-            point1 = self.viewController.hudView.layer.position;
-            point2 = point1;
-            point2.y += EEHUD_LENGTH_TO_BOTTOM;
-            
-            duration = EEHUD_DURATION_TO_BOTTOM;
-            
-            // 透明度
-            alphaAnime = [CABasicAnimation animationWithKeyPath:@"opacity"];
-            alphaAnime.fromValue = [NSNumber numberWithFloat:fromAlpha];
-            alphaAnime.toValue = [NSNumber numberWithFloat:toAlpha];
-            
-            // 移動
-            moveAnime = [CABasicAnimation animationWithKeyPath:@"position"];
-            moveAnime.fromValue = [NSValue valueWithCGPoint:point1];
-            moveAnime.toValue = [NSValue valueWithCGPoint:point2];
-            
-            // 合体
-            allAnimationGroup = [CAAnimationGroup animation];
-            allAnimationGroup.animations = [NSArray arrayWithObjects:alphaAnime, moveAnime, nil];
-            allAnimationGroup.removedOnCompletion = NO;
-            allAnimationGroup.fillMode = kCAFillModeForwards;
-            allAnimationGroup.duration = duration;
-            allAnimationGroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
-            allAnimationGroup.delegate = self;
-            
-            // 
-            [self.viewController.hudView.layer addAnimation:allAnimationGroup forKey:animationKey];
-            
+            [self toBottomAnimation];
             break;
             
         case EEHUDViewHideStyleToTop:
             
-            fromAlpha = 1.0;
-            toAlpha = 0.0;
-            
-            point1 = self.viewController.hudView.layer.position;
-            point2 = point1;
-            point2.y -= EEHUD_LENGTH_TO_TOP;
-            
-            duration = EEHUD_DURATION_TO_TOP;
-            
-            // 透明度
-            alphaAnime = [CABasicAnimation animationWithKeyPath:@"opacity"];
-            alphaAnime.fromValue = [NSNumber numberWithFloat:fromAlpha];
-            alphaAnime.toValue = [NSNumber numberWithFloat:toAlpha];
-            
-            // 移動
-            moveAnime = [CABasicAnimation animationWithKeyPath:@"position"];
-            moveAnime.fromValue = [NSValue valueWithCGPoint:point1];
-            moveAnime.toValue = [NSValue valueWithCGPoint:point2];
-            
-            // 合体
-            allAnimationGroup = [CAAnimationGroup animation];
-            allAnimationGroup.animations = [NSArray arrayWithObjects:alphaAnime, moveAnime, nil];
-            allAnimationGroup.removedOnCompletion = NO;
-            allAnimationGroup.fillMode = kCAFillModeForwards;
-            allAnimationGroup.duration = duration;
-            allAnimationGroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
-            allAnimationGroup.delegate = self;
-            
-            // 
-            [self.viewController.hudView.layer addAnimation:allAnimationGroup forKey:animationKey];
-            
+            [self toTopAnimation];
             break;
             
         default:
             break;
     }
+}
+
+- (void)fadeOutAnimation
+{
+    CGFloat fromAlpha = 1.0;
+    CGFloat toAlpha = 0.0;
+    
+    CGRect fromRect = self.viewController.hudView.frame;
+    CGRect toRect = self.viewController.hudView.frame;
+    toRect.size.width *= EEHUD_SIZERATIO_FADEOUT;
+    toRect.size.height *= EEHUD_SIZERATIO_FADEOUT;
+    
+    CGFloat duration = EEHUD_DURATION_FADEOUT;
+    
+    // 透明度
+    CABasicAnimation *alphaAnime;
+    alphaAnime = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    alphaAnime.fromValue = [NSNumber numberWithFloat:fromAlpha];
+    alphaAnime.toValue = [NSNumber numberWithFloat:toAlpha];
+    
+    // 拡大
+    CABasicAnimation *expandAnime;
+    expandAnime = [CABasicAnimation animationWithKeyPath:@"bounds"];
+    expandAnime.fromValue = [NSValue valueWithCGRect:fromRect];
+    expandAnime.toValue = [NSValue valueWithCGRect:toRect];
+    
+    // 合体
+    CAAnimationGroup *allAnimationGroup;
+    allAnimationGroup = [CAAnimationGroup animation];
+    allAnimationGroup.animations = [NSArray arrayWithObjects:alphaAnime, expandAnime, nil];
+    allAnimationGroup.removedOnCompletion = NO;
+    allAnimationGroup.fillMode = kCAFillModeForwards;
+    allAnimationGroup.duration = duration;
+    allAnimationGroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    allAnimationGroup.startHandlerBlock = [self startHandlerBlock];
+    allAnimationGroup.stopHandlerBlock = [self stopHandlerBlock];
+    
+    // start
+    EEAnimationHandler *handler = [EEAnimationHandler sharedHandler];
+    [handler registerAnimation:allAnimationGroup toLayer:self.viewController.hudView.layer forKey:@"fadeOut"];
+}
+
+- (void)lutzOutAnimation
+{
+    CGFloat fromAlpha = 1.0;
+    CGFloat toAlpha = 0.0;
+    
+    CGFloat duration = EEHUD_DURATION_LUTZOUT;
+    
+    CGRect fromRect = self.viewController.hudView.bounds;
+    
+    CGRect toRect = self.viewController.hudView.bounds;
+    toRect.size.width *= EEHUD_SIZERATIO_LUTZOUT;
+    toRect.size.height *= EEHUD_SIZERATIO_LUTZOUT;
+    
+    //
+    CGPoint point1 = self.viewController.hudView.layer.position;
+    CGPoint point2 = point1;
+    point2.y -= EEHUD_HEIGHT_JUMP_LUTZOUT;
+    
+    
+    // 透明度
+    CABasicAnimation *alphaAnime;
+    alphaAnime = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    alphaAnime.fromValue = [NSNumber numberWithFloat:fromAlpha];
+    alphaAnime.toValue = [NSNumber numberWithFloat:toAlpha];
+    alphaAnime.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+    alphaAnime.removedOnCompletion = NO;
+    alphaAnime.fillMode = kCAFillModeForwards;
+    alphaAnime.duration = duration * 0.5;
+    alphaAnime.beginTime = duration * 0.5;
+    
+    // 拡大
+    CABasicAnimation *expandAnime;
+    expandAnime = [CABasicAnimation animationWithKeyPath:@"bounds.size"];
+    expandAnime.fromValue = [NSValue valueWithCGSize:fromRect.size];
+    expandAnime.toValue = [NSValue valueWithCGSize:toRect.size];
+    expandAnime.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+    expandAnime.removedOnCompletion = NO;
+    expandAnime.fillMode = kCAFillModeForwards;
+    expandAnime.duration = duration * 0.5;
+    expandAnime.beginTime = 0.0;
+    
+    // jumpUP
+    CABasicAnimation *jumpUpAnime;
+    jumpUpAnime = [CABasicAnimation animationWithKeyPath:@"position"];
+    jumpUpAnime.fromValue = [NSValue valueWithCGPoint:point1];
+    jumpUpAnime.toValue = [NSValue valueWithCGPoint:point2];
+    jumpUpAnime.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+    jumpUpAnime.duration = duration * 0.5;
+    jumpUpAnime.beginTime = 0.0;
+    
+    // jumpDown
+    CABasicAnimation *jumpDownAnime;
+    jumpDownAnime = [CABasicAnimation animationWithKeyPath:@"position"];
+    jumpDownAnime.fromValue = [NSValue valueWithCGPoint:point2];
+    jumpDownAnime.toValue = [NSValue valueWithCGPoint:point1];
+    jumpDownAnime.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+    jumpDownAnime.duration = duration * 0.5;
+    jumpDownAnime.beginTime = duration * 0.5;
+    
+    // 回転
+    CABasicAnimation *rotateAnime;
+    rotateAnime = [CABasicAnimation animationWithKeyPath:@"transform"];
+    rotateAnime.fromValue = [NSValue valueWithCATransform3D:CATransform3DIdentity];
+    rotateAnime.toValue = [NSValue valueWithCATransform3D:CATransform3DMakeRotation(M_PI, 0.0f, 1.0f, 0.0f)];
+    rotateAnime.repeatCount = EEHUD_COUNT_ROTATION_LUTZOUT;
+    rotateAnime.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+    rotateAnime.duration = duration / (float)EEHUD_COUNT_ROTATION_LUTZOUT;
+    
+    // 合体
+    CAAnimationGroup *allAnimationGroup;
+    allAnimationGroup = [CAAnimationGroup animation];
+    allAnimationGroup.animations = [NSArray arrayWithObjects:
+                                    alphaAnime,
+                                    expandAnime,
+                                    jumpUpAnime,
+                                    jumpDownAnime,
+                                    rotateAnime, nil];
+    allAnimationGroup.removedOnCompletion = NO;
+    allAnimationGroup.fillMode = kCAFillModeForwards;
+    allAnimationGroup.duration = duration;
+    allAnimationGroup.startHandlerBlock = [self startHandlerBlock];
+    allAnimationGroup.stopHandlerBlock = [self stopHandlerBlock];
+    
+    // start
+    EEAnimationHandler *handler = [EEAnimationHandler sharedHandler];
+    [handler registerAnimation:allAnimationGroup toLayer:self.viewController.hudView.layer forKey:@"lutzOut"];
+}
+
+- (void)shakeOutAnimation
+{
+    CGFloat fromAlpha = 1.0;
+    CGFloat toAlpha = 0.0;
+    
+    CGFloat duration = EEHUD_DURATION_SHAKEIN;
+    
+    // 透明度
+    CABasicAnimation *alphaAnime;
+    alphaAnime = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    alphaAnime.fromValue = [NSNumber numberWithFloat:fromAlpha];
+    alphaAnime.toValue = [NSNumber numberWithFloat:toAlpha];
+    alphaAnime.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    alphaAnime.removedOnCompletion = NO;
+    alphaAnime.fillMode = kCAFillModeForwards;
+    alphaAnime.duration = duration * 0.7;
+    alphaAnime.beginTime = 0.3 * duration;
+    
+    // シェイク
+    CAKeyframeAnimation *shakeAnime;
+    shakeAnime = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
+    
+    CGFloat shakeTheta = 0.5 * EEHUD_THETA_DEGREE_SHAKEIN * M_PI / 180.0;
+    NSMutableArray *transforms = [NSMutableArray array];
+    NSMutableArray *timingFunctions = [NSMutableArray array];
+    NSMutableArray *durations = [NSMutableArray array];
+    
+    for (int i = 0; i < EEHUD_COUNT_SHAKEIN; i++) {
+        
+        /* transform */
+        if (i == 0) {
+            [transforms addObject:[NSValue valueWithCATransform3D:CATransform3DMakeRotation(0.0f, 0.0f, 0.0f, 1.0f)]];
+            [durations addObject:[NSNumber numberWithFloat:0.0]];
+            
+        }else if (i == EEHUD_COUNT_SHAKEIN - 1){
+            [transforms addObject:[NSValue valueWithCATransform3D:CATransform3DMakeRotation(0.0f, 0.0f, 0.0f, 1.0f)]];
+            [durations addObject:[NSNumber numberWithFloat:(i - 0.5)/((CGFloat)EEHUD_COUNT_SHAKEIN - 1.0)]];
+            
+        }else if (i % 2 == 0){
+            [transforms addObject:[NSValue valueWithCATransform3D:CATransform3DMakeRotation(shakeTheta, 0.0f, 0.0f, 1.0f)]];
+            [durations addObject:[NSNumber numberWithFloat:(i - 0.5)/((CGFloat)EEHUD_COUNT_SHAKEIN - 1.0)]];
+            
+        }else {
+            [transforms addObject:[NSValue valueWithCATransform3D:CATransform3DMakeRotation(- shakeTheta, 0.0f, 0.0f, 1.0f)]];
+            [durations addObject:[NSNumber numberWithFloat:(i - 0.5)/((CGFloat)EEHUD_COUNT_SHAKEIN - 1.0)]];
+            
+        }
+        
+        /* timingFunction */
+        if (i == 0) {
+            [timingFunctions addObject:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
+            
+        }else {
+            [timingFunctions addObject:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+        }
+    }
+    
+    shakeAnime.values = transforms;
+    shakeAnime.timingFunctions = timingFunctions;
+    shakeAnime.keyTimes = durations;
+    shakeAnime.duration = duration;
+    
+    // 合体
+    CAAnimationGroup *allAnimationGroup;
+    allAnimationGroup = [CAAnimationGroup animation];
+    allAnimationGroup.animations = [NSArray arrayWithObjects:alphaAnime, shakeAnime, nil];
+    allAnimationGroup.removedOnCompletion = NO;
+    allAnimationGroup.fillMode = kCAFillModeForwards;
+    allAnimationGroup.duration = duration;
+    allAnimationGroup.startHandlerBlock = [self startHandlerBlock];
+    allAnimationGroup.stopHandlerBlock = [self stopHandlerBlock];
+    
+    // start
+    EEAnimationHandler *handler = [EEAnimationHandler sharedHandler];
+    [handler registerAnimation:allAnimationGroup toLayer:self.viewController.hudView.layer forKey:@"shakeOut"];
+}
+
+- (void)noAnimeOutAnimation
+{
+    CGFloat fromAlpha = 1.0;
+    CGFloat toAlpha = 0.0;
+    
+    // 透明度
+    CABasicAnimation *alphaAnime;
+    alphaAnime = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    alphaAnime.fromValue = [NSNumber numberWithFloat:fromAlpha];
+    alphaAnime.toValue = [NSNumber numberWithFloat:toAlpha];
+    alphaAnime.removedOnCompletion = NO;
+    alphaAnime.fillMode = kCAFillModeForwards;
+    alphaAnime.duration = EEHUD_DURATION_NOANIME;
+    alphaAnime.startHandlerBlock = [self startHandlerBlock];
+    alphaAnime.stopHandlerBlock = [self stopHandlerBlock];
+    
+    // start
+    EEAnimationHandler *handler = [EEAnimationHandler sharedHandler];
+    [handler registerAnimation:alphaAnime toLayer:self.viewController.hudView.layer forKey:@"noAnimeOut"];
+    
+}
+
+- (void)toRightAnimation
+{
+    CGFloat fromAlpha = 1.0;
+    CGFloat toAlpha = 0.0;
+    
+    CGPoint point1 = self.viewController.hudView.layer.position;
+    CGPoint point2 = point1;
+    point2.x += EEHUD_LENGTH_TO_RIGHT;
+    
+    CGFloat duration = EEHUD_DURATION_TO_RIGHT;
+    
+    // 透明度
+    CABasicAnimation *alphaAnime;
+    alphaAnime = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    alphaAnime.fromValue = [NSNumber numberWithFloat:fromAlpha];
+    alphaAnime.toValue = [NSNumber numberWithFloat:toAlpha];
+    
+    // 移動
+    CABasicAnimation *moveAnime;
+    moveAnime = [CABasicAnimation animationWithKeyPath:@"position"];
+    moveAnime.fromValue = [NSValue valueWithCGPoint:point1];
+    moveAnime.toValue = [NSValue valueWithCGPoint:point2];
+    
+    // 合体
+    CAAnimationGroup *allAnimationGroup;
+    allAnimationGroup = [CAAnimationGroup animation];
+    allAnimationGroup.animations = [NSArray arrayWithObjects:alphaAnime, moveAnime, nil];
+    allAnimationGroup.removedOnCompletion = NO;
+    allAnimationGroup.fillMode = kCAFillModeForwards;
+    allAnimationGroup.duration = duration;
+    allAnimationGroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+    allAnimationGroup.startHandlerBlock = [self startHandlerBlock];
+    allAnimationGroup.stopHandlerBlock = [self stopHandlerBlock];
+    
+    // start
+    EEAnimationHandler *handler = [EEAnimationHandler sharedHandler];
+    [handler registerAnimation:allAnimationGroup toLayer:self.viewController.hudView.layer forKey:@"toRight"];
+}
+
+- (void)toLeftAnimation
+{
+    CGFloat fromAlpha = 1.0;
+    CGFloat toAlpha = 0.0;
+    
+    CGPoint point1 = self.viewController.hudView.layer.position;
+    CGPoint point2 = point1;
+    point2.x -= EEHUD_LENGTH_TO_LEFT;
+    
+    CGFloat duration = EEHUD_DURATION_TO_LEFT;
+    
+    // 透明度
+    CABasicAnimation *alphaAnime;
+    alphaAnime = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    alphaAnime.fromValue = [NSNumber numberWithFloat:fromAlpha];
+    alphaAnime.toValue = [NSNumber numberWithFloat:toAlpha];
+    
+    // 移動
+    CABasicAnimation *moveAnime;
+    moveAnime = [CABasicAnimation animationWithKeyPath:@"position"];
+    moveAnime.fromValue = [NSValue valueWithCGPoint:point1];
+    moveAnime.toValue = [NSValue valueWithCGPoint:point2];
+    
+    // 合体
+    CAAnimationGroup *allAnimationGroup;
+    allAnimationGroup = [CAAnimationGroup animation];
+    allAnimationGroup.animations = [NSArray arrayWithObjects:alphaAnime, moveAnime, nil];
+    allAnimationGroup.removedOnCompletion = NO;
+    allAnimationGroup.fillMode = kCAFillModeForwards;
+    allAnimationGroup.duration = duration;
+    allAnimationGroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+    allAnimationGroup.startHandlerBlock = [self startHandlerBlock];
+    allAnimationGroup.stopHandlerBlock = [self stopHandlerBlock];
+    
+    // start
+    EEAnimationHandler *handler = [EEAnimationHandler sharedHandler];
+    [handler registerAnimation:allAnimationGroup toLayer:self.viewController.hudView.layer forKey:@"toLeft"];
+}
+
+- (void)toTopAnimation
+{
+    CGFloat fromAlpha = 1.0;
+    CGFloat toAlpha = 0.0;
+    
+    CGPoint point1 = self.viewController.hudView.layer.position;
+    CGPoint point2 = point1;
+    point2.y -= EEHUD_LENGTH_TO_TOP;
+    
+    CGFloat duration = EEHUD_DURATION_TO_TOP;
+    
+    // 透明度
+    CABasicAnimation *alphaAnime;
+    alphaAnime = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    alphaAnime.fromValue = [NSNumber numberWithFloat:fromAlpha];
+    alphaAnime.toValue = [NSNumber numberWithFloat:toAlpha];
+    
+    // 移動
+    CABasicAnimation *moveAnime;
+    moveAnime = [CABasicAnimation animationWithKeyPath:@"position"];
+    moveAnime.fromValue = [NSValue valueWithCGPoint:point1];
+    moveAnime.toValue = [NSValue valueWithCGPoint:point2];
+    
+    // 合体
+    CAAnimationGroup *allAnimationGroup;
+    allAnimationGroup = [CAAnimationGroup animation];
+    allAnimationGroup.animations = [NSArray arrayWithObjects:alphaAnime, moveAnime, nil];
+    allAnimationGroup.removedOnCompletion = NO;
+    allAnimationGroup.fillMode = kCAFillModeForwards;
+    allAnimationGroup.duration = duration;
+    allAnimationGroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+    allAnimationGroup.startHandlerBlock = [self startHandlerBlock];
+    allAnimationGroup.stopHandlerBlock = [self stopHandlerBlock];
+    
+    // start
+    EEAnimationHandler *handler = [EEAnimationHandler sharedHandler];
+    [handler registerAnimation:allAnimationGroup toLayer:self.viewController.hudView.layer forKey:@"toTop"];
+}
+
+- (void)toBottomAnimation
+{
+    CGFloat fromAlpha = 1.0;
+    CGFloat toAlpha = 0.0;
+    
+    CGPoint point1 = self.viewController.hudView.layer.position;
+    CGPoint point2 = point1;
+    point2.y += EEHUD_LENGTH_TO_BOTTOM;
+    
+    CGFloat duration = EEHUD_DURATION_TO_BOTTOM;
+    
+    // 透明度
+    CABasicAnimation *alphaAnime;
+    alphaAnime = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    alphaAnime.fromValue = [NSNumber numberWithFloat:fromAlpha];
+    alphaAnime.toValue = [NSNumber numberWithFloat:toAlpha];
+    
+    // 移動
+    CABasicAnimation *moveAnime;
+    moveAnime = [CABasicAnimation animationWithKeyPath:@"position"];
+    moveAnime.fromValue = [NSValue valueWithCGPoint:point1];
+    moveAnime.toValue = [NSValue valueWithCGPoint:point2];
+    
+    // 合体
+    CAAnimationGroup *allAnimationGroup;
+    allAnimationGroup = [CAAnimationGroup animation];
+    allAnimationGroup.animations = [NSArray arrayWithObjects:alphaAnime, moveAnime, nil];
+    allAnimationGroup.removedOnCompletion = NO;
+    allAnimationGroup.fillMode = kCAFillModeForwards;
+    allAnimationGroup.duration = duration;
+    allAnimationGroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+    allAnimationGroup.startHandlerBlock = [self startHandlerBlock];
+    allAnimationGroup.stopHandlerBlock = [self stopHandlerBlock];
+    
+    // start
+    EEAnimationHandler *handler = [EEAnimationHandler sharedHandler];
+    [handler registerAnimation:allAnimationGroup toLayer:self.viewController.hudView.layer forKey:@"toBottom"];
 }
 
 - (void)makeTimer
@@ -1370,100 +1848,124 @@ static EEHUDView *sharedInstance_ = nil;
     self.state = EEHUDViewStateAppeal;
     
     // なぜかこのタイミングでタイマー発動
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:self.time
-                                                  target:self
-                                                selector:@selector(hideAnimation:)
-                                                userInfo:nil
-                                                 repeats:NO];
+    self.appealTimer = [NSTimer scheduledTimerWithTimeInterval:self.time
+                                                        target:self
+                                                      selector:@selector(hideAnimation:)
+                                                      userInfo:nil
+                                                       repeats:NO];
 }
 
-#pragma mark - Animation Delegate
-- (void)animationDidStart:(CAAnimation *)anim
+- (EEAnimationDidStartHandlerBlock)startHandlerBlock
 {
-    switch (self.state) {
-        case EEHUDViewStateTransparent:
-            // 非表示状態
-            
-            // 状態更新
-            self.state = EEHUDViewStateAnimatingIn;
-            
-            break;
+    __weak EEHUDView *me = self;
+    
+    void (^block)(CAAnimation *anim);
+    block = ^(CAAnimation *anim){
         
-        case EEHUDViewStateAnimatingIn:
-            // アニメーション中
-            
-            // 削除
-            for (NSString *key in self.viewController.hudView.layer.animationKeys) {
-                if (![[self.viewController.hudView.layer animationForKey:key] isEqual:anim]) {
-                    [self.viewController.hudView.layer removeAnimationForKey:key];
-                }
-            }
-            break;
-        
-        case EEHUDViewStateAppeal:
-            
-            // 状態更新
-            self.state = EEHUDViewStateAnimatingOut;
-            
-            break;
-            
-        case EEHUDViewStateAnimatingOut:
-            
-            // 状態更新
-            self.state = EEHUDViewStateAnimatingIn;
-            
-            break;
-            
-        default:
-            break;
-    }
-}
-
-- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag
-{
-    if (flag) {
-        
-        switch (self.state) {
-            case EEHUDViewStateAnimatingIn:
+        switch (me.state) {
+            case EEHUDViewStateCalledHideAnimation:
                 
-                // 状態更新
-                self.state = EEHUDViewStateAppeal;
-                
-                // 消去 (resultViewとmessage出てくる)
-                [self.viewController.hudView.layer removeAllAnimations];
-                
-                // なぜかこのタイミングでタイマー発動
-                self.timer = [NSTimer scheduledTimerWithTimeInterval:self.time
-                                                              target:self
-                                                            selector:@selector(hideAnimation:)
-                                                            userInfo:nil
-                                                             repeats:NO];
-                
-                break;
-                
-            case EEHUDViewStateAnimatingOut:
-                
-                // 全て終わったので初期化
-                [self cleaning];
-                
-                break;
+                // 状態更新 (アニメーション発動してからの方が良さげ)
+                self.state = EEHUDViewStateAnimatingOut;
                 
             default:
                 break;
         }
+    };
+    
+    return block;
+}
+
+- (EEAnimationDidStopHandlerBlock)stopHandlerBlock
+{
+    __weak EEHUDView *me = self;
+    
+    void (^block)(CAAnimation *anim, BOOL finished);
+    block = ^(CAAnimation *anim, BOOL finished){
         
+        if (finished) {
+            
+            switch (me.state) {
+                case EEHUDViewStateAnimatingIn:
+                    
+                    // 状態更新
+                    me.state = EEHUDViewStateAppeal;
+                    
+                    // アニメーション消去 (resultViewとmessage出てくる)
+                    [me.viewController.hudView.layer removeAnimationForKey:anim.animationKey];
+                    
+                    // なぜかこのタイミングでタイマー発動
+                    me.appealTimer = [NSTimer scheduledTimerWithTimeInterval:self.time
+                                                                      target:self
+                                                                    selector:@selector(hideAnimation:)
+                                                                    userInfo:nil
+                                                                     repeats:NO];
+                    
+                    break;
+                    
+                case EEHUDViewStateAnimatingOut:
+                    
+//                    LOG(@"AnimatingOut");
+//                    LOG(@"me:%@", me);
+//                    LOG(@"viewCon:%@", me.viewController);
+//                    LOG(@"isShow:%d", me.viewController.isShowProgress);
+                    
+                    // アニメーション削除
+                    [me.viewController.hudView.layer removeAnimationForKey:anim.animationKey];
+                    
+                    // 全て終わったのでprogress状態じゃなければ初期化
+                    if (!me.viewController.isShowProgress) {
+                        [me cleaning];
+                        
+                    }else {
+                        // progress状態へ戻す
+                        // たぶんここは来ないはず
+                        self.state = EEHUDViewStateTransparent;
+                        [EEHUDView showProgressWithMessage:self.progressMessage
+                                                 showStyle:EEHUDViewShowStyleFadeIn
+                                         activityViewStyle:self.viewController.resultView.activityStyle];
+                        
+                    }
+                    
+                    
+                    break;
+                    
+                default:
+                    break;
+            }
+            
+            
+        }
+    };
+    
+    return block;
+}
+
+- (void)appealEndInProgress:(NSTimer *)timer
+{
+    if ((self.state == EEHUDViewStateAppeal) && (self.viewController.isShowProgress == YES)) {
         
+        // timer初期化
+        [_appealTimerInProgress invalidate];
+        self.appealTimerInProgress = nil;
+        
+        // 表示差し替えて再びアニメーション開始
+        self.viewController.message.text = self.progressMessage;
+        self.viewController.resultView.activityStyle = self.viewController.resultView.activityStyle;
     }
-    
-    
 }
 
 #pragma mark - END
 - (void)cleaning
 {
-    if (self.timer) {
-        [self.timer invalidate];
-        self.timer = nil;
+    if (self.appealTimer) {
+        [self.appealTimer invalidate];
+        self.appealTimer = nil;
+    }
+    
+    if (self.appealTimerInProgress) {
+        [self.appealTimerInProgress invalidate];
+        self.appealTimerInProgress = nil;
     }
     
     if (self.viewController.hudView.superview) {
@@ -1474,6 +1976,8 @@ static EEHUDView *sharedInstance_ = nil;
     if (self.viewController.view.superview) {
         [self.viewController.view removeFromSuperview];
     }
+    
+    self.progressMessage = nil;
     
     self.viewController = nil;
     

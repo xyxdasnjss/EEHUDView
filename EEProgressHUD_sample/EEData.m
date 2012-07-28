@@ -8,15 +8,17 @@
 
 #import "EEData.h"
 
-#define kEEDataResultStyleNumber 32
+#define kEEDataResultStyleNumber 31
 #define kEEDataShowStyleNumber 8
 #define kEEDataHideStyleNumber 8
+#define kEEDataActivityStyleNumber 2
 
 @interface EEData ()
 
 @property (nonatomic, strong) NSArray *showInfos;
 @property (nonatomic, strong) NSArray *hideInfos;
 @property (nonatomic, strong) NSArray *resultInfos;
+@property (nonatomic, strong) NSArray *activityInfos;
 
 - (void)prepare;
 @end
@@ -25,6 +27,7 @@
 @synthesize showInfos = _showInfos;
 @synthesize hideInfos = _hideInfos;
 @synthesize resultInfos = _resultInfos;
+@synthesize activityInfos = _activityInfos;
 
 - (id)init
 {
@@ -67,6 +70,16 @@
     }
 }
 
+- (NSString *)stringActivityStyle:(int)index
+{
+    if (index < [self.activityInfos count]) {
+        NSDictionary *info = [self.activityInfos objectAtIndex:index];
+        return (NSString *)[info objectForKey:@"style"];
+    }else {
+        return @"";
+    }
+}
+
 - (NSString *)abbreviatedStringShowStyle:(int)index
 {
     if (index < [self.showInfos count]) {
@@ -97,9 +110,20 @@
     }
 }
 
+- (NSString *)abbreviatedStringActivityStyle:(int)index
+{
+    if (index < [self.activityInfos count]) {
+        NSDictionary *info = [self.activityInfos objectAtIndex:index];
+        return (NSString *)[info objectForKey:@"abbreviated"];
+    }else {
+        return @"";
+    }
+}
+
 - (int)countOfShowStyle { return [self.showInfos count]; }
 - (int)countOfHideStyle { return [self.hideInfos count]; }
 - (int)countOfResultStyle { return [self.resultInfos count]; }
+- (int)countOfActivityStyle {return [self.activityInfos count]; }
 
 #pragma mark - Private
 - (void)prepare
@@ -186,12 +210,12 @@
                 styleString = @"EEHUDViewHideStyleToRight";
                 break;
             case 6:
-                abbreviatedString = @"↑";
-                styleString = @"EEHUDViewHideStyleToTop";
-                break;
-            case 7:
                 abbreviatedString = @"↓";
                 styleString = @"EEHUDViewHideStyleToBottom";
+                break;
+            case 7:
+                abbreviatedString = @"↑";
+                styleString = @"EEHUDViewHideStyleToTop";
                 break;
             default:
                 styleString = @"";
@@ -335,10 +359,6 @@
                 abbreviatedString = @"Wifi - empty";
                 styleString = @"EEHUDResultViewStyleWifiEmpty";
                 break;
-            case 31:
-                abbreviatedString = @"Turn Arround";
-                styleString = @"EEHUDResultViewStyleTurnArround";
-                break;
             default:
                 abbreviatedString = @"";
                 styleString = @"";
@@ -351,6 +371,33 @@
         [array addObject:info];
     }
     _resultInfos = [NSArray arrayWithArray:array];
+    
+    // activity
+    array = nil;
+    array = [NSMutableArray array];
+    for (int i = 0; i < kEEDataActivityStyleNumber; i++) {
+        NSString *styleString, *abbreviatedString;
+        switch (i) {
+            case 0:
+                abbreviatedString = @"turn around";
+                styleString = @"EEHUDActivityViewStyleTurnAround";
+                break;
+            case 1:
+                abbreviatedString = @"electrocardiogram";
+                styleString = @"EEHUDActivityViewStyleElectrocardiogram";
+                break;
+            default:
+                abbreviatedString = @"";
+                styleString = @"";
+                break;
+        }
+        
+        NSArray *keys = [NSArray arrayWithObjects:@"style", @"abbreviated", nil];
+        NSArray *objects = [NSArray arrayWithObjects:styleString, abbreviatedString, nil];
+        NSDictionary *info = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+        [array addObject:info];
+    }
+    _activityInfos = [NSArray arrayWithArray:array];
     
     array = nil;
 }

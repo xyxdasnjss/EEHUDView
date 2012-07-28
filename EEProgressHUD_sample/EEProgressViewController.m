@@ -14,11 +14,13 @@
 {
     float progress_;
 }
-
+@property (nonatomic, weak) NSTimer *timer;
 - (void)continuousCountUPHUD:(NSTimer *)timer;
 @end
 
 @implementation EEProgressViewController
+
+@synthesize timer = _timer;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -74,13 +76,6 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    static NSString *CellIdentifier = @"Cell";
-//    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-//    
-//    // Configure the cell...
-//    
-//    return cell;
-    
     UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
     return cell;
 }
@@ -92,17 +87,59 @@
     int section = indexPath.section;
     switch (section) {
         case 0:
+
+            [EEHUDView showProgressWithMessage:@"is Downloading..."
+                                     showStyle:EEHUDViewShowStyleFadeIn
+                             activityViewStyle:EEHUDActivityViewStyleTurnAround];
             
-            [NSTimer scheduledTimerWithTimeInterval:0.03
-                                             target:self
-                                           selector:@selector(continuousCountUPHUD:)
-                                           userInfo:nil
-                                            repeats:YES];
+            if (self.timer) {
+                [self.timer invalidate];
+                self.timer = nil;
+            }
+            self.timer = [NSTimer scheduledTimerWithTimeInterval:0.03
+                                                          target:self
+                                                        selector:@selector(continuousCountUPHUD:)
+                                                        userInfo:nil
+                                                         repeats:YES];
+            
+            [(AppDelegate *)[UIApplication sharedApplication].delegate countUpIgnoringCounter];
             
             [tableView deselectRowAtIndexPath:indexPath animated:YES];
             
             break;
             
+        case 1:
+            
+            [EEHUDView showProgressWithMessage:@"is Downloading..."
+                                     showStyle:EEHUDViewShowStyleFadeIn
+                             activityViewStyle:EEHUDActivityViewStyleElectrocardiogram];
+            if (self.timer) {
+                [self.timer invalidate];
+                self.timer = nil;
+            }
+            self.timer = [NSTimer scheduledTimerWithTimeInterval:0.07
+                                                          target:self
+                                                        selector:@selector(continuousCountUPHUD:)
+                                                        userInfo:nil
+                                                         repeats:YES];
+            
+            double delayInSeconds = 1.2;
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                
+                [EEHUDView growlWithMessage:@"tweeted!"
+                                  showStyle:EEHUDViewShowStyleFadeIn
+                                  hideStyle:EEHUDViewHideStyleFadeOut
+                            resultViewStyle:EEHUDResultViewStyleTweet
+                                   showTime:1.5];
+            });
+            
+            [(AppDelegate *)[UIApplication sharedApplication].delegate countUpIgnoringCounter];
+            
+            [tableView deselectRowAtIndexPath:indexPath animated:YES];
+            
+            
+            break;            
         default:
             break;
     }
@@ -111,29 +148,30 @@
 #pragma mark - Private
 - (void)continuousCountUPHUD:(NSTimer *)timer
 {
-    //NSLog(@"%s", __func__);
-    
-    if (progress_ <= 0.0) {
-        [(AppDelegate *)[UIApplication sharedApplication].delegate countUpIgnoringCounter];
-    }else if (progress_ >= 1.0) {
-        [(AppDelegate *)[UIApplication sharedApplication].delegate countDownIgnoringCounter];
-        
-        [timer invalidate];
-    }
-    
-    [EEHUDView progressWithMessage:@"is Downloading..."
-                         showStyle:EEHUDViewShowStyleFadeIn
-                         hideStyle:EEHUDViewHideStyleFadeOut
-                 progressViewStyle:EEHUDProgressViewStyleBar
-                          progress:progress_];
-    
-    //
     if (progress_ >= 1.0) {
+        
+        [self.timer invalidate];
+        self.timer = nil;
+        
+        [EEHUDView hideProgressWithMessage:@"Finished"
+                                 hideStyle:EEHUDViewHideStyleFadeOut
+                           resultViewStyle:EEHUDResultViewStyleChecked
+                                  showTime:1.5];
+        
+        [(AppDelegate *)[UIApplication sharedApplication].delegate countDownIgnoringCounter];
         progress_ = 0.0;
+        
     }else {
-        progress_ += 0.01;
+        
+        [EEHUDView updateProgress:progress_];
+        
+        //
+        if (progress_ >= 1.0) {
+            progress_ = 1.0;
+        }else {
+            progress_ += 0.01;
+        }
     }
-    
     
 }
 
