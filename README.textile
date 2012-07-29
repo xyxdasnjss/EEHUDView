@@ -105,8 +105,7 @@ h3. resultViewStyle (アイコン)
 !https://lh5.googleusercontent.com/-pEnuvZie0DI/T-RY9Zh7IxI/AAAAAAAAAPw/xdG7SYt76WU/s800/029_clock.png!|*_EEHUDREsultViewStyleWifiFull_*
 !https://lh6.googleusercontent.com/-gTo8vjA2JFI/UArUMIhvJrI/AAAAAAAAAQE/WbwW9nIevPY/s800/030_wifiFull.png!|
 |*_EEHUDResultViewStyleWifiEmpty_*
-!https://lh6.googleusercontent.com/-X5-_-_8b4G0/UArUMF1PL1I/AAAAAAAAAQA/Bu3jWniYUPY/s800/031_wifiEmpty.png!|*_EEHUDResultViewStyleTurnArround_*
-!https://lh3.googleusercontent.com/-7j0AhSXhaD0/UArUMbPXBkI/AAAAAAAAAQM/q716kfobcNM/s800/032_turnArround.png!||
+!https://lh6.googleusercontent.com/-X5-_-_8b4G0/UArUMF1PL1I/AAAAAAAAAQA/Bu3jWniYUPY/s800/031_wifiEmpty.png!|||
 
 
 h3. activityViewStyle (progressタイプの表示アイコン)
