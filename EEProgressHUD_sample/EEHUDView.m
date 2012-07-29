@@ -466,6 +466,7 @@ typedef enum EEHUDViewState_{
 - (void)toLeftAnimation;
 - (void)toTopAnimation;
 - (void)toBottomAnimation;
+- (void)crushOutAnimation;
 /******************************************/
 
 - (void)cleaning;
@@ -1454,6 +1455,11 @@ static EEHUDView *sharedInstance_ = nil;
             [self toTopAnimation];
             break;
             
+        case EEHUDViewHideStyleCrush:
+            
+            [self crushOutAnimation];
+            break;
+            
         default:
             break;
     }
@@ -1842,6 +1848,61 @@ static EEHUDView *sharedInstance_ = nil;
     [handler registerAnimation:allAnimationGroup toLayer:self.viewController.hudView.layer forKey:@"toBottom"];
 }
 
+- (void)crushOutAnimation
+{
+    UIView *resultView = self.viewController.resultView;
+    UILabel *messageLabel = self.viewController.message;
+    UIView *hudView = self.viewController.hudView;
+    
+    CGSize resultSize = resultView.bounds.size;
+    CGSize messageSize = messageLabel.bounds.size;
+    
+    CABasicAnimation *crush = [CABasicAnimation animationWithKeyPath:@"bounds.size"];
+    crush.fromValue = [NSValue valueWithCGSize:CGSizeMake(EEHUD_VIEW_WIDTH, EEHUD_VIEW_HEIGHT)];
+    crush.toValue = [NSValue valueWithCGSize:CGSizeMake(EEHUD_VIEW_WIDTH, 0.0)];
+    crush.duration = EEHUD_DURATION_CRUSHOUT_TOTAL;
+    crush.startHandlerBlock = [self startHandlerBlock];
+    crush.stopHandlerBlock = [self stopHandlerBlock];
+    
+    CABasicAnimation *crush1 = [CABasicAnimation animationWithKeyPath:@"bounds.size"];
+    crush1.fromValue = [NSValue valueWithCGSize:resultSize];
+    crush1.toValue = [NSValue valueWithCGSize:CGSizeMake(resultSize.width, 0.0)];
+    crush1.duration = EEHUD_DURATION_CRUSHOUT_TOTAL;
+    crush1.fillMode = kCAFillModeForwards;
+    crush1.removedOnCompletion = NO;
+    
+    CABasicAnimation *move1 = [CABasicAnimation animationWithKeyPath:@"position"];
+    move1.fromValue = [NSValue valueWithCGPoint:resultView.layer.position];
+    move1.toValue = [NSValue valueWithCGPoint:CGPointMake(resultView.layer.position.x, 0.0)];
+    
+    CABasicAnimation *crush2 = [CABasicAnimation animationWithKeyPath:@"bounds.size"];
+    crush2.fromValue = [NSValue valueWithCGSize:messageSize];
+    crush2.toValue = [NSValue valueWithCGSize:CGSizeMake(messageSize.width, 0.0)];
+    crush2.duration = EEHUD_DURATION_CRUSHOUT_TOTAL;
+    crush2.fillMode = kCAFillModeForwards;
+    crush2.removedOnCompletion = NO;
+    
+    CABasicAnimation *move2 = [CABasicAnimation animationWithKeyPath:@"position"];
+    move2.fromValue = [NSValue valueWithCGPoint:messageLabel.layer.position];
+    move2.toValue = [NSValue valueWithCGPoint:CGPointMake(messageLabel.layer.position.x, 0.0)];
+    
+    CAAnimationGroup *group1 = [CAAnimationGroup animation];
+    group1.animations = [NSArray arrayWithObjects:crush1, move1, nil];
+    group1.duration = EEHUD_DURATION_CRUSHOUT_TOTAL;
+    
+    CAAnimationGroup *group2 = [CAAnimationGroup animation];
+    group2.animations = [NSArray arrayWithObjects:crush2, move2, nil];
+    group2.duration = EEHUD_DURATION_CRUSHOUT_TOTAL;
+    
+    // add
+    EEAnimationHandler *handler = [EEAnimationHandler sharedHandler];
+    [handler registerAnimation:group1 toLayer:resultView.layer forKey:@"crushOut"];
+    [handler registerAnimation:group2 toLayer:messageLabel.layer forKey:@"crushOut"];
+    [handler registerAnimation:crush toLayer:hudView.layer forKey:@"crushOut"];
+    
+}
+
+#pragma mark - Other
 - (void)makeTimer
 {
     // 状態遷移

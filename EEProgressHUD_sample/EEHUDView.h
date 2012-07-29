@@ -45,7 +45,8 @@ typedef enum _EEHUDViewHideStyle {
     EEHUDViewHideStyleToLeft = 4,
     EEHUDViewHideStyleToRight = 5,
     EEHUDViewHideStyleToBottom = 6,
-    EEHUDViewHideStyleToTop = 7
+    EEHUDViewHideStyleToTop = 7,
+    EEHUDViewHideStyleCrush = 8
 } EEHUDViewHideStyle;
 
 @interface EEHUDView : UIWindow 

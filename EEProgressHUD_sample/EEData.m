@@ -10,7 +10,7 @@
 
 #define kEEDataResultStyleNumber 31
 #define kEEDataShowStyleNumber 8
-#define kEEDataHideStyleNumber 8
+#define kEEDataHideStyleNumber 9
 #define kEEDataActivityStyleNumber 2
 
 @interface EEData ()
@@ -216,6 +216,10 @@
             case 7:
                 abbreviatedString = @"↑";
                 styleString = @"EEHUDViewHideStyleToTop";
+                break;
+            case 8:
+                abbreviatedString = @"crush";
+                styleString = @"EEHUDViewHideStyleCrush";
                 break;
             default:
                 styleString = @"";

@@ -61,6 +61,7 @@ h3. hideStyle (削除方法)
 @EEHUDViewHideStyleToRight@     右へフェードアウト
 @EEHUDViewHideStyleToBottom@    下へフェードアウト
 @EEHUDViewHideStyleToTop@       上へフェードアウト
+@EEHUDViewHideStyleCrush@		縦方向へつぶす
 
 h3. resultViewStyle (アイコン)
 

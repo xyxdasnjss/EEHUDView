@@ -113,6 +113,9 @@
 #define EEHUD_KEY_HIDE_PROGRESS         @"EEHUD_KEY_HIDE_PROGRESS"
 #define EEHUD_KEY_SHOW_PROGRESS         @"EEHUD_KEY_SHOW_PROGRESS"
 
+// animation (crush)
+#define EEHUD_DURATION_CRUSHOUT_TOTAL           0.15
+
 // turn arround
 #define EEHUD_RADIUS_TURN_ARROUND       20.0
 

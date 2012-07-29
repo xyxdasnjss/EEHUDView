@@ -46,7 +46,7 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
     self.showStyle = EEHUDViewShowStyleFadeIn;
-    self.hideStyle = EEHUDViewHideStyleFadeOut;
+    self.hideStyle = EEHUDViewHideStyleCrush;
     self.resultStyle = EEHUDResultViewStyleOK;
     
     if (!self.data) {

@@ -183,7 +183,7 @@
 		845728B2148F914100715B6B /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0440;
 				ORGANIZATIONNAME = Milestoneeee.com;
 			};
 			buildConfigurationList = 845728B5148F914100715B6B /* Build configuration list for PBXProject "EEProgressHUD_sample" */;
