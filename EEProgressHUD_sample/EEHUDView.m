@@ -74,7 +74,8 @@
 
 - (void)loadView
 {
-    UIView *baseView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 1.0, 1.0)];
+    //UIView *baseView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 1.0, 1.0)];
+    UIView *baseView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 480.0)];
     baseView.backgroundColor = [UIColor clearColor];
     baseView.userInteractionEnabled = NO;
     self.view = baseView;
@@ -452,6 +453,7 @@ typedef enum EEHUDViewState_{
 - (void)fromLeftAnimation;
 - (void)fromTopAnimation;
 - (void)fromBottomAnimation;
+- (void)fromZAxisNegativeStrong:(BOOL)isStrong;
 
 /******************************************/
 
@@ -467,6 +469,7 @@ typedef enum EEHUDViewState_{
 - (void)toTopAnimation;
 - (void)toBottomAnimation;
 - (void)crushOutAnimation;
+- (void)toZAxisNegativeStrong:(BOOL)isStrong;
 /******************************************/
 
 - (void)cleaning;
@@ -1018,7 +1021,17 @@ static EEHUDView *sharedInstance_ = nil;
             
             [self fromBottomAnimation];
             break;
+        
+        case EEHUDViewShowStyleFromZAxisNegative:
             
+            [self fromZAxisNegativeStrong:NO];
+            break;
+            
+        case EEHUDViewShowStyleFromZAxisNegativeStrong:
+            
+            [self fromZAxisNegativeStrong:YES];
+            break;
+        
         default:
             break;
     }
@@ -1408,6 +1421,56 @@ static EEHUDView *sharedInstance_ = nil;
     [handler registerAnimation:allAnimationGroup toLayer:self.viewController.hudView.layer forKey:@"fromBottom"];
 }
 
+- (void)fromZAxisNegativeStrong:(BOOL)isStrong;
+{
+    __weak EEHUDView *me = self;
+    
+    CATransform3D transform = self.viewController.view.layer.sublayerTransform;
+    
+    transform.m34 = EEHUD_ZPOSITION_TRANSFORM_M34;
+    self.viewController.view.layer.sublayerTransform = transform;
+    
+    CABasicAnimation *alpha = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    alpha.fromValue = [NSNumber numberWithFloat:0.0];
+    alpha.toValue = [NSNumber numberWithFloat:1.0];
+    
+    CGFloat from = EEHUD_ZPOSITION_FROM;
+    if (isStrong) {
+        from = EEHUD_ZPOSITION_FROM_STRONG;
+    }
+    
+    CABasicAnimation *zPosition = [CABasicAnimation animationWithKeyPath:@"zPosition"];
+    zPosition.fromValue = [NSNumber numberWithFloat:from];
+    zPosition.toValue = [NSNumber numberWithFloat:EEHUD_ZPOSITION_TO];
+    
+    CAAnimationGroup *group = [CAAnimationGroup animation];
+    group.animations = [NSArray arrayWithObjects:alpha, zPosition, nil];
+    //group.removedOnCompletion = NO;
+    //group.fillMode = kCAFillModeForwards;
+    group.duration = EEHUD_DURATION_ZPOSITION_IN;
+    group.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+    group.stopHandlerBlock = ^(CAAnimation *anim, BOOL finished){
+        
+        CATransform3D transform = me.viewController.view.layer.sublayerTransform;
+        transform.m34 = 0.0;
+        me.viewController.view.layer.sublayerTransform = transform;
+        
+    };
+    
+    //
+    CABasicAnimation *kari = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    kari.fromValue = [NSNumber numberWithFloat:1.0];
+    kari.toValue = [NSNumber numberWithFloat:1.0];
+    kari.duration = 0.01;
+    kari.stopHandlerBlock = [self stopHandlerBlock];
+    
+    CALayer *layer = self.viewController.hudView.layer;
+    
+    EEAnimationHandler *handler = [EEAnimationHandler sharedHandler];
+    [handler registerAnimation:group toLayer:layer forKey:@"zPositionIn"];
+    [handler registerAnimation:kari toLayer:layer forKey:@"kariIn"];
+}
+
 #pragma mark ** hide **
 - (void)hideAnimation:(NSTimer *)timer;
 {
@@ -1458,6 +1521,16 @@ static EEHUDView *sharedInstance_ = nil;
         case EEHUDViewHideStyleCrush:
             
             [self crushOutAnimation];
+            break;
+            
+        case EEHUDViewHideStyleToZAxisNegative:
+            
+            [self toZAxisNegativeStrong:NO];
+            break;
+            
+        case EEHUDViewHideStyleToZAxisNegativeStrong:
+            
+            [self toZAxisNegativeStrong:YES];
             break;
             
         default:
@@ -1900,6 +1973,57 @@ static EEHUDView *sharedInstance_ = nil;
     [handler registerAnimation:group2 toLayer:messageLabel.layer forKey:@"crushOut"];
     [handler registerAnimation:crush toLayer:hudView.layer forKey:@"crushOut"];
     
+}
+
+- (void)toZAxisNegativeStrong:(BOOL)isStrong
+{
+    __weak EEHUDView *me = self;
+    
+    CATransform3D transform = self.viewController.view.layer.sublayerTransform;
+    
+    transform.m34 = EEHUD_ZPOSITION_TRANSFORM_M34;
+    self.viewController.view.layer.sublayerTransform = transform;
+    
+    CABasicAnimation *alpha = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    alpha.fromValue = [NSNumber numberWithFloat:1.0];
+    alpha.toValue = [NSNumber numberWithFloat:0.0];
+    
+    CGFloat to = EEHUD_ZPOSITION_FROM;
+    if (isStrong) {
+        to = EEHUD_ZPOSITION_FROM_STRONG;
+    }
+    
+    CABasicAnimation *zPosition = [CABasicAnimation animationWithKeyPath:@"zPosition"];
+    zPosition.fromValue = [NSNumber numberWithFloat:EEHUD_ZPOSITION_TO];
+    zPosition.toValue = [NSNumber numberWithFloat:to];
+    
+    CAAnimationGroup *group = [CAAnimationGroup animation];
+    group.animations = [NSArray arrayWithObjects:alpha, zPosition, nil];
+    //group.removedOnCompletion = NO;
+    //group.fillMode = kCAFillModeForwards;
+    group.duration = EEHUD_DURATION_ZPOSITION_OUT;
+    group.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+    group.stopHandlerBlock = ^(CAAnimation *anim, BOOL finished){
+        
+        CATransform3D transform = me.viewController.view.layer.sublayerTransform;
+        transform.m34 = 0.0;
+        me.viewController.view.layer.sublayerTransform = transform;
+        
+    };
+    
+    //
+    CABasicAnimation *kari = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    kari.fromValue = [NSNumber numberWithFloat:0.0];
+    kari.toValue = [NSNumber numberWithFloat:0.0];
+    kari.duration = 0.01;
+    kari.startHandlerBlock = [self startHandlerBlock];
+    kari.stopHandlerBlock = [self stopHandlerBlock];
+    
+    CALayer *layer = self.viewController.hudView.layer;
+    
+    EEAnimationHandler *handler = [EEAnimationHandler sharedHandler];
+    [handler registerAnimation:group toLayer:layer forKey:@"zPositionOut"];
+    [handler registerAnimation:kari toLayer:layer forKey:@"kariOut"];
 }
 
 #pragma mark - Other

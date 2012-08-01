@@ -45,8 +45,8 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
-    self.showStyle = EEHUDViewShowStyleFadeIn;
-    self.hideStyle = EEHUDViewHideStyleCrush;
+    self.showStyle = EEHUDViewShowStyleFromZAxisNegativeStrong;
+    self.hideStyle = EEHUDViewHideStyleToZAxisNegativeStrong;
     self.resultStyle = EEHUDResultViewStyleOK;
     
     if (!self.data) {

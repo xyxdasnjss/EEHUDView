@@ -9,8 +9,8 @@
 #import "EEData.h"
 
 #define kEEDataResultStyleNumber 31
-#define kEEDataShowStyleNumber 8
-#define kEEDataHideStyleNumber 9
+#define kEEDataShowStyleNumber 10
+#define kEEDataHideStyleNumber 11
 #define kEEDataActivityStyleNumber 2
 
 @interface EEData ()
@@ -165,6 +165,14 @@
                 abbreviatedString = @"↑";
                 styleString = @"EEHUDViewShowStyleFromBottom";
                 break;
+            case 8:
+                abbreviatedString = @"zAxis";
+                styleString = @"EEHUDViewShowStyleFromZAxisNegative";
+                break;
+            case 9:
+                abbreviatedString = @"zAxis (storng)";
+                styleString = @"EEHUDViewShowStyleFromZAxisNegativeStrong";
+                break;
             default:
                 abbreviatedString = @"";
                 styleString = @"";
@@ -220,6 +228,14 @@
             case 8:
                 abbreviatedString = @"crush";
                 styleString = @"EEHUDViewHideStyleCrush";
+                break;
+            case 9:
+                abbreviatedString = @"zAxis";
+                styleString = @"EEHUDViewHideStyleToZAxisNegative";
+                break;
+            case 10:
+                abbreviatedString = @"zAxis (strong)";
+                styleString = @"EEHUDViewHideStyleToZAxisNegativeStrong";
                 break;
             default:
                 styleString = @"";

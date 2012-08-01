@@ -116,6 +116,14 @@
 // animation (crush)
 #define EEHUD_DURATION_CRUSHOUT_TOTAL           0.15
 
+// animation (zPosition)
+#define EEHUD_ZPOSITION_FROM                500
+#define EEHUD_ZPOSITION_FROM_STRONG         1100
+#define EEHUD_ZPOSITION_TO                  0
+#define EEHUD_ZPOSITION_TRANSFORM_M34       -1.0/2000.0
+#define EEHUD_DURATION_ZPOSITION_IN         0.3
+#define EEHUD_DURATION_ZPOSITION_OUT        0.3
+
 // turn arround
 #define EEHUD_RADIUS_TURN_ARROUND       20.0
 

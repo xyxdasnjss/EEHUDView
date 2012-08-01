@@ -42,26 +42,30 @@ h2. Arguments (引数)
 
 h3. showStyle (表示方法)
 
-@EEHUDViewShowStyleFadeIn@      フェードイン
-@EEHUDViewShowStyleLutz@        回転しながらジャンプ
-@EEHUDViewShowStyleShake@       z軸を回転軸として震える
-@EEHUDViewShowStyleNoAnime@     アニメーション無し
-@EEHUDViewShowStyleFromRight@   右からフェードイン
-@EEHUDViewShowStyleFromLeft@    左からフェードイン
-@EEHUDViewShowStyleFromTop@     上からフェードイン
-@EEHUDViewShowStyleFromBottom@  下からフェードイン
+@EEHUDViewShowStyleFadeIn@      			フェードイン
+@EEHUDViewShowStyleLutz@        			回転しながらジャンプ
+@EEHUDViewShowStyleShake@       			z軸を回転軸として震える
+@EEHUDViewShowStyleNoAnime@     			アニメーション無し
+@EEHUDViewShowStyleFromRight@   			右からフェードイン
+@EEHUDViewShowStyleFromLeft@    			左からフェードイン
+@EEHUDViewShowStyleFromTop@     			上からフェードイン
+@EEHUDViewShowStyleFromBottom@  			下からフェードイン
+@EEHUDViewShowStyleFromZAxisNegative@		手前からフェードイン
+@EEHUDViewShowStyleFromZAxisNegativeStrong@	手前からフェードイン(ど派手)
 
 h3. hideStyle (削除方法)
 
-@EEHUDViewHideStyleFadeOut@     フェードアウト
-@EEHUDViewHideStyleLutz@        回転しながらジャンプ
-@EEHUDViewHideStyleShake@       z軸を回転軸として震える
-@EEHUDViewHideStyleNoAnime@     アニメーション無し
-@EEHUDViewHideStyleToLeft@      左へフェードアウト
-@EEHUDViewHideStyleToRight@     右へフェードアウト
-@EEHUDViewHideStyleToBottom@    下へフェードアウト
-@EEHUDViewHideStyleToTop@       上へフェードアウト
-@EEHUDViewHideStyleCrush@		縦方向へつぶす
+@EEHUDViewHideStyleFadeOut@					フェードアウト
+@EEHUDViewHideStyleLutz@					回転しながらジャンプ
+@EEHUDViewHideStyleShake@					z軸を回転軸として震える
+@EEHUDViewHideStyleNoAnime@					アニメーション無し
+@EEHUDViewHideStyleToLeft@					左へフェードアウト
+@EEHUDViewHideStyleToRight@					右へフェードアウト
+@EEHUDViewHideStyleToBottom@				下へフェードアウト
+@EEHUDViewHideStyleToTop@					上へフェードアウト
+@EEHUDViewHideStyleCrush@					縦方向へつぶす
+@EEHUDViewHideStyleToZAxisNegative@			手前へフェードアウト
+@EEHUDViewHideStyleToZAxisNegativeStrong@	手前へフェードアウト(ど派手)
 
 h3. resultViewStyle (アイコン)
 
