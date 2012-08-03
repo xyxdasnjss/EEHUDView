@@ -45,10 +45,12 @@ enum {
     CGFloat width = rect.size.width;
     CGFloat height = rect.size.height;
     
+    CGFloat yohaku = 2.0;
+    
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGMutablePathRef path = CGPathCreateMutable();
     
-    CGPathAddArc(path, NULL, width*0.5, height*0.5, width*0.5, 0.0, 2.0f*M_PI, YES);
+    CGPathAddArc(path, NULL, width*0.5, height*0.5, width*0.5 - yohaku, 0.0, 2.0f*M_PI, YES);
     
     CGContextAddPath(context, path);
     CGPathRelease(path);
@@ -112,6 +114,7 @@ enum {
  ***/
 - (void)animationStartTurnArround;
 - (void)animationStartElectrocardiogram;
+- (void)animationStartBeat;
 /*****************************************/
 
 - (void)refreshSomeLayers;
@@ -174,12 +177,16 @@ enum {
     switch (self.activityStyle) {
         case EEHUDActivityViewStyleTurnAround:
             [self animationStartTurnArround];
-            
             break;
+            
         case EEHUDActivityViewStyleElectrocardiogram:
             [self animationStartElectrocardiogram];
-            
             break;
+            
+        case EEHUDActivityViewStyleBeat:
+            [self animationStartBeat];
+            break;
+            
         default:
             break;
     }
@@ -236,8 +243,7 @@ enum {
     CGFloat height = rect.size.height;
     CGPoint center = CGPointMake(rect.origin.x + width*0.5, rect.origin.y + height*0.5);
     
-    CGFloat oneSide = (width < height) ? width : height;
-    CGFloat r = oneSide * 0.5;
+    //CGFloat oneSide = (width < height) ? width : height;
     
     CGFloat verticalSpace = 15.0;
     CGFloat offsetY = 7.0;
@@ -321,6 +327,46 @@ enum {
     EEAnimationHandler *handler = [EEAnimationHandler sharedHandler];
     [handler registerAnimation:group toLayer:aLayer forKey:@"electrocardiogram"];
     //[aLayer addAnimation:group forKey:nil];
+}
+
+- (void)animationStartBeat
+{
+    CGRect rect = self.bounds;
+    CGFloat width = rect.size.width;
+    CGFloat height = rect.size.height;
+    CGPoint center = CGPointMake(rect.origin.x + width*0.5, rect.origin.y + height*0.5);
+    
+    CGFloat oneSide = (width < height) ? width : height;
+    CGFloat r = oneSide * 0.5;
+    
+    CGFloat minRatio = 0.30;
+    CGFloat maxRatio = 0.55;
+    
+    CGMutablePathRef minArc = CGPathCreateMutable();
+    CGPathAddArc(minArc, NULL, center.x, center.y, r*minRatio, 0.0, 2.0*M_PI, YES);
+    
+    CGMutablePathRef maxArc = CGPathCreateMutable();
+    CGPathAddArc(maxArc, NULL, center.x, center.y, r*maxRatio, 0.0, 2.0*M_PI, YES);
+    
+    CAShapeLayer *aLayer = [CAShapeLayer layer];
+    aLayer.frame = self.layer.bounds;
+    aLayer.path = minArc;
+    aLayer.fillColor = [(UIColor *)EEHUD_COLOR_IMAGE CGColor];
+    
+    [self.layer addSublayer:aLayer];
+    self.shapeLayer = aLayer;
+    
+    
+    CABasicAnimation *bounce = [CABasicAnimation animationWithKeyPath:@"path"];
+    bounce.fromValue = (__bridge id)minArc;
+    bounce.toValue = (__bridge id)maxArc;
+    bounce.duration = 0.6f;
+    bounce.repeatCount = HUGE_VALF;
+    bounce.autoreverses = YES;
+    bounce.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    
+    EEAnimationHandler *handler = [EEAnimationHandler sharedHandler];
+    [handler registerAnimation:bounce toLayer:aLayer forKey:@"beat"];
 }
 
 #pragma mark - Common

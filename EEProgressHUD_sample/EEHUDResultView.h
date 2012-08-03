@@ -61,7 +61,8 @@ typedef enum _EEHUDResultViewStyle {
 
 typedef enum _EEHUDActivityViewStyle {
     EEHUDActivityViewStyleTurnAround = 1,
-    EEHUDActivityViewStyleElectrocardiogram = 2
+    EEHUDActivityViewStyleElectrocardiogram = 2,
+    EEHUDActivityViewStyleBeat = 3
 } EEHUDActivityViewStyle;
 
 @interface EEHUDResultView : UIView {

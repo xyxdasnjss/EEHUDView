@@ -90,13 +90,13 @@
 
             [EEHUDView showProgressWithMessage:@"is Downloading..."
                                      showStyle:EEHUDViewShowStyleFadeIn
-                             activityViewStyle:EEHUDActivityViewStyleTurnAround];
+                             activityViewStyle:EEHUDActivityViewStyleBeat];
             
             if (self.timer) {
                 [self.timer invalidate];
                 self.timer = nil;
             }
-            self.timer = [NSTimer scheduledTimerWithTimeInterval:0.03
+            self.timer = [NSTimer scheduledTimerWithTimeInterval:0.05
                                                           target:self
                                                         selector:@selector(continuousCountUPHUD:)
                                                         userInfo:nil

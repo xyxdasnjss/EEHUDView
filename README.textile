@@ -117,7 +117,8 @@ h3. activityViewStyle (progressタイプの表示アイコン)
 
 |*_EEHUDActivityViewStyleTurnAround_*
 !https://lh6.googleusercontent.com/-4Ll-W0A3I3s/UBNiIXEt5hI/AAAAAAAAAQw/TlJMcKAbgWc/s800/-001_turnArround.png!|*_EEHUDActivityViewStyleElectrocardiogram_*
-!https://lh6.googleusercontent.com/-wiOvX73_HRA/UBNiIcotsRI/AAAAAAAAAQs/O-pDTYptKeA/s800/-002_electrocardiogram.png!||
+!https://lh6.googleusercontent.com/-wiOvX73_HRA/UBNiIcotsRI/AAAAAAAAAQs/O-pDTYptKeA/s800/-002_electrocardiogram.png!|*_EEHUDActivityViewStyleBeat_*
+!https://lh6.googleusercontent.com/-SXRlKJF9aDs/UBvKpGHWXQI/AAAAAAAAARI/8ZMtIYB0l3o/s800/-003_beat.png!|
 
 
 h3. progress (進捗度)
