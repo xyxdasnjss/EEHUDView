@@ -5,7 +5,7 @@ EEHUDView is an easy-to-use, clean and lightweight HUD for iOS.
 
 !https://lh5.googleusercontent.com/-D4prt2WDrv0/T902ENPr9OI/AAAAAAAAAPE/vfjaHdjztzA/s800/120617-0002.png!
 
-h2. Features(特徴):
+h2. Features
 
 * Singleton Class
 
@@ -23,7 +23,7 @@ h2. Features(特徴):
 ** HUD - progress - を非表示にします 
 @+ (void)hideProgressWithMessage:hideStyle:resultViewStyle:showTime:@
 
-h2. Warning (注意)
+h2. Warning
 
 回転対応しました。
 EEHUDViewの回転は EEHUDViewConstants.h 内の以下定数により制御しております。
@@ -38,9 +38,9 @@ EEHUDViewの回転は EEHUDViewConstants.h 内の以下定数により制御し�
 必ず、EEHUDViewConstants.h内にて所望の定数を定義してください。
 (回転対応する方向をYESに対応しない方向をNOに)
 
-h2. Arguments (引数)
+h2. Arguments
 
-h3. showStyle (表示方法)
+h3. showStyle
 
 @EEHUDViewShowStyleFadeIn@      			フェードイン
 @EEHUDViewShowStyleLutz@        			回転しながらジャンプ
@@ -53,7 +53,7 @@ h3. showStyle (表示方法)
 @EEHUDViewShowStyleFromZAxisNegative@		手前からフェードイン
 @EEHUDViewShowStyleFromZAxisNegativeStrong@	手前からフェードイン(ど派手)
 
-h3. hideStyle (削除方法)
+h3. hideStyle
 
 @EEHUDViewHideStyleFadeOut@					フェードアウト
 @EEHUDViewHideStyleLutz@					回転しながらジャンプ
@@ -67,7 +67,7 @@ h3. hideStyle (削除方法)
 @EEHUDViewHideStyleToZAxisNegative@			手前へフェードアウト
 @EEHUDViewHideStyleToZAxisNegativeStrong@	手前へフェードアウト(ど派手)
 
-h3. resultViewStyle (アイコン)
+h3. resultViewStyle
 
 |*_EEHUDResultViewStyleOK_*
 !https://lh6.googleusercontent.com/-D4TQoDbF60g/T6OIllIAN2I/AAAAAAAAALA/WjTrCnVsiWM/s800/001_OK.png!|*_EEHUDResultViewStyleNG_*
@@ -113,7 +113,7 @@ h3. resultViewStyle (アイコン)
 !https://lh6.googleusercontent.com/-X5-_-_8b4G0/UArUMF1PL1I/AAAAAAAAAQA/Bu3jWniYUPY/s800/031_wifiEmpty.png!|||
 
 
-h3. activityViewStyle (progressタイプの表示アイコン)
+h3. activityViewStyle
 
 |*_EEHUDActivityViewStyleTurnAround_*
 !https://lh6.googleusercontent.com/-4Ll-W0A3I3s/UBNiIXEt5hI/AAAAAAAAAQw/TlJMcKAbgWc/s800/-001_turnArround.png!|*_EEHUDActivityViewStyleElectrocardiogram_*
@@ -121,7 +121,7 @@ h3. activityViewStyle (progressタイプの表示アイコン)
 !https://lh6.googleusercontent.com/-SXRlKJF9aDs/UBvKpGHWXQI/AAAAAAAAARI/8ZMtIYB0l3o/s800/-003_beat.png!|
 
 
-h3. progress (進捗度)
+h3. progress
 
 0.0〜1.0のfloatを代入してください
 
