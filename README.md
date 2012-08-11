@@ -84,10 +84,21 @@ EEHUDViewの回転は `EEHUDViewConstants.h` 内の以下定数により制御�
 回転対応する方向をYESに対応しない方向をNOにしてください。  
 
 
-引数 - Arguments  
+定数 - Constants  
 -------------------
-* `showStyle`  
+* `EEHUDViewShowStyle`  
+    * EEHUDViewShowStyleFadeIn  
+    * EEHUDViewShowStyleLutz  
+    * EEHUDViewShowStyleShake  
+    * EEHUDViewShowStyleNoAnime  
+    * EEHUDViewShowStyleFromRight  
+    * EEHUDViewShowStyleFromLeft  
+    * EEHUDViewShowStyleFromTop  
+    * EEHUDViewShowStyleFromBottom  
+    * EEHUDViewShowStyleFromZAxisNegative  
+    * EEHUDViewShowStyleFromZAxisNegativeStrong  
 
-* `hideStyle`  
+* `EEHUDViewHideStyle`  
+* `EEHUDResultViewStyle`  
+* `EEHUDActivityViewStyle`  
 
-* resultStyle  
