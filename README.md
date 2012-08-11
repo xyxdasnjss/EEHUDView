@@ -140,7 +140,10 @@ EEHUDViewの回転は `EEHUDViewConstants.h` 内の以下定数により制御�
 
 * `EEHUDActivityViewStyle`  
 
-
+||||
+|:------:|:------:|:------:|
+| EEHUDActivityViewStyleTurnAround | EEHUDActivityViewStyleElectrocardiogram | EEHUDActivityViewStyleBeat |
+| ![Turn Arround][turn_arround] | ![Electrocardiogram][electrocardiogram] | ![Beat][beat] |
 
 
 
@@ -175,3 +178,7 @@ EEHUDViewの回転は `EEHUDViewConstants.h` 内の以下定数により制御�
 [clock]: https://lh5.googleusercontent.com/-pEnuvZie0DI/T-RY9Zh7IxI/AAAAAAAAAPw/xdG7SYt76WU/s800/029_clock.png "Clock icon"  
 [wifi_full]: https://lh6.googleusercontent.com/-gTo8vjA2JFI/UArUMIhvJrI/AAAAAAAAAQE/WbwW9nIevPY/s800/030_wifiFull.png "Wifi Full icon"  
 [wifi_empty]: https://lh6.googleusercontent.com/-X5-_-_8b4G0/UArUMF1PL1I/AAAAAAAAAQA/Bu3jWniYUPY/s800/031_wifiEmpty.png "Wifi Empty icon"  
+
+[turn_arround]: https://lh6.googleusercontent.com/-4Ll-W0A3I3s/UBNiIXEt5hI/AAAAAAAAAQw/TlJMcKAbgWc/s800/-001_turnArround.png "Turn Arround icon"  
+[electrocardiogram]: https://lh6.googleusercontent.com/-wiOvX73_HRA/UBNiIcotsRI/AAAAAAAAAQs/O-pDTYptKeA/s800/-002_electrocardiogram.png "Electrocardiogram icon"  
+[beat]: https://lh6.googleusercontent.com/-SXRlKJF9aDs/UBvKpGHWXQI/AAAAAAAAARI/8ZMtIYB0l3o/s800/-003_beat.png "Beat icon"
