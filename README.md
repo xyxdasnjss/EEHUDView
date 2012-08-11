@@ -25,7 +25,7 @@ EEHUDView is an easy-to-use, clean and lightweight HUD for iOS.
         * HUDを表示します(出て消える)  
     	```+ (void)growlWithMessage:showStyle:hideStyle:resultViewStyle:showTime:(float)time```  
     * progress mode  
-    	* HUD – progress – を表示します。(出っぱなし) 
+    	* HUD – progress – を表示します。(出っぱなし)  
  		```+ (void)showProgressWithMessage:showStyle:activityViewStyle:```  
  		* HUD - progress - の進捗度を更新できます (0.0 - 1.0)  
 		```+ (void)updateProgress:```  
@@ -110,7 +110,18 @@ EEHUDViewの回転は `EEHUDViewConstants.h` 内の以下定数により制御�
     * EEHUDViewHideStyleCrush  
     * EEHUDViewHideStyleToZAxisNegative  
     * EEHUDViewHideStyleToZAxisNegativeStrong  
-    
+
 * `EEHUDResultViewStyle`  
+
+|EEHUDResultViewStyleOK|EEHUDResultViewStyleNG|EEHUDResultViewStyleChecked|
+|:------:|:------:|:------:|
+![OK](https://lh6.googleusercontent.com/-D4TQoDbF60g/T6OIllIAN2I/AAAAAAAAALA/WjTrCnVsiWM/s800/001_OK.png)|
+![NG](https://lh5.googleusercontent.com/-lxzV7SXuv8g/T6OIlv0jVdI/AAAAAAAAAK8/RXd56F5JqAE/s800/002_NG.png)|
+![Check](https://lh6.googleusercontent.com/-aAVm3jgPHHQ/T6OIlnZoCzI/AAAAAAAAALM/YVM6CwynwuM/s800/003_Checked.png)|  
+
+
 * `EEHUDActivityViewStyle`  
+
+
+
 
