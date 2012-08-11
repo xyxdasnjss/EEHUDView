@@ -12,12 +12,13 @@ EEHUDView is an easy-to-use, clean and lightweight HUD for iOS.
 
 [demo - youtube](http://youtu.be/QcRMokpS_3E "growl")  
 
-	[EEHUDView growlWithMessage:@"message"
-       	              showStyle:EEHUDViewShowStyleFadeIn
-           	          hideStyle:EEHUDViewHideStyleFadeOut
-           	    resultViewStyle:EEHUDResultViewStyleChecked
-           	           showTime:2.0];
-    
+``` objective-c 
+[EEHUDView growlWithMessage:@"message"
+   	              showStyle:EEHUDViewShowStyleFadeIn
+       	          hideStyle:EEHUDViewHideStyleFadeOut
+       	    resultViewStyle:EEHUDResultViewStyleChecked
+       	           showTime:2.0];
+```      
 
 * 2つの表示モードがあります (EEHUDView has two mode.)  
     * growl mode  
