@@ -119,9 +119,21 @@ EEHUDViewの回転は `EEHUDViewConstants.h` 内の以下定数により制御�
 | ![OK image][ok] | ![NG image][ng] | ![Check image][check] |
 | EEHUDResultViewStyleUpArrow | EEHUDResultViewStyleDownArrow | EEHUDResultViewStyleRightArrow |
 | ![Up Arrow][up_arrow] | ![Down Arrow][down_arrow] | ![Right Arrow][right_arrow] |
+| EEHUDResultViewStyleLeftArrow | EEHUDResultViewStylePlay | EEHUDResultViewStylePause|
+| ![Right Arrow][right_arrow] | ![Play][play] | ![Pause][pause] |
+| EEHUDResultViewStyleZero | EEHUDResultViewStyleOne | EEHUDResultViewStyleTwo |
+| ![Zero][zero] |![One][one] |![Two][two] |
 
 
 * `EEHUDActivityViewStyle`  
+
+
+
+
+
+
+
+
 
 
 
@@ -131,4 +143,16 @@ EEHUDViewの回転は `EEHUDViewConstants.h` 内の以下定数により制御�
 [up_arrow]: https://lh4.googleusercontent.com/-iCXoYP753KY/T6OImLcYgqI/AAAAAAAAALE/8genv0PcDRk/s800/004_UpArrow.png "Up Arrow icon"  
 [down_arrow]: https://lh5.googleusercontent.com/-F9HMjYUACjw/T6OIsXkIzNI/AAAAAAAAAL8/qt13-lCnDiM/s800/005_DownArrow.png "Down Arrow icon"  
 [right_arrow]: https://lh3.googleusercontent.com/-2TAnHqO4YKM/T6OIrNlHVII/AAAAAAAAAL0/T7sbDEJ-UB4/s800/006_RightArrow.png "Right Arrow icon"  
-
+[left_arrow]: https://lh6.googleusercontent.com/-rWdNEMvtEVY/T6OInfCtj2I/AAAAAAAAALc/cLXpt5e3Ghc/s800/007_LeftArrow.png "Left Arrow icon"  
+[play]: https://lh5.googleusercontent.com/-lEE_3lhjCp0/T6OIo09ySiI/AAAAAAAAALg/6XssC5BwdsI/s800/008_Play.png "Play icon"  
+[pause]: https://lh4.googleusercontent.com/-pFqcFsTxyZI/T6OIoydhuPI/AAAAAAAAALk/NJcqUJ3AuIA/s800/009_Pause.png "Pause icon"  
+[zero]: https://lh5.googleusercontent.com/-hWuJEOrTtgM/T6OYqfRkc7I/AAAAAAAAAMI/OUjLYEcCjss/s800/010_0.png "Zero icon"  
+[one]: https://lh4.googleusercontent.com/-U4cA8zK6k8E/T6OYqSJfBnI/AAAAAAAAAMM/d1FnfpP_oCE/s800/011_1.png "One icon"  
+[two]: https://lh3.googleusercontent.com/-BaqIvT8qUNA/T6OYvnjpNrI/AAAAAAAAAM0/27PdpA7d1Sk/s800/012_2.png "Two icon"  
+[three]: https://lh6.googleusercontent.com/-ectWmpyW78Y/T6OYqz-30VI/AAAAAAAAAMQ/L2pbkD_4pVM/s800/013_3.png "Three icon"  
+[four]: https://lh4.googleusercontent.com/-gtxf0m7gdBQ/T6OYrAl8-zI/AAAAAAAAAMU/KaGg7WmNGXk/s800/014_4.png "Four icon"
+[five]: https://lh4.googleusercontent.com/-dKxQQfmiVBU/T6OYwijezQI/AAAAAAAAAM8/zeTCf2oaIMU/s800/015_5.png "Five icon"  
+[six]: https://lh6.googleusercontent.com/-ZmvDSK-y9fw/T6OYrzM_vDI/AAAAAAAAAMk/tfBNY0Tz6qY/s800/016_6.png "Six icon"  
+[seven]: https://lh6.googleusercontent.com/-orIuTdbAQ-o/T6OYxqToEZI/AAAAAAAAANI/2FjC3jSfOno/s800/017_7.png "Seven icon"  
+[eight]: https://lh5.googleusercontent.com/-MXW5mcuSE0M/T6OYy62mgVI/AAAAAAAAANQ/N5Ot8-M40SY/s800/018_8.png "Eight icon"  
+[nine]: https://lh3.googleusercontent.com/-jmho3WMMa6Q/T6OYtexGRKI/AAAAAAAAAMw/pNQaGENsj48/s800/019_9.png "Nine icon"  
