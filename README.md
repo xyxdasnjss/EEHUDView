@@ -33,7 +33,7 @@ EEHUDView is an easy-to-use, clean and lightweight HUD for iOS.
 
 [demo - youtube](http://youtu.be/bTrCc9xvzPE "progress")  
 
-```smalltalk
+```objectiev-c
     - (void)buttonPressed:(id)sender {
       [EEHUDView showProgressWithMessage:@"message"
                                showStyle:EEHUDViewShowStyleFadeIn
