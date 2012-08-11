@@ -173,7 +173,7 @@ Please request what you thing for this HUD.
 また、使用する際@335gまで連絡していただけると励みになり非常に嬉しいです。  
 And please reply @335g if you adopt EEHUDView because I'm happy.  
 
-ライセンス＆コピーライト Licence & Copyright
+ライセンス＆コピーライト - Licence & Copyright
 -------------------
 Copyright &copy; 2011 Yoshiki Kudo  
 Distributed under the [MIT license](http://www.opensource.org/licenses/mit-license.php "MIT")
