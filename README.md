@@ -115,13 +115,17 @@ EEHUDViewの回転は `EEHUDViewConstants.h` 内の以下定数により制御�
   
 | EEHUDResultViewStyleOK | EEHUDResultViewStyleNG | EEHUDResultViewStyleChecked |
 |:------:|:------:|:------:|
-|![OK](https://lh6.googleusercontent.com/-D4TQoDbF60g/T6OIllIAN2I/AAAAAAAAALA/WjTrCnVsiWM/s800/001_OK.png)|![NG](https://lh5.googleusercontent.com/-lxzV7SXuv8g/T6OIlv0jVdI/AAAAAAAAAK8/RXd56F5JqAE/s800/002_NG.png)|![Check](https://lh6.googleusercontent.com/-aAVm3jgPHHQ/T6OIlnZoCzI/AAAAAAAAALM/YVM6CwynwuM/s800/003_Checked.png)|  
+| [OK image][ok] | [NG image][ng] | [Check image][check] |  
 | EEHUDResultViewStyleUpArrow | EEHUDResultViewStyleDownArrow | EEHUDResultViewStyleRightArrow |
 |:------:|:------:|:------:|
-
+||||
 
 
 * `EEHUDActivityViewStyle`  
 
 
+
+[ok]: https://lh6.googleusercontent.com/-D4TQoDbF60g/T6OIllIAN2I/AAAAAAAAALA/WjTrCnVsiWM/s800/001_OK.png "OK icon"  
+[ng]: https://lh5.googleusercontent.com/-lxzV7SXuv8g/T6OIlv0jVdI/AAAAAAAAAK8/RXd56F5JqAE/s800/002_NG.png "NG icon"  
+[check]: https://lh6.googleusercontent.com/-aAVm3jgPHHQ/T6OIlnZoCzI/AAAAAAAAALM/YVM6CwynwuM/s800/003_Checked.png "Check icon"  
 
