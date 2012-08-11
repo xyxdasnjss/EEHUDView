@@ -99,6 +99,18 @@ EEHUDViewの回転は `EEHUDViewConstants.h` 内の以下定数により制御�
     * EEHUDViewShowStyleFromZAxisNegativeStrong  
 
 * `EEHUDViewHideStyle`  
+    * EEHUDViewHideStyleFadeOut  
+    * EEHUDViewHideStyleLutz  
+    * EEHUDViewHideStyleShake  
+    * EEHUDViewHideStyleNoAnime  
+    * EEHUDViewHideStyleToLeft  
+    * EEHUDViewHideStyleToRight  
+    * EEHUDViewHideStyleToBottom  
+    * EEHUDViewHideStyleToTop  
+    * EEHUDViewHideStyleCrush  
+    * EEHUDViewHideStyleToZAxisNegative  
+    * EEHUDViewHideStyleToZAxisNegativeStrong  
+    
 * `EEHUDResultViewStyle`  
 * `EEHUDActivityViewStyle`  
 
