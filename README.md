@@ -42,7 +42,6 @@ EEHUDView is an easy-to-use, clean and lightweight HUD for iOS.
   double delayInSeconds = 1.0;
   dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
   dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-      
       NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:0.05
                                                         target:self
                                                       selector:@selector(updateProgress:)
@@ -50,7 +49,6 @@ EEHUDView is an easy-to-use, clean and lightweight HUD for iOS.
                                                        repeats:YES];
       [timer fire];
   });
-
 }
 
 - (void)updateProgress:(NSTimer *)timer
@@ -58,23 +56,38 @@ EEHUDView is an easy-to-use, clean and lightweight HUD for iOS.
   if (_progress >= 1.0) {
       [timer invalidate];
       timer = nil;
-      
       [EEHUDView hideProgressWithMessage:@"Finished"
                                hideStyle:EEHUDViewHideStyleToTop
                          resultViewStyle:EEHUDResultViewStyleChecked
                                 showTime:1.5];
-      
       _progress = 0.0;
   }
     
   [EEHUDView updateProgress:_progress];
-  
   _progress += 0.01;
 }
 ```
 
 注意 - Warning  
 -------------------
+回転対応しました。  
+EEHUDViewの回転は `EEHUDViewConstants.h` 内の以下定数により制御しております。  
+
+`EEHUD_INTERFACE_ORIENTATION_PORTRAIT`  
+`EEHUD_INTERFACE_ORIENTATION_LANDSCAPE_LEFT`  
+`EEHUD_INTERFACE_ORIENTATION_LANDSCAPE_RIGHT`  
+`EEHUD_INTERFACE_ORIENTATION_PORTRAIT_UPSIDEDOWN`  
+
+![orientation](https://lh5.googleusercontent.com/-a3EKZnX5_Z0/T901FC4HHXI/AAAAAAAAAOw/5YLlz-_waJ4/s800/120617-0001.png)  
+
+必ず、`EEHUDViewConstants.h`内にて所望の定数を定義してください。(You must set some constant to define orientation handling.)  
+回転対応する方向をYESに対応しない方向をNOにしてください。  
 
 
+引数 - Arguments  
+-------------------
+* `showStyle`  
 
+* `hideStyle`  
+
+* resultStyle  
