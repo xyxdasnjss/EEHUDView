@@ -159,7 +159,7 @@ EEHUDViewの回転は `EEHUDViewConstants.h` 内の以下定数により制御�
 `EEHUDViewConstants.h`  
 `EEAnimationHandler.h(.m)`  
 
-* 2.以下フレームワークを追加してください(Add the below framework to your project)
+* 2.以下フレームワークを追加してください(Add the below framework to your project)  
 `QuartzCore`  
 
 クレジット - Credit
