@@ -33,38 +33,43 @@ EEHUDView is an easy-to-use, clean and lightweight HUD for iOS.
 
 [demo - youtube](http://youtu.be/bTrCc9xvzPE "progress")  
 
-```objectiev-C
-    - (void)buttonPressed:(id)sender {
-      [EEHUDView showProgressWithMessage:@"message"
-                               showStyle:EEHUDViewShowStyleFadeIn
-                       activityViewStyle:EEHUDActivityViewStyleBeat];
-    
-      double delayInSeconds = 1.0;
-      dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-      dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        
-          NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:0.05
-                                                            target:self
-                                                          selector:@selector(updateProgress:)
-                                                          userInfo:nil
-                                                           repeats:YES];
-          [timer fire];
-      }
-    );
-
-    - (void)updateProgress:(NSTimer *)timer {
+``` objective-c
+- (void)buttonPressed:(id)sender {
+  [EEHUDView showProgressWithMessage:@"message"
+                           showStyle:EEHUDViewShowStyleFadeIn
+                   activityViewStyle:EEHUDActivityViewStyleBeat];
+  double delayInSeconds = 1.0;
+  dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+  dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
       
-      if (_progress >= 1.0) {
-        [timer invalidate];
-        [EEHUDView hideProgressWithMessage:@"Finished"
-                                 hideStyle:EEHUDViewHideStyleToTop
-                           resultViewStyle:EEHUDResultViewStyleChecked
-                                  showTime:1.5];
-      }
+      NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:0.05
+                                                        target:self
+                                                      selector:@selector(updateProgress:)
+                                                      userInfo:nil
+                                                       repeats:YES];
+      [timer fire];
+  });
+
+}
+
+- (void)updateProgress:(NSTimer *)timer
+{
+  if (_progress >= 1.0) {
+      [timer invalidate];
+      timer = nil;
+      
+      [EEHUDView hideProgressWithMessage:@"Finished"
+                               hideStyle:EEHUDViewHideStyleToTop
+                         resultViewStyle:EEHUDResultViewStyleChecked
+                                showTime:1.5];
+      
+      _progress = 0.0;
+  }
     
-      [EEHUDView updateProgress:_progress];
-      _progress += 0.01;
-    } 
+  [EEHUDView updateProgress:_progress];
+  
+  _progress += 0.01;
+}
 ```
 
 注意 - Warning  
