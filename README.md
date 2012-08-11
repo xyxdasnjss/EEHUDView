@@ -146,6 +146,39 @@ EEHUDViewの回転は `EEHUDViewConstants.h` 内の以下定数により制御�
 | ![Turn Arround][turn_arround] | ![Electrocardiogram][electrocardiogram] | ![Beat][beat] |
 
 
+引数 - Argument
+------------------
+* progress  
+0.0〜1.0のfloatを代入してください (You must set from 0.0 to 1.0 value at progress argument.)  
+
+インストール - Installation
+------------------
+1. 以下のファイルをプロジェクトへコピーする (Drag the below files into your project.)
+`EEHUDView.h(.m)`  
+`EEHUDResultView(.m)`  
+`EEHUDViewConstants.h`  
+`EEAnimationHandler.h(.m)`  
+
+* 2.以下フレームワークを追加してください(Add the below framework to your project)
+`QuartzCore`  
+
+クレジット - Credit
+------------------
+開発は現在継続しています。安心してお使いください。  
+Expansion will continue. Please use this HUD.  
+
+HUDに対するリクエスト等ありましたらご連絡ください。  
+Please request what you thing for this HUD.  
+
+また、使用する際@335gまで連絡していただけると励みになり非常に嬉しいです。  
+And please reply @335g if you adopt EEHUDView because I'm happy.  
+
+ライセンス＆コピーライト Licence & Copyright
+-------------------
+Copyright &copy; 2011 Yoshiki Kudo  
+Distributed under the [MIT license](http://www.opensource.org/licenses/mit-license.php "MIT")
+
+
 
 [ok]: https://lh6.googleusercontent.com/-D4TQoDbF60g/T6OIllIAN2I/AAAAAAAAALA/WjTrCnVsiWM/s800/001_OK.png "OK icon"  
 [ng]: https://lh5.googleusercontent.com/-lxzV7SXuv8g/T6OIlv0jVdI/AAAAAAAAAK8/RXd56F5JqAE/s800/002_NG.png "NG icon"  
