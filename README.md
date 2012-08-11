@@ -117,8 +117,7 @@ EEHUDViewの回転は `EEHUDViewConstants.h` 内の以下定数により制御�
 |:------:|:------:|:------:|
 | ![OK image][ok] | ![NG image][ng] | ![Check image][check] |
 | EEHUDResultViewStyleUpArrow | EEHUDResultViewStyleDownArrow | EEHUDResultViewStyleRightArrow |
-|:------:|:------:|:------:|
-| | | |
+| ![Up Arrow][up_arrow] | ![Down Arrow][down_arrow] | ![Right Arrow][right_arrow] |
 
 
 * `EEHUDActivityViewStyle`  
@@ -128,4 +127,7 @@ EEHUDViewの回転は `EEHUDViewConstants.h` 内の以下定数により制御�
 [ok]: https://lh6.googleusercontent.com/-D4TQoDbF60g/T6OIllIAN2I/AAAAAAAAALA/WjTrCnVsiWM/s800/001_OK.png "OK icon"  
 [ng]: https://lh5.googleusercontent.com/-lxzV7SXuv8g/T6OIlv0jVdI/AAAAAAAAAK8/RXd56F5JqAE/s800/002_NG.png "NG icon"  
 [check]: https://lh6.googleusercontent.com/-aAVm3jgPHHQ/T6OIlnZoCzI/AAAAAAAAALM/YVM6CwynwuM/s800/003_Checked.png "Check icon"  
+[up_arrow]: https://lh4.googleusercontent.com/-iCXoYP753KY/T6OImLcYgqI/AAAAAAAAALE/8genv0PcDRk/s800/004_UpArrow.png "Up Arrow icon"  
+[down_arrow]: https://lh5.googleusercontent.com/-F9HMjYUACjw/T6OIsXkIzNI/AAAAAAAAAL8/qt13-lCnDiM/s800/005_DownArrow.png "Down Arrow icon"  
+[right_arrow]: https://lh3.googleusercontent.com/-2TAnHqO4YKM/T6OIrNlHVII/AAAAAAAAAL0/T7sbDEJ-UB4/s800/006_RightArrow.png "Right Arrow icon"  
 
