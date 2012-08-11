@@ -65,6 +65,7 @@ EEHUDView is an easy-to-use, clean and lightweight HUD for iOS.
       [EEHUDView updateProgress:_progress];
       _progress += 0.01;
     } 
+```
 
 注意 - Warning  
 -------------------
