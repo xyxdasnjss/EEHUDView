@@ -123,15 +123,22 @@ EEHUDViewの回転は `EEHUDViewConstants.h` 内の以下定数により制御�
 | ![Right Arrow][right_arrow] | ![Play][play] | ![Pause][pause] |
 | EEHUDResultViewStyleZero | EEHUDResultViewStyleOne | EEHUDResultViewStyleTwo |
 | ![Zero][zero] |![One][one] |![Two][two] |
-
+| EEHUDResultViewStyleThree | EEHUDResultViewStyleFour | EEHUDResultViewStyleFive |
+| ![Three][three] | ![Four][four] | ![Five][five] |
+| EEHUDResultViewStyleSix | EEHUDResultViewStyleSeven | EEHUDResultViewStyleEight |
+| ![Six][six] | ![Seven][seven] | ![Eight][eight] |
+| EEHUDResultViewStyleNine | EEHUDResultViewStyleExclamation | EEHUDResultViewStyleCloud |
+| ![Nine][nine] | ![Exclamatino][exclamation] | ![Cloud][cloud] |
+| EEHUDResultViewStyleCloudUp | EEHUDResultViewStyleCloudDown | EEHUDResultViewStyleMail |
+| ![Cloud UP][cloud_up] | ![Cloud DOWN][cloud_down] | ![Mail][mail] |
+| EEHUDResultViewStyleMicrophone | EEHUDResultViewStyleLocation | EEHUDResultViewStyleHome |
+| ![Microphone][microphone] | ![Location][location] | ![Home][home] |
+| EEHUDResultViewStyleTweet | EEHUDResultViewStyleClock | EEHUDResultViewStyleWifiFull |
+| ![Tweet][tweet] | ![Clock][clock] | ![Wifi Full][wifi_full] |
+| EEHUDResultViewStyleWifiEmpty |||
+| ![Wifi Empty][wifi_empty] |||
 
 * `EEHUDActivityViewStyle`  
-
-
-
-
-
-
 
 
 
@@ -156,3 +163,15 @@ EEHUDViewの回転は `EEHUDViewConstants.h` 内の以下定数により制御�
 [seven]: https://lh6.googleusercontent.com/-orIuTdbAQ-o/T6OYxqToEZI/AAAAAAAAANI/2FjC3jSfOno/s800/017_7.png "Seven icon"  
 [eight]: https://lh5.googleusercontent.com/-MXW5mcuSE0M/T6OYy62mgVI/AAAAAAAAANQ/N5Ot8-M40SY/s800/018_8.png "Eight icon"  
 [nine]: https://lh3.googleusercontent.com/-jmho3WMMa6Q/T6OYtexGRKI/AAAAAAAAAMw/pNQaGENsj48/s800/019_9.png "Nine icon"  
+[exclamation]: https://lh5.googleusercontent.com/-Tf2brsObTM8/T6PFWoQb9YI/AAAAAAAAANg/jUVNxIWHu4o/s800/020_exclamation.png "Exclamation icon"  
+[cloud]: https://lh3.googleusercontent.com/-ClJCzZRU5EI/T6PFW82QdfI/AAAAAAAAANc/qHgqW0oWDc8/s800/021_cloud.png "Cloud icon"  
+[cloud_up]: https://lh4.googleusercontent.com/-U21199OsCag/UArUxEStM8I/AAAAAAAAAQY/bTyMrP3Tf7c/s800/022_cloudUp2.png "Cloud UP icon"  
+[cloud_down]: https://lh4.googleusercontent.com/-sIjKZWuAgvE/UArUxBBFHvI/AAAAAAAAAQc/4dkq6KIS2Sk/s800/023_cloudDown2.png "Cloud DOWN icon"  
+[mail]: https://lh3.googleusercontent.com/-2jku23CPft0/T8TF6aqp6RI/AAAAAAAAAOA/V3CggQtEGrQ/s800/024_mail.png "Mail icon"  
+[microphone]: https://lh6.googleusercontent.com/-4887D1xNGJc/T9wZESmsELI/AAAAAAAAAOQ/1b6KljBRKk8/s800/025_microphone.png "Microphone icon"  
+[location]: https://lh5.googleusercontent.com/-YFwjubFI3Pg/T9wZES0HlWI/AAAAAAAAAOM/MDZbRF4O7dQ/s800/026_location.png "Location icon"  
+[home]: https://lh3.googleusercontent.com/-_7I5KJ1koEk/T9wZEpL0eWI/AAAAAAAAAOU/HHAISS8BSIg/s800/027_home.png "Home icon"  
+[tweet]: https://lh3.googleusercontent.com/-E7WdM3PlDdw/T9wZE31b7MI/AAAAAAAAAOk/H5lbspSEPXI/s800/028_tweet.png "Tweet icon"  
+[clock]: https://lh5.googleusercontent.com/-pEnuvZie0DI/T-RY9Zh7IxI/AAAAAAAAAPw/xdG7SYt76WU/s800/029_clock.png "Clock icon"  
+[wifi_full]: https://lh6.googleusercontent.com/-gTo8vjA2JFI/UArUMIhvJrI/AAAAAAAAAQE/WbwW9nIevPY/s800/030_wifiFull.png "Wifi Full icon"  
+[wifi_empty]: https://lh6.googleusercontent.com/-X5-_-_8b4G0/UArUMF1PL1I/AAAAAAAAAQA/Bu3jWniYUPY/s800/031_wifiEmpty.png "Wifi Empty icon"  
