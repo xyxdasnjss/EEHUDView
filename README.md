@@ -12,7 +12,6 @@ EEHUDView is an easy-to-use, clean and lightweight HUD for iOS.
 
 [demo - youtube](http://youtu.be/QcRMokpS_3E "growl")  
 
-```smalltalk
 	[EEHUDView growlWithMessage:@"message"
        	              showStyle:EEHUDViewShowStyleFadeIn
            	          hideStyle:EEHUDViewHideStyleFadeOut
@@ -34,6 +33,7 @@ EEHUDView is an easy-to-use, clean and lightweight HUD for iOS.
 
 [demo - youtube](http://youtu.be/bTrCc9xvzPE "progress")  
 
+```smalltalk
     - (void)buttonPressed:(id)sender {
       [EEHUDView showProgressWithMessage:@"message"
                                showStyle:EEHUDViewShowStyleFadeIn
