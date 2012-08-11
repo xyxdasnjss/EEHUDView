@@ -113,6 +113,7 @@ EEHUDViewの回転は `EEHUDViewConstants.h` 内の以下定数により制御�
 
 * `EEHUDResultViewStyle`  
   
+||||
 |:------:|:------:|:------:|
 | EEHUDResultViewStyleOK | EEHUDResultViewStyleNG | EEHUDResultViewStyleChecked |
 | ![OK image][ok] | ![NG image][ng] | ![Check image][check] |
