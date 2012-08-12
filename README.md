@@ -153,7 +153,7 @@ EEHUDViewの回転は `EEHUDViewConstants.h` 内の以下定数により制御�
 
 インストール - Installation
 ------------------
-1. 以下のファイルをプロジェクトへコピーする (Drag the below files into your project.)
+1. 以下のファイルをプロジェクトへコピーする (Drag the below files into your project.)  
 `EEHUDView.h(.m)`  
 `EEHUDResultView(.m)`  
 `EEHUDViewConstants.h`  
