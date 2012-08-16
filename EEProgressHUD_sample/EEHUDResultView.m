@@ -393,17 +393,11 @@ enum {
      ************************/
     
     // 定義
-    CGPoint hidariue, migishita, migiue, hidarishita;
-    CGPoint start, relay, end;
+    CGPoint hidariue;
     CGFloat innerMargin;
-    CGFloat bothExpansion;
-    CGFloat ueMargin, hidariMargin, migiMargin, shitaMargin;
-    CGFloat theta;
-    CGFloat floatOne;   // 何でも用
     
     EEHUDResultViewStyle style = self.viewStyle;
     
-    UIBezierPath *path;
     switch (style) {
         case EEHUDResultViewStyleOK:
             [self drawOK:rect];
