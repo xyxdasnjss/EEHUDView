@@ -358,8 +358,8 @@ enum {
     
     
     CABasicAnimation *bounce = [CABasicAnimation animationWithKeyPath:@"path"];
-    bounce.fromValue = (__bridge id)minArc;
-    bounce.toValue = (__bridge id)maxArc;
+    bounce.fromValue = (__bridge_transfer id)minArc;
+    bounce.toValue = (__bridge_transfer id)maxArc;
     bounce.duration = 0.6f;
     bounce.repeatCount = HUGE_VALF;
     bounce.autoreverses = YES;
@@ -393,17 +393,11 @@ enum {
      ************************/
     
     // 定義
-    CGPoint hidariue, migishita, migiue, hidarishita;
-    CGPoint start, relay, end;
+    CGPoint hidariue;
     CGFloat innerMargin;
-    CGFloat bothExpansion;
-    CGFloat ueMargin, hidariMargin, migiMargin, shitaMargin;
-    CGFloat theta;
-    CGFloat floatOne;   // 何でも用
     
     EEHUDResultViewStyle style = self.viewStyle;
     
-    UIBezierPath *path;
     switch (style) {
         case EEHUDResultViewStyleOK:
             [self drawOK:rect];
