@@ -358,8 +358,8 @@ enum {
     
     
     CABasicAnimation *bounce = [CABasicAnimation animationWithKeyPath:@"path"];
-    bounce.fromValue = (__bridge id)minArc;
-    bounce.toValue = (__bridge id)maxArc;
+    bounce.fromValue = (__bridge_transfer id)minArc;
+    bounce.toValue = (__bridge_transfer id)maxArc;
     bounce.duration = 0.6f;
     bounce.repeatCount = HUGE_VALF;
     bounce.autoreverses = YES;
