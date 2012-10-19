@@ -2,7 +2,7 @@
 // EEProgressHUDResultView.h 
 // Created by Yoshiki Kudo on 11/12/05.
 //
-// Copyright (c) 2012 milestoneeee.com All rights reserved.
+// Copyright (c) 2012 Yoshiki Kudo All rights reserved.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to

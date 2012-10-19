@@ -2,7 +2,7 @@
 // EEProgressHUDResultView.m 
 // Created by Yoshiki Kudo on 11/12/05.
 //
-// Copyright (c) 2012 milestoneeee.com All rights reserved.
+// Copyright (c) 2012 Yoshiki Kudo All rights reserved.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -171,7 +171,7 @@ enum {
     // 初期化
     [self refreshSomeLayers];
     
-    LOG(@"activityStyle:%d", self.activityStyle);
+    //LOG(@"activityStyle:%d", self.activityStyle);
     
     // 振り分け
     switch (self.activityStyle) {
@@ -358,8 +358,8 @@ enum {
     
     
     CABasicAnimation *bounce = [CABasicAnimation animationWithKeyPath:@"path"];
-    bounce.fromValue = (__bridge id)minArc;
-    bounce.toValue = (__bridge id)maxArc;
+    bounce.fromValue = (__bridge_transfer id)minArc;
+    bounce.toValue = (__bridge_transfer id)maxArc;
     bounce.duration = 0.6f;
     bounce.repeatCount = HUGE_VALF;
     bounce.autoreverses = YES;
@@ -393,17 +393,11 @@ enum {
      ************************/
     
     // 定義
-    CGPoint hidariue, migishita, migiue, hidarishita;
-    CGPoint start, relay, end;
+    CGPoint hidariue;
     CGFloat innerMargin;
-    CGFloat bothExpansion;
-    CGFloat ueMargin, hidariMargin, migiMargin, shitaMargin;
-    CGFloat theta;
-    CGFloat floatOne;   // 何でも用
     
     EEHUDResultViewStyle style = self.viewStyle;
     
-    UIBezierPath *path;
     switch (style) {
         case EEHUDResultViewStyleOK:
             [self drawOK:rect];

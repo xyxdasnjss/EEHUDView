@@ -2,7 +2,7 @@
 // EEHUDView.m 
 // Created by Yoshiki Kudo on 11/12/05.
 //
-// Copyright (c) 2012 milestoneeee.com All rights reserved.
+// Copyright (c) 2012 Yoshiki Kudo All rights reserved.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -127,7 +127,7 @@
 
 - (void)viewDidLayoutSubviews
 {
-    LOG_METHOD;
+    //LOG_METHOD;
     
     CGRect hudRect = self.hudView.frame;
     
@@ -282,7 +282,7 @@
     
     if (_isShowProgress != isShowProgress) {
         
-        LOG(@"isShowProrgess:%d", isShowProgress);
+        //LOG(@"isShowProrgess:%d", isShowProgress);
         
         if (isShowProgress) {
             // NO -> YES
@@ -606,7 +606,7 @@ static EEHUDView *sharedInstance_ = nil;
          resultViewStyle:(EEHUDResultViewStyle)aResultViewStyle
                 showTime:(float)aTime
 {
-    LOG(@" --------- (show growl) state:%d ---------", self.state);
+    //LOG(@" --------- (show growl) state:%d ---------", self.state);
     
     if (!self.viewController) {
         self.viewController = [[EEHUDViewController alloc] initWithNibName:nil bundle:nil];
@@ -799,7 +799,7 @@ static EEHUDView *sharedInstance_ = nil;
                       showStyle:(EEHUDViewShowStyle)aShowStyle
               activityViewStyle:(EEHUDActivityViewStyle)anActivityStyle
 {
-    LOG(@" --------- (show progress) state:%d ---------", self.state);
+    //LOG(@" --------- (show progress) state:%d ---------", self.state);
     
     if (!self.viewController) {
         self.viewController = [[EEHUDViewController alloc] initWithNibName:nil bundle:nil];
@@ -928,7 +928,7 @@ static EEHUDView *sharedInstance_ = nil;
                 resultViewStyle:(EEHUDResultViewStyle)aResultViewStyle
                        showTime:(float)time
 {
-    LOG(@" --------- (hide progress) state:%d ---------", self.state);
+    //LOG(@" --------- (hide progress) state:%d ---------", self.state);
     
     if (self.viewController.isShowProgress) {
         
