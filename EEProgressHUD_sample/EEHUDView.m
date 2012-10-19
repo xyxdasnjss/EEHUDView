@@ -167,7 +167,9 @@
     if (!hudView_) {
         
         //CGSize fullRect = self.bounds.size;
-        CGSize fullSize = CGSizeMake(320.0, 460.0);
+        //CGSize fullSize = CGSizeMake(320.0, 460.0);
+        CGSize fullSize = [[UIScreen mainScreen] bounds].size;
+        //NSLog(@"fullSize:%@", NSStringFromCGSize(fullSize));
         
         CGRect rect;
         rect.origin.x = (fullSize.width - EEHUD_VIEW_WIDTH) * 0.5;
