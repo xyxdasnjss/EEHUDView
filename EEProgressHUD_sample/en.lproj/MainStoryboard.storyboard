@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11E53" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="EbG-Uw-5kh">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2843" systemVersion="12C60" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="EbG-Uw-5kh">
     <dependencies>
-        <deployment defaultVersion="1296" identifier="iOS"/>
-        <development defaultVersion="4200" identifier="xcode"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1181"/>
+        <deployment defaultVersion="1536" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1929"/>
     </dependencies>
     <scenes>
         <!--Show View Controller - Show-->
         <scene sceneID="w3q-Ai-rf4">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="tDI-e3-vFf" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController storyboardIdentifier="showViewController" id="Fpf-rQ-2s6" customClass="EEShowViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="singleLineEtched" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="PVk-Ca-kgd">
-                        <rect key="frame" x="0.0" y="20" width="320" height="411"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="499"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <sections>
@@ -42,7 +40,7 @@
                             <tableViewSection headerTitle="ShowStyle" footerTitle="EEHUDViewの出現の仕方を指定します (You specifies how the emergence of EEHUDView.)" id="R7c-L1-SVN">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="showStyle" textLabel="fKs-ny-wKe" detailTextLabel="hMg-G1-NDv" rowHeight="50" style="IBUITableViewCellStyleSubtitle" id="olX-0s-Xu8">
-                                        <rect key="frame" x="0.0" y="254" width="320" height="52"/>
+                                        <rect key="frame" x="0.0" y="264" width="320" height="52"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="10" y="1" width="280" height="49"/>
@@ -71,7 +69,7 @@
                             <tableViewSection headerTitle="HideStyle" footerTitle="EEHUDViewの消し方を指定します (You specifies how to put out the EEHUDView.)" id="HGb-6r-ibu">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="hideStyle" textLabel="1Gy-sf-2gj" detailTextLabel="NgU-Ha-coH" rowHeight="50" style="IBUITableViewCellStyleSubtitle" id="z07-VW-rci">
-                                        <rect key="frame" x="0.0" y="411" width="320" height="52"/>
+                                        <rect key="frame" x="0.0" y="431" width="320" height="52"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="10" y="1" width="280" height="49"/>
@@ -100,7 +98,7 @@
                             <tableViewSection headerTitle="ResultStyle" footerTitle="EEHUDViewの中に表示するアイコンを指定します (You specifies the icon to be displayed in the EEHUDView.)" id="ab1-NR-h8l">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="resultStyle" textLabel="hci-Lb-Sg5" detailTextLabel="Gwg-up-Gd3" rowHeight="50" style="IBUITableViewCellStyleSubtitle" id="UUw-oh-3ds">
-                                        <rect key="frame" x="0.0" y="549" width="320" height="52"/>
+                                        <rect key="frame" x="0.0" y="579" width="320" height="52"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="10" y="1" width="280" height="49"/>
@@ -138,13 +136,13 @@
                         <segue destination="Tem-vI-6gC" kind="modal" identifier="showDetail" id="bK3-X8-UZL"/>
                     </connections>
                 </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tDI-e3-vFf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-802" y="-18"/>
         </scene>
         <!--Navigation Controller - Concrete Ex-->
         <scene sceneID="W6l-5I-PZT">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="1Yh-OV-rGF" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController definesPresentationContext="YES" id="Ygl-RR-08X" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Concrete Ex" id="4Z9-jK-8k7"/>
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="i9a-OH-Ww0">
@@ -154,16 +152,16 @@
                         <segue destination="VHO-gb-JRj" kind="relationship" relationship="rootViewController" id="IDh-7o-FuY"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="1Yh-OV-rGF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-802" y="1275"/>
         </scene>
         <!--Progress View Controller - Progress-->
         <scene sceneID="Vyn-t2-45a">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="O2k-Pm-Bh3" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController id="Iv9-UD-N2i" customClass="EEProgressViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="4nv-46-TGK">
-                        <rect key="frame" x="0.0" y="20" width="320" height="411"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="499"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <sections>
@@ -183,7 +181,7 @@
                             <tableViewSection headerTitle="show progress → growl → hide progress" footerTitle="showProgressWithMessage...で表示した後、途中でgrowlを表示したパターンです。中身のみ代わり、time終了後再びprogress状態へ勝手に戻ります。" id="ZNw-PH-Nh0">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="fE8-Sb-fUL">
-                                        <rect key="frame" x="0.0" y="217" width="320" height="45"/>
+                                        <rect key="frame" x="0.0" y="227" width="320" height="45"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="10" y="1" width="300" height="43"/>
@@ -201,16 +199,16 @@
                     </tableView>
                     <tabBarItem key="tabBarItem" title="Progress" id="nmj-lL-7Nc"/>
                 </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="O2k-Pm-Bh3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-802" y="633"/>
         </scene>
         <!--ConcreteEX View Controller - 使用例-->
         <scene sceneID="vIU-Ej-uYH">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Mkj-vi-1Be" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController id="VHO-gb-JRj" customClass="EEConcreteEXViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="singleLineEtched" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="NmI-i1-XJd">
-                        <rect key="frame" x="0.0" y="64" width="320" height="367"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="455"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <sections>
@@ -292,31 +290,31 @@
                         <segue destination="5wk-1O-C8y" kind="push" identifier="pushHowTo" id="mGa-qE-4BB"/>
                     </connections>
                 </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Mkj-vi-1Be" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-364" y="1275"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="MpY-ik-WlY">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Ahu-p8-5YP" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="4Si-fe-4E5" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="eoz-hX-Ca4">
-                        <rect key="frame" x="0.0" y="64" width="320" height="367"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="455"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="AVH-Hv-Zm0"/>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ahu-p8-5YP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="70" y="1275"/>
         </scene>
         <!--How To View Controller-->
         <scene sceneID="a0H-Rs-hTS">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Ihg-mx-NDT" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="5wk-1O-C8y" customClass="EEHowToViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="tpJ-gl-dwY">
-                        <rect key="frame" x="0.0" y="64" width="320" height="367"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="455"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
@@ -326,6 +324,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="dAN-nf-1eQ"/>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ihg-mx-NDT" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <swipeGestureRecognizer direction="up" id="KSp-Zz-KM9">
                     <connections>
                         <action selector="up:" destination="5wk-1O-C8y" id="Fbk-Nw-STa"/>
@@ -337,14 +336,13 @@
         <!--Show Detail View Controller-->
         <scene sceneID="4XX-dS-sgl">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="OuC-6s-olS" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="Tem-vI-6gC" customClass="EEShowDetailViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2FU-uG-kB5">
-                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="548"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="singleLineEtched" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="CEm-lB-jpF">
-                                <rect key="frame" x="-1" y="0.0" width="320" height="460"/>
+                                <rect key="frame" x="-1" y="0.0" width="320" height="548"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <prototypes>
@@ -387,14 +385,14 @@
                         <outlet property="tableView" destination="CEm-lB-jpF" id="X7g-Qo-EsR"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="OuC-6s-olS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-364" y="-18"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="TXe-5V-Z6L">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="0Ey-qZ-Mhf" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tabBarController definesPresentationContext="YES" id="EbG-Uw-5kh" sceneMemberID="viewController">
+                <tabBarController wantsFullScreenLayout="YES" definesPresentationContext="YES" id="EbG-Uw-5kh" sceneMemberID="viewController">
                     <nil key="simulatedBottomBarMetrics"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="h5m-H5-vxk">
                         <rect key="frame" x="129" y="330" width="163" height="49"/>
@@ -407,6 +405,7 @@
                         <segue destination="Ygl-RR-08X" kind="relationship" relationship="viewControllers" id="age-rY-EkC"/>
                     </connections>
                 </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0Ey-qZ-Mhf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1460" y="633"/>
         </scene>
@@ -437,6 +436,6 @@
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
 </document>

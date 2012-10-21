@@ -28,6 +28,9 @@
 #import "EEHUDViewConstants.h"
 #import "EEAnimationHandler.h"
 
+
+
+
 #pragma mark - ** EEHUDViewController **
 @interface EEHUDViewController : UIViewController  {
     
@@ -43,6 +46,9 @@
 @property (nonatomic, strong) EEProgressView *progressView;
 @property (nonatomic, assign) BOOL isShowProgress;
 
+- (void)willChangeStatusBarOrientationNotification:(NSNotification *)notification;
+- (void)didChangeStatusBarOrientationNotification:(NSNotification *)notification;
+
 @end
 
 @implementation EEHUDViewController
@@ -51,6 +57,33 @@
 @synthesize resultView = resultView_;
 @synthesize progressView = _progressView;
 @synthesize isShowProgress = _isShowProgress;
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        
+        // notifiation
+        NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+        [center addObserver:self
+                   selector:@selector(willChangeStatusBarOrientationNotification:)
+                       name:UIApplicationWillChangeStatusBarOrientationNotification
+                     object:nil];
+        [center addObserver:self
+                   selector:@selector(didChangeStatusBarOrientationNotification:)
+                       name:UIApplicationDidChangeStatusBarOrientationNotification
+                     object:nil];
+    }
+    
+    return self;
+}
+
+- (void)dealloc
+{
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+    [center removeObserver:self name:UIApplicationWillChangeStatusBarOrientationNotification object:nil];
+    [center removeObserver:self name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
+}
 
 - (void)didReceiveMemoryWarning
 {
@@ -74,8 +107,8 @@
 
 - (void)loadView
 {
-    //UIView *baseView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 1.0, 1.0)];
-    UIView *baseView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 480.0)];
+    CGRect fullRect = [[UIScreen mainScreen] bounds];
+    UIView *baseView = [[UIView alloc] initWithFrame:fullRect];
     baseView.backgroundColor = [UIColor clearColor];
     baseView.userInteractionEnabled = NO;
     self.view = baseView;
@@ -100,7 +133,7 @@
      
         EEHUDViewConstants.h
      
-     内の各定数項を変更してください
+     内の各定数項を変更してください ( ** iOS6以降のみ対応する場合は変更する必要ありません **)
      ***************************************************************/
     
     BOOL boolSwitch;
@@ -125,10 +158,17 @@
     return boolSwitch;
 }
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 60000
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskAll;
+}
+- (BOOL)shouldAutorotate{
+    return YES;
+}
+#endif
+
 - (void)viewDidLayoutSubviews
 {
-    //LOG_METHOD;
-    
     CGRect hudRect = self.hudView.frame;
     
     CGFloat height = EEHUD_VIEW_HEIGHT;
@@ -140,21 +180,23 @@
     
     hudRect.size.height = height;
     
+    CGSize fullSize = [[UIScreen mainScreen] bounds].size;
+    
     switch (self.interfaceOrientation) {
         case UIInterfaceOrientationPortrait:
-            hudRect.origin = CGPointMake((320.0 - width)*0.5, (460.0 - height)*0.5);
+            hudRect.origin = CGPointMake((fullSize.width - width)*0.5, (fullSize.height - height)*0.5);
             break;
         case UIInterfaceOrientationLandscapeLeft:
-            hudRect.origin = CGPointMake((480.0 - width)*0.5, (300.0 - height)*0.5);
+            hudRect.origin = CGPointMake((fullSize.height - width)*0.5, (fullSize.width - height)*0.5);
             break;
         case UIInterfaceOrientationLandscapeRight:
-            hudRect.origin = CGPointMake((480.0 - width)*0.5, (300.0 - height)*0.5);
+            hudRect.origin = CGPointMake((fullSize.height - width)*0.5, (fullSize.width - height)*0.5);
             break;
         case UIInterfaceOrientationPortraitUpsideDown:
-            hudRect.origin = CGPointMake((320.0 - width)*0.5, (460.0 - height)*0.5);
+            hudRect.origin = CGPointMake((fullSize.width - width)*0.5, (fullSize.height - height)*0.5);
             break;
         default:
-            hudRect.origin = CGPointMake((320.0 - width)*0.5, (460.0 - height)*0.5);
+            hudRect.origin = CGPointMake((fullSize.width - width)*0.5, (fullSize.height - height)*0.5);
             break;
     }
     
@@ -166,10 +208,7 @@
 {
     if (!hudView_) {
         
-        //CGSize fullRect = self.bounds.size;
-        //CGSize fullSize = CGSizeMake(320.0, 460.0);
         CGSize fullSize = [[UIScreen mainScreen] bounds].size;
-        //NSLog(@"fullSize:%@", NSStringFromCGSize(fullSize));
         
         CGRect rect;
         rect.origin.x = (fullSize.width - EEHUD_VIEW_WIDTH) * 0.5;
@@ -248,11 +287,7 @@
         
         UIView *hud = [self hudView];
         
-        //CGSize fullSize = CGSizeMake(320.0, 460.0);
-        
         CGRect rect = CGRectZero;
-//        rect.origin.x = (fullSize.width - EEHUD_VIEW_WIDTH) * 0.5;
-//        rect.origin.y = (fullSize.height - EEHUD_VIEW_HEIGHT) * 0.5 + EEHUD_VIEW_HEIGHT;
         rect.origin.x = EEHUD_VIEW_MARGIN_HORIZONTAL_PROGRESS;
         rect.origin.y = EEHUD_VIEW_HEIGHT + EEHUD_VIEW_MARGIN_VERTICAL_PROGRESS;
         rect.size.width = hud.frame.size.width - 2.0*EEHUD_VIEW_MARGIN_HORIZONTAL_PROGRESS;
@@ -272,6 +307,30 @@
     }
     
     return _progressView;
+}
+
+#pragma mark - Notification
+- (void)willChangeStatusBarOrientationNotification:(NSNotification *)notification
+{
+//    EEHUDView *window = (EEHUDView *)[[UIApplication sharedApplication] keyWindow];
+//    
+//    if ([window respondsToSelector:@selector(appealTimer)]) {
+//        NSTimer *appealTimer = [window performSelector:@selector(appealTimer)];
+//        LOG(@"timer:%@, isValid:%d", appealTimer, appealTimer.isValid);
+//        [appealTimer invalidate];
+//    }
+    
+}
+
+- (void)didChangeStatusBarOrientationNotification:(NSNotification *)notification
+{
+//    EEHUDView *window = (EEHUDView *)[[UIApplication sharedApplication] keyWindow];
+//    
+//    if ([window respondsToSelector:@selector(appealTimer)]) {
+//        NSTimer *appealTimer = [window performSelector:@selector(appealTimer)];
+//        LOG(@"timer:%@, isValid:%d", appealTimer, appealTimer.isValid);
+//        [appealTimer fire];
+//    }
 }
 
 #pragma mark - Setter
@@ -613,7 +672,7 @@ static EEHUDView *sharedInstance_ = nil;
     }
     
     if (!self.viewController.view.superview) {
-        [self addSubview:viewController_.view];
+        self.rootViewController = viewController_;
     }
     
     /* show */
@@ -806,7 +865,7 @@ static EEHUDView *sharedInstance_ = nil;
     }
     
     if (!self.viewController.view.superview) {
-        [self addSubview:viewController_.view];
+        self.rootViewController = viewController_;
     }
     
     /* show */
@@ -1979,8 +2038,6 @@ static EEHUDView *sharedInstance_ = nil;
 
 - (void)toZAxisNegativeStrong:(BOOL)isStrong
 {
-    __weak EEHUDView *me = self;
-    
     CATransform3D transform = self.viewController.view.layer.sublayerTransform;
     
     transform.m34 = EEHUD_ZPOSITION_TRANSFORM_M34;
@@ -2001,31 +2058,15 @@ static EEHUDView *sharedInstance_ = nil;
     
     CAAnimationGroup *group = [CAAnimationGroup animation];
     group.animations = [NSArray arrayWithObjects:alpha, zPosition, nil];
-    //group.removedOnCompletion = NO;
-    //group.fillMode = kCAFillModeForwards;
+    group.removedOnCompletion = NO;
+    group.fillMode = kCAFillModeForwards;
     group.duration = EEHUD_DURATION_ZPOSITION_OUT;
     group.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-    group.stopHandlerBlock = ^(CAAnimation *anim, BOOL finished){
-        
-        CATransform3D transform = me.viewController.view.layer.sublayerTransform;
-        transform.m34 = 0.0;
-        me.viewController.view.layer.sublayerTransform = transform;
-        
-    };
-    
-    //
-    CABasicAnimation *kari = [CABasicAnimation animationWithKeyPath:@"opacity"];
-    kari.fromValue = [NSNumber numberWithFloat:0.0];
-    kari.toValue = [NSNumber numberWithFloat:0.0];
-    kari.duration = 0.01;
-    kari.startHandlerBlock = [self startHandlerBlock];
-    kari.stopHandlerBlock = [self stopHandlerBlock];
-    
-    CALayer *layer = self.viewController.hudView.layer;
+    group.startHandlerBlock = [self startHandlerBlock];
+    group.stopHandlerBlock = [self stopHandlerBlock];
     
     EEAnimationHandler *handler = [EEAnimationHandler sharedHandler];
-    [handler registerAnimation:group toLayer:layer forKey:@"zPositionOut"];
-    [handler registerAnimation:kari toLayer:layer forKey:@"kariOut"];
+    [handler registerAnimation:group toLayer:self.viewController.hudView.layer forKey:@"zPositionOut"];
 }
 
 #pragma mark - Other

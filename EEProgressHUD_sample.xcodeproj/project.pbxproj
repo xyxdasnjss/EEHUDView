@@ -18,6 +18,9 @@
 		845728D3148F914100715B6B /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 845728D1148F914100715B6B /* MainStoryboard.storyboard */; };
 		845728E0148F931000715B6B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845728DF148F931000715B6B /* QuartzCore.framework */; };
 		8458944614E7B744002D32C4 /* EEHUDResultView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8458944514E7B744002D32C4 /* EEHUDResultView.m */; };
+		8470842D1634186100D079E7 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8470842A1634186100D079E7 /* Default-568h@2x.png */; };
+		8470842E1634186100D079E7 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 8470842B1634186100D079E7 /* Default.png */; };
+		8470842F1634186100D079E7 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8470842C1634186100D079E7 /* Default@2x.png */; };
 		8471FC2515C00753005CCC53 /* EEProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8471FC2415C00753005CCC53 /* EEProgressView.m */; };
 		84884AE81591EA760037DDB2 /* EEProgressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84884AE71591EA760037DDB2 /* EEProgressViewController.m */; };
 		849EAEB61597046D0011400F /* EEHowToViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 849EAEB51597046D0011400F /* EEHowToViewController.m */; };
@@ -47,6 +50,9 @@
 		8458944414E7B744002D32C4 /* EEHUDResultView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EEHUDResultView.h; sourceTree = "<group>"; };
 		8458944514E7B744002D32C4 /* EEHUDResultView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EEHUDResultView.m; sourceTree = "<group>"; };
 		845D572E14E29E2200C5941C /* EEHUDViewConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EEHUDViewConstants.h; sourceTree = "<group>"; };
+		8470842A1634186100D079E7 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		8470842B1634186100D079E7 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		8470842C1634186100D079E7 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		8471FC2315C00753005CCC53 /* EEProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EEProgressView.h; sourceTree = "<group>"; };
 		8471FC2415C00753005CCC53 /* EEProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EEProgressView.m; sourceTree = "<group>"; };
 		84884AE61591EA760037DDB2 /* EEProgressViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EEProgressViewController.h; sourceTree = "<group>"; };
@@ -124,6 +130,9 @@
 				849EAEB51597046D0011400F /* EEHowToViewController.m */,
 				84E7CCDA158C6D9C009D17D1 /* EEData.h */,
 				84E7CCDB158C6D9C009D17D1 /* EEData.m */,
+				8470842A1634186100D079E7 /* Default-568h@2x.png */,
+				8470842B1634186100D079E7 /* Default.png */,
+				8470842C1634186100D079E7 /* Default@2x.png */,
 				845D572C14E29D5A00C5941C /* EEHUDView */,
 				845728C6148F914100715B6B /* Supporting Files */,
 			);
@@ -210,6 +219,9 @@
 			files = (
 				845728CA148F914100715B6B /* InfoPlist.strings in Resources */,
 				845728D3148F914100715B6B /* MainStoryboard.storyboard in Resources */,
+				8470842D1634186100D079E7 /* Default-568h@2x.png in Resources */,
+				8470842E1634186100D079E7 /* Default.png in Resources */,
+				8470842F1634186100D079E7 /* Default@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
