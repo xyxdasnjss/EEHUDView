@@ -182,6 +182,9 @@
     
     CGSize fullSize = [[UIScreen mainScreen] bounds].size;
     
+    BOOL statusBarHidden = [UIApplication sharedApplication].statusBarHidden;
+    if (!statusBarHidden) fullSize.height -= 20.0;
+    
     switch (self.interfaceOrientation) {
         case UIInterfaceOrientationPortrait:
             hudRect.origin = CGPointMake((fullSize.width - width)*0.5, (fullSize.height - height)*0.5);
